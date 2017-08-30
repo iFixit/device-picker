@@ -1,22 +1,23 @@
-import React, { Component } from 'react'
-import data from './api'
+import React, { Component } from 'react';
+import data from './api';
 
 class App extends Component {
   state = {
     searchValue: '',
     tree: data,
     path: [],
-  }
+  };
 
   handleSearchChange = event => {
-    this.setState({ searchValue: event.target.value })
-  }
+    this.setState({ searchValue: event.target.value });
+  };
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const list =
       tree.children.length > 0 ? (
-        <ul
+        <div
           key={tree.name}
+          role="presentation"
           onClick={() =>
             this.setState({
               searchValue: tree.name,
@@ -24,8 +25,10 @@ class App extends Component {
             })}
         >
           {tree.children.map(child => (
-            <li
+            <div
               key={child.name}
+              role="button"
+              tabIndex="0"
               style={{
                 backgroundColor:
                   leadingPath[0] && child.name === leadingPath[0]
@@ -42,20 +45,20 @@ class App extends Component {
                 this.setState({
                   searchValue: child.name,
                   path: [...trailingPath, child.name],
-                })
-                event.stopPropagation()
+                });
+                event.stopPropagation();
               }}
             >
               {child.name}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <div>{tree.name}</div>
-      )
+        <div key={tree.name}>{tree.name}</div>
+      );
 
     if (leadingPath.length === 0) {
-      return [list]
+      return [list];
     }
 
     return [
@@ -65,11 +68,11 @@ class App extends Component {
         leadingPath: leadingPath.slice(1),
         trailingPath: [...trailingPath, ...leadingPath.slice(0, 1)],
       }),
-    ]
-  }
+    ];
+  };
 
   render() {
-    const { searchValue, tree, path } = this.state
+    const { searchValue, tree, path } = this.state;
 
     return (
       <div>
@@ -86,8 +89,8 @@ class App extends Component {
           Choose device
         </button>
       </div>
-    )
+    );
   }
 }
 
-export default App
+export default App;
