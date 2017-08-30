@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import tree from './tree'
+import data from './api'
 
 class App extends Component {
   state = {
     searchValue: '',
-    tree,
+    tree: data,
     path: [],
   }
 
