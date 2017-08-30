@@ -13,7 +13,7 @@ const List = glamorous('div', {
 
 const Row = glamorous('div', {
   displayName: 'Row',
-  withProps: { role: 'button', tabIndex: 0 },
+  withProps: { role: 'button' },
 })();
 
 class App extends Component {
@@ -23,35 +23,58 @@ class App extends Component {
     path: [],
   };
 
+  getRelativeRow = ({ list, currentIndex, step }) => {
+    let newIndex = (currentIndex + step) % list.length;
+
+    if (newIndex < 0) {
+      newIndex += list.length;
+    }
+
+    return list[newIndex];
+  };
+
   handleSearchChange = event => {
     this.setState({ searchValue: event.target.value });
   };
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
+    const highlightedIndex = tree.children.findIndex(
+      child => child.name === leadingPath[0],
+    );
+
     const list =
       tree.children.length > 0 ? (
         <List
           key={tree.name}
+          onKeyDown={event => {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+              const newRow = this.getRelativeRow({
+                list: tree.children,
+                currentIndex: highlightedIndex,
+                step: event.key === 'ArrowDown' ? 1 : -1,
+              });
+
+              this.setState({
+                searchValue: newRow.name,
+                path: [...trailingPath, newRow.name],
+              });
+            }
+          }}
           onClick={() =>
             this.setState({
               searchValue: tree.name,
               path: trailingPath,
             })}
         >
-          {tree.children.map(child => (
+          {tree.children.map((child, index) => (
             <Row
               key={child.name}
               role="button"
-              tabIndex="0"
               style={{
                 backgroundColor:
-                  leadingPath[0] && child.name === leadingPath[0]
-                    ? 'lightgray'
-                    : 'transparent',
+                  index === highlightedIndex ? 'lightgray' : 'transparent',
                 fontWeight:
-                  leadingPath[0] &&
-                  child.name === leadingPath[0] &&
-                  leadingPath.length === 1
+                  index === highlightedIndex && leadingPath.length === 1
                     ? 'bold'
                     : 'normal',
               }}
