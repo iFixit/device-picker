@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
 import data from './api';
 
+const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
+  display: 'flex',
+  overflowX: 'auto',
+});
+
 const List = glamorous('div', {
   displayName: 'List',
   withProps: { role: 'presentation', tabIndex: 0 },
@@ -82,12 +87,12 @@ class App extends Component {
       tree.children.length > 0 ? (
         <List
           key={tree.name}
-          onKeyDown={event => {
-            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          onKeyDown={({ key }) => {
+            if (key === 'ArrowDown' || key === 'ArrowUp') {
               const newRow = this.getRelativeRow({
                 list: tree.children,
                 currentIndex: highlightedIndex,
-                step: event.key === 'ArrowDown' ? 1 : -1,
+                step: key === 'ArrowDown' ? 1 : -1,
               });
 
               this.setPath([...trailingPath, newRow.name]);
@@ -140,17 +145,15 @@ class App extends Component {
           value={searchValue}
           onChange={this.handleSearchChange}
         />
-        <Div
+        <ListsContainer
           innerRef={this.setListsContainerRef}
-          display="flex"
-          overflowX="auto"
-          onKeyDown={event => {
-            if (event.key === 'ArrowLeft') {
+          onKeyDown={({ key }) => {
+            if (key === 'ArrowLeft') {
               this.listsContainerRef.children[path.length - 2].focus();
               this.setPath(path.slice(0, path.length - 1));
             }
 
-            if (event.key === 'ArrowRight') {
+            if (key === 'ArrowRight') {
               const currentNode = this.getNode({ tree, path });
 
               if (currentNode.children.length > 0) {
@@ -161,7 +164,7 @@ class App extends Component {
           }}
         >
           {this.renderLists({ tree, leadingPath: path })}
-        </Div>
+        </ListsContainer>
         <button
           disabled={path.length === 0}
           onClick={() => alert(`You chose ${path[path.length - 1]}.`)}
