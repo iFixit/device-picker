@@ -1,5 +1,20 @@
 import React, { Component } from 'react';
+import glamorous, { Div } from 'glamorous';
 import data from './api';
+
+const List = glamorous('div', {
+  displayName: 'List',
+  withProps: { role: 'presentation', tabIndex: 0 },
+})({
+  flex: '0 0 auto',
+  width: '16rem',
+  overflowY: 'auto',
+});
+
+const Row = glamorous('div', {
+  displayName: 'Row',
+  withProps: { role: 'button', tabIndex: 0 },
+})();
 
 class App extends Component {
   state = {
@@ -15,9 +30,8 @@ class App extends Component {
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const list =
       tree.children.length > 0 ? (
-        <div
+        <List
           key={tree.name}
-          role="presentation"
           onClick={() =>
             this.setState({
               searchValue: tree.name,
@@ -25,7 +39,7 @@ class App extends Component {
             })}
         >
           {tree.children.map(child => (
-            <div
+            <Row
               key={child.name}
               role="button"
               tabIndex="0"
@@ -50,9 +64,9 @@ class App extends Component {
               }}
             >
               {child.name}
-            </div>
+            </Row>
           ))}
-        </div>
+        </List>
       ) : (
         <div key={tree.name}>{tree.name}</div>
       );
@@ -75,20 +89,22 @@ class App extends Component {
     const { searchValue, tree, path } = this.state;
 
     return (
-      <div>
+      <Div>
         <input
           type="search"
           value={searchValue}
           onChange={this.handleSearchChange}
         />
-        {this.renderLists({ tree, leadingPath: path })}
+        <Div display="flex" overflowX="auto">
+          {this.renderLists({ tree, leadingPath: path })}
+        </Div>
         <button
           disabled={path.length === 0}
           onClick={() => alert(`You chose ${path[path.length - 1]}.`)}
         >
           Choose device
         </button>
-      </div>
+      </Div>
     );
   }
 }
