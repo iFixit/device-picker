@@ -10,6 +10,9 @@ const List = glamorous('div', {
   width: '16rem',
   overflowY: 'auto',
   outline: 0,
+  '&:focus': {
+    backgroundColor: 'whitesmoke',
+  },
 });
 
 const Row = glamorous('div', {
@@ -44,6 +47,28 @@ class App extends Component {
     return list[newIndex];
   };
 
+  getNode = ({ tree, path }) => {
+    if (path.length === 0) {
+      return tree;
+    }
+
+    return this.getNode({
+      tree: tree.children.find(child => child.name === path[0]),
+      path: path.slice(1),
+    });
+  };
+
+  setPath = path => {
+    this.setState({
+      searchValue: path[path.length - 1],
+      path,
+    });
+  };
+
+  setListsContainerRef = node => {
+    this.listsContainerRef = node;
+  };
+
   handleSearchChange = event => {
     this.setState({ searchValue: event.target.value });
   };
@@ -65,17 +90,10 @@ class App extends Component {
                 step: event.key === 'ArrowDown' ? 1 : -1,
               });
 
-              this.setState({
-                searchValue: newRow.name,
-                path: [...trailingPath, newRow.name],
-              });
+              this.setPath([...trailingPath, newRow.name]);
             }
           }}
-          onClick={() =>
-            this.setState({
-              searchValue: tree.name,
-              path: trailingPath,
-            })}
+          onClick={() => this.setPath(trailingPath)}
         >
           {tree.children.map((child, index) => (
             <Row
@@ -86,10 +104,7 @@ class App extends Component {
                 index === highlightedIndex && leadingPath.length === 1
               }
               onClick={event => {
-                this.setState({
-                  searchValue: child.name,
-                  path: [...trailingPath, child.name],
-                });
+                this.setPath([...trailingPath, child.name]);
                 event.stopPropagation();
               }}
             >
@@ -125,7 +140,26 @@ class App extends Component {
           value={searchValue}
           onChange={this.handleSearchChange}
         />
-        <Div display="flex" overflowX="auto">
+        <Div
+          innerRef={this.setListsContainerRef}
+          display="flex"
+          overflowX="auto"
+          onKeyDown={event => {
+            if (event.key === 'ArrowLeft') {
+              this.listsContainerRef.children[path.length - 2].focus();
+              this.setPath(path.slice(0, path.length - 1));
+            }
+
+            if (event.key === 'ArrowRight') {
+              const currentNode = this.getNode({ tree, path });
+
+              if (currentNode.children.length > 0) {
+                this.listsContainerRef.children[path.length].focus();
+                this.setPath([...path, currentNode.children[0].name]);
+              }
+            }
+          }}
+        >
           {this.renderLists({ tree, leadingPath: path })}
         </Div>
         <button
