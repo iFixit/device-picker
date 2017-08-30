@@ -1,5 +1,5 @@
 export default {
-  name: 'Home',
+  name: '',
   children: [
     {
       name: 'Mac',
