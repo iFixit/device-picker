@@ -2,9 +2,25 @@ import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
 import data from './api';
 
+const SearchInput = glamorous('input', {
+  displayName: 'SearchInput',
+  // withProps: { type: 'search' },
+})({
+  width: '100%',
+  padding: '1rem',
+  fontFamily: 'inherit',
+  fontSize: '1.5rem',
+  backgroundColor: 'transparent',
+  border: 'none',
+  outline: 0,
+});
+
 const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
+  flex: '1 1 auto',
   display: 'flex',
   overflowX: 'auto',
+  borderTop: '1px solid rgba(0, 3, 6, 0.12)',
+  borderBottom: '1px solid rgba(0, 3, 6, 0.12)',
 });
 
 const List = glamorous('div', {
@@ -13,11 +29,9 @@ const List = glamorous('div', {
 })({
   flex: '0 0 auto',
   width: '16rem',
+  boxShadow: '1px 0 0 rgba(0, 3, 6, 0.12)',
   overflowY: 'auto',
   outline: 0,
-  '&:focus': {
-    backgroundColor: 'whitesmoke',
-  },
 });
 
 const Row = glamorous('div', {
@@ -25,7 +39,7 @@ const Row = glamorous('div', {
   withProps: { role: 'button' },
 })(
   {
-    padding: '8px 16px',
+    padding: '0.5rem 1rem',
     lineHeight: 1.5,
     cursor: 'pointer',
     userSelect: 'none',
@@ -34,6 +48,15 @@ const Row = glamorous('div', {
   ({ isSelected }) =>
     isSelected && { color: 'white', backgroundColor: 'royalblue' },
 );
+
+const Footer = glamorous('div', { displayName: 'Footer' })({
+  display: 'flex',
+  padding: '1rem',
+});
+
+const FooterRight = glamorous('div', { displayName: 'FooterRight' })({
+  marginLeft: 'auto',
+});
 
 class App extends Component {
   state = {
@@ -87,15 +110,16 @@ class App extends Component {
       tree.children.length > 0 ? (
         <List
           key={tree.name}
-          onKeyDown={({ key }) => {
-            if (key === 'ArrowDown' || key === 'ArrowUp') {
+          onKeyDown={event => {
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
               const newRow = this.getRelativeRow({
                 list: tree.children,
                 currentIndex: highlightedIndex,
-                step: key === 'ArrowDown' ? 1 : -1,
+                step: event.key === 'ArrowDown' ? 1 : -1,
               });
 
               this.setPath([...trailingPath, newRow.name]);
+              event.preventDefault();
             }
           }}
           onClick={() => this.setPath(trailingPath)}
@@ -139,38 +163,48 @@ class App extends Component {
     const { searchValue, tree, path } = this.state;
 
     return (
-      <Div>
-        <input
-          type="search"
+      <Div display="flex" flexDirection="column" height="100vh">
+        <SearchInput
+          placeholder="Search"
           value={searchValue}
           onChange={this.handleSearchChange}
         />
         <ListsContainer
           innerRef={this.setListsContainerRef}
-          onKeyDown={({ key }) => {
-            if (key === 'ArrowLeft') {
-              this.listsContainerRef.children[path.length - 2].focus();
-              this.setPath(path.slice(0, path.length - 1));
+          onKeyDown={event => {
+            if (event.key === 'ArrowLeft') {
+              if (path.length > 1) {
+                this.listsContainerRef.children[path.length - 2].focus();
+                this.setPath(path.slice(0, path.length - 1));
+              }
+
+              event.preventDefault();
             }
 
-            if (key === 'ArrowRight') {
+            if (event.key === 'ArrowRight') {
               const currentNode = this.getNode({ tree, path });
 
               if (currentNode.children.length > 0) {
                 this.listsContainerRef.children[path.length].focus();
                 this.setPath([...path, currentNode.children[0].name]);
               }
+
+              event.preventDefault();
             }
           }}
         >
           {this.renderLists({ tree, leadingPath: path })}
         </ListsContainer>
-        <button
-          disabled={path.length === 0}
-          onClick={() => alert(`You chose ${path[path.length - 1]}.`)}
-        >
-          Choose device
-        </button>
+        <Footer>
+          <FooterRight>
+            <button
+              disabled={path.length === 0}
+              onClick={() => alert(`You chose ${path[path.length - 1]}.`)}
+            >
+              Choose device
+            </button>
+          </FooterRight>
+        </Footer>
       </Div>
     );
   }
