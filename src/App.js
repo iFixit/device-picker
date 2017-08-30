@@ -2,14 +2,26 @@ import React, { Component } from 'react'
 import tree from './tree'
 
 class App extends Component {
-  state = { tree, path: [] }
+  state = {
+    searchValue: '',
+    tree,
+    path: [],
+  }
+
+  handleSearchChange = event => {
+    this.setState({ searchValue: event.target.value })
+  }
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const list =
       tree.children.length > 0 ? (
         <ul
           key={tree.name}
-          onClick={() => this.setState({ path: trailingPath })}
+          onClick={() =>
+            this.setState({
+              searchValue: tree.name,
+              path: trailingPath,
+            })}
         >
           {tree.children.map(child => (
             <li
@@ -27,7 +39,10 @@ class App extends Component {
                     : 'normal',
               }}
               onClick={event => {
-                this.setState({ path: [...trailingPath, child.name] })
+                this.setState({
+                  searchValue: child.name,
+                  path: [...trailingPath, child.name],
+                })
                 event.stopPropagation()
               }}
             >
@@ -54,10 +69,15 @@ class App extends Component {
   }
 
   render() {
-    const { tree, path } = this.state
+    const { searchValue, tree, path } = this.state
 
     return (
       <div>
+        <input
+          type="search"
+          value={searchValue}
+          onChange={this.handleSearchChange}
+        />
         {this.renderLists({ tree, leadingPath: path })}
         <button
           disabled={path.length === 0}
