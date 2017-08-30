@@ -4,6 +4,7 @@
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "max-len": "off",
+    "no-param-reassign": "off",
     "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx"] }]
   },
   "env": {

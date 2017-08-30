@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
 import data from './api';
+import List from './List';
 
 const SearchInput = glamorous('input', {
   displayName: 'SearchInput',
@@ -23,19 +24,8 @@ const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
   borderBottom: '1px solid rgba(0, 3, 6, 0.12)',
 });
 
-const List = glamorous('div', {
-  displayName: 'List',
-  withProps: { role: 'presentation', tabIndex: 0 },
-})({
-  flex: '0 0 auto',
-  width: '16rem',
-  boxShadow: '1px 0 0 rgba(0, 3, 6, 0.12)',
-  overflowY: 'auto',
-  outline: 0,
-});
-
-const Row = glamorous('div', {
-  displayName: 'Row',
+const Item = glamorous('div', {
+  displayName: 'Item',
   withProps: { role: 'button' },
 })(
   {
@@ -65,7 +55,7 @@ class App extends Component {
     path: [],
   };
 
-  getRelativeRow = ({ list, currentIndex, step }) => {
+  getRelativeItem = ({ list, currentIndex, step }) => {
     let newIndex = (currentIndex + step) % list.length;
 
     if (newIndex < 0) {
@@ -110,37 +100,36 @@ class App extends Component {
       tree.children.length > 0 ? (
         <List
           key={tree.name}
+          data={tree.children}
+          highlightedIndex={highlightedIndex}
+          renderItem={({ item, isHighlighted }) => (
+            <Item
+              key={item.name}
+              role="button"
+              isHighlighted={isHighlighted}
+              isSelected={isHighlighted && leadingPath.length === 1}
+              onClick={event => {
+                this.setPath([...trailingPath, item.name]);
+                event.stopPropagation();
+              }}
+            >
+              {item.name}
+            </Item>
+          )}
           onKeyDown={event => {
             if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-              const newRow = this.getRelativeRow({
+              const newItem = this.getRelativeItem({
                 list: tree.children,
                 currentIndex: highlightedIndex,
                 step: event.key === 'ArrowDown' ? 1 : -1,
               });
 
-              this.setPath([...trailingPath, newRow.name]);
+              this.setPath([...trailingPath, newItem.name]);
               event.preventDefault();
             }
           }}
           onClick={() => this.setPath(trailingPath)}
-        >
-          {tree.children.map((child, index) => (
-            <Row
-              key={child.name}
-              role="button"
-              isHighlighted={index === highlightedIndex}
-              isSelected={
-                index === highlightedIndex && leadingPath.length === 1
-              }
-              onClick={event => {
-                this.setPath([...trailingPath, child.name]);
-                event.stopPropagation();
-              }}
-            >
-              {child.name}
-            </Row>
-          ))}
-        </List>
+        />
       ) : (
         <div key={tree.name}>{tree.name}</div>
       );
