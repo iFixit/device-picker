@@ -9,12 +9,23 @@ const List = glamorous('div', {
   flex: '0 0 auto',
   width: '16rem',
   overflowY: 'auto',
+  outline: 0,
 });
 
 const Row = glamorous('div', {
   displayName: 'Row',
   withProps: { role: 'button' },
-})();
+})(
+  {
+    padding: '8px 16px',
+    lineHeight: 1.5,
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  ({ isHighlighted }) => isHighlighted && { backgroundColor: 'lightgray' },
+  ({ isSelected }) =>
+    isSelected && { color: 'white', backgroundColor: 'royalblue' },
+);
 
 class App extends Component {
   state = {
@@ -70,14 +81,10 @@ class App extends Component {
             <Row
               key={child.name}
               role="button"
-              style={{
-                backgroundColor:
-                  index === highlightedIndex ? 'lightgray' : 'transparent',
-                fontWeight:
-                  index === highlightedIndex && leadingPath.length === 1
-                    ? 'bold'
-                    : 'normal',
-              }}
+              isHighlighted={index === highlightedIndex}
+              isSelected={
+                index === highlightedIndex && leadingPath.length === 1
+              }
               onClick={event => {
                 this.setState({
                   searchValue: child.name,
