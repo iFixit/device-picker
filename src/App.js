@@ -48,7 +48,7 @@ class App extends Component {
       ...this.renderLists({
         tree: tree.children.find(child => child.name === leadingPath[0]),
         leadingPath: leadingPath.slice(1),
-        trailingPath: [...trailingPath, ...leadingPath.splice(0, 1)],
+        trailingPath: [...trailingPath, ...leadingPath.slice(0, 1)],
       }),
     ]
   }
@@ -56,7 +56,17 @@ class App extends Component {
   render() {
     const { tree, path } = this.state
 
-    return <div>{this.renderLists({ tree, leadingPath: path })}</div>
+    return (
+      <div>
+        {this.renderLists({ tree, leadingPath: path })}
+        <button
+          disabled={path.length === 0}
+          onClick={() => alert(`You chose ${path[path.length - 1]}.`)}
+        >
+          Choose device
+        </button>
+      </div>
+    )
   }
 }
 
