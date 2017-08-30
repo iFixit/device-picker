@@ -80,7 +80,7 @@ class App extends Component {
 
   setPath = path => {
     this.setState({
-      searchValue: path[path.length - 1],
+      searchValue: path[path.length - 1] || '',
       path,
     });
   };
