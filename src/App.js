@@ -7,6 +7,7 @@ const SearchInput = glamorous('input', {
   displayName: 'SearchInput',
   // withProps: { type: 'search' },
 })({
+  flex: '0 0 auto',
   width: '100%',
   padding: '1rem',
   fontFamily: 'inherit',
@@ -40,6 +41,7 @@ const Item = glamorous('div', {
 );
 
 const Footer = glamorous('div', { displayName: 'Footer' })({
+  flex: '0 0 auto',
   display: 'flex',
   padding: '1rem',
 });
