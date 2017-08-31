@@ -6,7 +6,7 @@ import glamorous from 'glamorous';
 import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 
-import { Button, constants } from 'toolbox';
+import { Button, Icon, constants } from 'toolbox';
 import List from './List';
 import PreviewContainer from './PreviewContainer';
 
@@ -57,19 +57,35 @@ const Item = glamorous('div', {
   withProps: { role: 'button' },
 })(
   {
-    padding: `${spacing[1]} ${spacing[3]}`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: `${spacing[1]} ${spacing[1]} ${spacing[1]} ${spacing[3]}`,
     lineHeight: lineHeight.copy,
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
     cursor: 'pointer',
     userSelect: 'none',
+
+    '& svg': {
+      opacity: 0.5,
+    },
   },
   ({ isHighlighted }) =>
     isHighlighted && { backgroundColor: color.grayAlpha[3] },
   ({ isSelected }) =>
-    isSelected && { color: color.white, backgroundColor: color.blue[4] },
+    isSelected && {
+      color: color.white,
+      backgroundColor: color.blue[4],
+      '& svg': {
+        opacity: 1,
+      },
+    },
 );
+
+const ItemText = glamorous.span({
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+});
 
 const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
@@ -294,10 +310,13 @@ class DevicePicker extends Component {
             isSelected={isHighlighted && leadingPath.length === 1}
             onClick={event => handleItemClick(event, item)}
           >
-            {this.removeParentFromTitle({
-              title: item,
-              parentTitle: title,
-            })}
+            <ItemText>
+              {this.removeParentFromTitle({
+                title: item,
+                parentTitle: title,
+              })}
+            </ItemText>
+            {tree[item] && <Icon name="chevron-right" size={20} />}
           </Item>
         )}
       />
