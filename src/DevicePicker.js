@@ -6,12 +6,15 @@ import glamorous from 'glamorous';
 import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 
-// components
 import List from './List';
 import PreviewContainer from './PreviewContainer';
 // TODO: add toolbox
 
 smoothscroll.polyfill();
+
+const propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
 const Container = glamorous.div({
   display: 'flex',
@@ -70,10 +73,6 @@ const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
 });
 
 class DevicePicker extends Component {
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-  };
-
   state = {
     searchValue: '',
     tree: null,
@@ -342,5 +341,7 @@ class DevicePicker extends Component {
     );
   }
 }
+
+DevicePicker.propTypes = propTypes;
 
 export default DevicePicker;
