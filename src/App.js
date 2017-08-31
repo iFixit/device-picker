@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
+import smoothscroll from 'smoothscroll-polyfill';
 import data from './api';
 import List from './List';
+
+smoothscroll.polyfill();
 
 const SearchInput = glamorous('input', {
   displayName: 'SearchInput',
@@ -19,9 +22,10 @@ const SearchInput = glamorous('input', {
 const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
   flex: '1 1 auto',
   display: 'flex',
-  overflowX: 'auto',
   borderTop: '1px solid rgba(0, 3, 6, 0.12)',
   borderBottom: '1px solid rgba(0, 3, 6, 0.12)',
+  overflowX: 'auto',
+  '-webkit-overflow-scrolling': 'touch',
 });
 
 const Item = glamorous('div', {
