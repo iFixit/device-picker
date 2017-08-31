@@ -5,7 +5,6 @@ import List from './List';
 
 const SearchInput = glamorous('input', {
   displayName: 'SearchInput',
-  // withProps: { type: 'search' },
 })({
   flex: '0 0 auto',
   width: '100%',
