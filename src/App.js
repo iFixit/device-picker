@@ -55,6 +55,7 @@ const FooterRight = glamorous('div', { displayName: 'FooterRight' })({
   marginLeft: 'auto',
 });
 
+// TODO: rename this component DevicePicker
 class App extends Component {
   state = {
     searchValue: '',
@@ -63,6 +64,8 @@ class App extends Component {
   };
 
   componentDidMount() {
+    // TODO: figure out how to minimize load time
+    // TODO: include fetch polyfill
     fetch('https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy')
       .then(response => response.json())
       .then(data => {
@@ -117,6 +120,12 @@ class App extends Component {
     this.setState({ searchValue: event.target.value });
   };
 
+  removeParentFromTitle = ({ title, parentTitle }) =>
+    title
+      .split(' ')
+      .filter(word => !parentTitle.split(' ').includes(word))
+      .join(' ');
+
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const highlightedIndex =
       tree && Object.keys(tree).findIndex(key => key === leadingPath[0]);
@@ -149,12 +158,19 @@ class App extends Component {
               event.stopPropagation();
             }}
           >
-            {item}
+            {this.removeParentFromTitle({
+              title: item,
+              parentTitle: trailingPath[trailingPath.length - 1] || '',
+            })}
           </Item>
         )}
       />
     ) : (
-      <div>End!</div>
+      <div>
+        {/* TODO: create a Preview component */}
+        {/* TODO: get leaf node data */}
+        End!
+      </div>
     );
 
     if (leadingPath.length === 0) {
