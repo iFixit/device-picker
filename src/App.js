@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
+import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 import List from './List';
 // TODO: add toolbox
@@ -66,7 +67,6 @@ class App extends Component {
 
   componentDidMount() {
     // TODO: figure out how to minimize load time
-    // TODO: include fetch polyfill
     fetch('https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy')
       .then(response => response.json())
       .then(data => {
