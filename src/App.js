@@ -58,7 +58,11 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path) {
-      this.listsContainerRef.scrollLeft = this.listsContainerRef.scrollWidth;
+      this.listsContainerRef.scroll({
+        top: 0,
+        left: this.listsContainerRef.scrollWidth,
+        behavior: 'smooth',
+      });
     }
   }
 
