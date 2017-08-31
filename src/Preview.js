@@ -32,9 +32,9 @@ const Image = glamorous.div(
     width: '100%',
     height: '14rem',
     minHeight: '3rem',
+    backgroundSize: 'contain',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
   },
   ({ url }) => ({
     backgroundImage: `url(${url})`,
@@ -52,6 +52,12 @@ const Description = glamorous.span({
   color: 'rgba(0, 3, 6, 0.54)',
 });
 
+/**
+ * Truncate string to given length.
+ * @param {string} string
+ * @param {number} length
+ * @param {string} - Truncated string.
+ */
 function truncate(string, length) {
   if (string.length <= length) {
     return string;
