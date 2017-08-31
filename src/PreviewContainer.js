@@ -13,6 +13,7 @@ class PreviewContainer extends Component {
   componentDidMount() {
     const encodedTitle = this.props.title.replace(/ /g, '_');
 
+    // get device data
     fetch(`https://www.ifixit.com/api/2.0/wikis/CATEGORY/${encodedTitle}`)
       .then(response => response.json())
       .then(data => this.setState({ data }));
