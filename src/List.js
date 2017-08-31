@@ -23,16 +23,14 @@ class List extends Component {
     const { highlightedIndex } = this.props;
 
     if (
-      prevProps.highlightedIndex === highlightedIndex ||
-      highlightedIndex === -1
+      prevProps.highlightedIndex !== highlightedIndex &&
+      highlightedIndex > -1
     ) {
-      return;
+      this.scrollToItem({
+        itemNode: this.listRef.children[highlightedIndex],
+        listNode: this.listRef,
+      });
     }
-
-    this.scrollToItem({
-      itemNode: this.listRef.children[highlightedIndex],
-      listNode: this.listRef,
-    });
   }
 
   setListRef = node => {

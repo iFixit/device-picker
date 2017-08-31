@@ -57,6 +57,12 @@ class App extends Component {
     path: [],
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.path !== this.state.path) {
+      this.listsContainerRef.scrollLeft = this.listsContainerRef.scrollWidth;
+    }
+  }
+
   getRelativeItem = ({ list, currentIndex, step }) => {
     let newIndex = (currentIndex + step) % list.length;
 
