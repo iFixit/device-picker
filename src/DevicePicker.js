@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
+
+// polyfills
 import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 
+// components
 import List from './List';
 import PreviewContainer from './PreviewContainer';
 // TODO: add toolbox
@@ -78,16 +81,19 @@ class DevicePicker extends Component {
   };
 
   componentDidMount() {
-    // TODO: figure out how to minimize load time
+    // get iFixit's category hierarchy
     fetch('https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy')
       .then(response => response.json())
       .then(data => {
         this.setState({ tree: data.hierarchy });
       });
+
+    // TODO: investigate caching
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path) {
+      // if path changed,
       // scroll to right edge
       this.listsContainerRef.scroll({
         top: 0,
@@ -97,8 +103,30 @@ class DevicePicker extends Component {
     }
   }
 
-  getRelativeItem = ({ list, currentIndex, step }) => {
-    let newIndex = (currentIndex + step) % list.length;
+  /**
+   * Handle search input change event.
+   * @param {InputEvent} event
+   */
+  handleSearchChange = event => {
+    this.setState({ searchValue: event.target.value });
+  };
+
+  /**
+   * Handle lists container key down event.
+   * @param {KeyboardEvent}
+   */
+  handleListsContainerKeyDown = event => {};
+
+  /**
+   * Get item relative to an index given a distance.
+   * @param {Object} params
+   * @param {string[]} params.list
+   * @param {number} params.index
+   * @param {number} params.distance
+   * @returns {string} - Item given distance away from given index.
+   */
+  getRelativeItem = ({ list, index, distance }) => {
+    let newIndex = (index + distance) % list.length;
 
     if (newIndex < 0) {
       newIndex += list.length;
@@ -107,6 +135,13 @@ class DevicePicker extends Component {
     return list[newIndex];
   };
 
+  /**
+   * Get a tree node given a path.
+   * @param {Object} params
+   * @param {Object} params.tree
+   * @param {string[]} params.path
+   * @returns {Object} - Tree node.
+   */
   getNode = ({ tree, path }) => {
     if (path.length === 0) {
       return tree;
@@ -118,6 +153,10 @@ class DevicePicker extends Component {
     });
   };
 
+  /**
+   * Update path and searchValue state given a path.
+   * @param {string[]} path
+   */
   setPath = path => {
     this.setState({
       searchValue: path[path.length - 1] || '',
@@ -125,14 +164,22 @@ class DevicePicker extends Component {
     });
   };
 
-  setListsContainerRef = node => {
-    this.listsContainerRef = node;
+  /**
+   * Store reference to the lists container DOM element.
+   * @param {HTMLElement} element
+   */
+  setListsContainerRef = element => {
+    this.listsContainerRef = element;
   };
 
-  handleSearchChange = event => {
-    this.setState({ searchValue: event.target.value });
-  };
-
+  /**
+   * Remove words in parent title from category title
+   * because category titles are sometimes long and redundant.
+   * @param {Object} params
+   * @param {string} params.title
+   * @param {string} params.parentTitle
+   * @param {string} - Category title without words from parent title.
+   */
   removeParentFromTitle = ({ title, parentTitle }) =>
     title
       .split(' ')
@@ -145,30 +192,65 @@ class DevicePicker extends Component {
       )
       .join(' ');
 
+  /**
+   * Render path along a tree.
+   * @param {Object} params
+   * @param {Object} params.tree
+   * @param {string[]} params.leadingPath
+   * @param {string[]} params.trailingPath
+   * @param {ReactElement[]} - Array of React elements to render.
+   */
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
+    // use the last value of trailingPath as title of list
     const title = trailingPath[trailingPath.length - 1] || '';
 
+    // index of highlighted item in list
+    // index will be -1 if no item is highlighted
     const highlightedIndex =
       tree && Object.keys(tree).findIndex(key => key === leadingPath[0]);
+
+    /**
+     * Handle list click event.
+     */
+    const handleListClick = () => {
+      // deselect all items in list
+    };
+
+    /**
+     * Handle list key down event.
+     * @param {KeyboardEvent} event
+     */
+    const handleListKeyDown = event => {
+      // change selected item to previous or next item
+    };
+
+    /**
+     * Handle item click event.
+     * @param {MouseEvent} event
+     * @param {string} item
+     */
+    const handleItemClick = (event, item) => {
+      // select item
+    };
 
     const list = tree ? (
       <List
         key={title}
         data={Object.keys(tree)}
         highlightedIndex={highlightedIndex}
+        onClick={() => this.setPath(trailingPath)}
         onKeyDown={event => {
           if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
             const newItem = this.getRelativeItem({
               list: Object.keys(tree),
-              currentIndex: highlightedIndex,
-              step: event.key === 'ArrowDown' ? 1 : -1,
+              index: highlightedIndex,
+              distance: event.key === 'ArrowDown' ? 1 : -1,
             });
 
             this.setPath([...trailingPath, newItem]);
             event.preventDefault();
           }
         }}
-        onClick={() => this.setPath(trailingPath)}
         renderItem={({ item, isHighlighted }) => (
           <Item
             key={item}
