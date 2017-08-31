@@ -1,6 +1,7 @@
 {
   "name": "device-picker",
   "version": "0.1.0",
+  "main": "src/DevicePicker.js",
   "private": true,
   "dependencies": {
     "glamor": "^2.20.40",
