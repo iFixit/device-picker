@@ -104,20 +104,6 @@ class DevicePicker extends Component {
   }
 
   /**
-   * Handle search input change event.
-   * @param {InputEvent} event
-   */
-  handleSearchChange = event => {
-    this.setState({ searchValue: event.target.value });
-  };
-
-  /**
-   * Handle lists container key down event.
-   * @param {KeyboardEvent}
-   */
-  handleListsContainerKeyDown = event => {};
-
-  /**
    * Get item relative to an index given a distance.
    * @param {Object} params
    * @param {string[]} params.list
@@ -170,6 +156,46 @@ class DevicePicker extends Component {
    */
   setListsContainerRef = element => {
     this.listsContainerRef = element;
+  };
+
+  /**
+   * Handle search input change event.
+   * @param {InputEvent} event
+   */
+  handleSearchChange = event => {
+    this.setState({ searchValue: event.target.value });
+  };
+
+  /**
+   * Handle lists container key down event.
+   * @param {KeyboardEvent}
+   */
+  handleListsContainerKeyDown = event => {
+    const { tree, path } = this.state;
+
+    if (event.key === 'ArrowLeft') {
+      if (path.length > 1) {
+        // focus left list
+        this.listsContainerRef.children[path.length - 2].focus();
+        // remove last item from path
+        this.setPath(path.slice(0, path.length - 1));
+      }
+
+      event.preventDefault();
+    }
+
+    if (event.key === 'ArrowRight') {
+      const currentNode = this.getNode({ tree, path });
+
+      if (currentNode && Object.keys(currentNode).length > 0) {
+        // focus right list
+        this.listsContainerRef.children[path.length].focus();
+        // add first item in right list to path
+        this.setPath([...path, Object.keys(currentNode)[0]]);
+      }
+
+      event.preventDefault();
+    }
   };
 
   /**
@@ -298,27 +324,7 @@ class DevicePicker extends Component {
         />
         <ListsContainer
           innerRef={this.setListsContainerRef}
-          onKeyDown={event => {
-            if (event.key === 'ArrowLeft') {
-              if (path.length > 1) {
-                this.listsContainerRef.children[path.length - 2].focus();
-                this.setPath(path.slice(0, path.length - 1));
-              }
-
-              event.preventDefault();
-            }
-
-            if (event.key === 'ArrowRight') {
-              const currentNode = this.getNode({ tree, path });
-
-              if (currentNode && Object.keys(currentNode).length > 0) {
-                this.listsContainerRef.children[path.length].focus();
-                this.setPath([...path, Object.keys(currentNode)[0]]);
-              }
-
-              event.preventDefault();
-            }
-          }}
+          onKeyDown={this.handleListsContainerKeyDown}
         >
           {tree && this.renderLists({ tree, leadingPath: path })}
         </ListsContainer>
