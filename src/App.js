@@ -31,6 +31,9 @@ const Item = glamorous('div', {
   {
     padding: '0.5rem 1rem',
     lineHeight: 1.5,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
     cursor: 'pointer',
     userSelect: 'none',
   },
