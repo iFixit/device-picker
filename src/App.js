@@ -61,6 +61,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path) {
+      // scroll to right edge
       this.listsContainerRef.scroll({
         top: 0,
         left: this.listsContainerRef.scrollWidth,
