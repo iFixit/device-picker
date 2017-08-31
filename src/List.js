@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
+import { constants } from 'toolbox';
+
+const { color } = constants;
+
 const propTypes = {
   data: PropTypes.arrayOf(PropTypes.any).isRequired,
   highlightedIndex: PropTypes.number.isRequired,
@@ -13,7 +17,7 @@ const Container = glamorous('div', {
 })({
   flex: '0 0 auto',
   width: '16rem',
-  boxShadow: '1px 0 0 rgba(0, 3, 6, 0.12)',
+  boxShadow: `1px 0 0 ${color.grayAlpha[3]}`,
   overflowY: 'auto',
   outline: 0,
 });

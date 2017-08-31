@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
+import { constants } from 'toolbox';
+
+const { color, lineHeight, spacing } = constants;
+
 const propTypes = {
   image: PropTypes.shape({
     standard: PropTypes.string.isRequired,
@@ -22,7 +26,7 @@ const Container = glamorous.div({
   flexDirection: 'column',
   justifyContent: 'flex-start',
   width: '16rem',
-  padding: '2rem',
+  padding: spacing[4],
   textAlign: 'center',
   overflowY: 'auto',
 });
@@ -42,14 +46,14 @@ const Image = glamorous.div(
 );
 
 const Title = glamorous.span({
-  margin: '1rem 0 0.5rem',
-  lineHeight: 1.5,
+  margin: `${spacing[3]} 0 ${spacing[1]}`,
+  lineHeight: lineHeight.copy,
   fontWeight: 700,
 });
 
 const Description = glamorous.span({
-  lineHeight: 1.5,
-  color: 'rgba(0, 3, 6, 0.54)',
+  lineHeight: lineHeight.copy,
+  color: color.grayAlpha[6],
 });
 
 /**

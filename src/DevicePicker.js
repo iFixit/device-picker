@@ -6,11 +6,13 @@ import glamorous from 'glamorous';
 import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 
+import { Button, constants } from 'toolbox';
 import List from './List';
 import PreviewContainer from './PreviewContainer';
-// TODO: add toolbox
 
 smoothscroll.polyfill();
+
+const { color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   onSubmit: PropTypes.func.isRequired,
@@ -20,6 +22,7 @@ const Container = glamorous.div({
   display: 'flex',
   flexDirection: 'column',
   height: '100%',
+  color: color.grayAlpha[9],
 });
 
 const SearchInput = glamorous('input', {
@@ -27,19 +30,24 @@ const SearchInput = glamorous('input', {
 })({
   flex: '0 0 auto',
   width: '100%',
-  padding: '1rem',
+  padding: spacing[3],
   fontFamily: 'inherit',
-  fontSize: '1.5rem',
+  fontSize: fontSize[4],
+  color: 'inherit',
   backgroundColor: 'transparent',
   border: 'none',
   outline: 0,
+
+  '&::placeholder': {
+    color: color.grayAlpha[5],
+  },
 });
 
 const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
   flex: '1 1 auto',
   display: 'flex',
-  borderTop: '1px solid rgba(0, 3, 6, 0.12)',
-  borderBottom: '1px solid rgba(0, 3, 6, 0.12)',
+  borderTop: `1px solid ${color.grayAlpha[3]}`,
+  borderBottom: `1px solid ${color.grayAlpha[3]}`,
   overflowX: 'auto',
   WebkitOverflowScrolling: 'touch',
 });
@@ -49,23 +57,24 @@ const Item = glamorous('div', {
   withProps: { role: 'button' },
 })(
   {
-    padding: '0.5rem 1rem',
-    lineHeight: 1.5,
+    padding: `${spacing[1]} ${spacing[3]}`,
+    lineHeight: lineHeight.copy,
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     cursor: 'pointer',
     userSelect: 'none',
   },
-  ({ isHighlighted }) => isHighlighted && { backgroundColor: 'lightgray' },
+  ({ isHighlighted }) =>
+    isHighlighted && { backgroundColor: color.grayAlpha[3] },
   ({ isSelected }) =>
-    isSelected && { color: 'white', backgroundColor: 'royalblue' },
+    isSelected && { color: color.white, backgroundColor: color.blue[4] },
 );
 
 const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
   display: 'flex',
-  padding: '1rem',
+  padding: spacing[3],
 });
 
 const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
@@ -329,12 +338,13 @@ class DevicePicker extends Component {
         </ListsContainer>
         <Toolbar>
           <ToolbarRight>
-            <button
+            <Button
+              design="primary"
               disabled={path.length === 0}
               onClick={() => onSubmit(path[path.length - 1])}
             >
               Choose device
-            </button>
+            </Button>
           </ToolbarRight>
         </Toolbar>
       </Container>
