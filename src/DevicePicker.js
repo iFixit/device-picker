@@ -54,13 +54,13 @@ const Item = glamorous('div', {
     isSelected && { color: 'white', backgroundColor: 'royalblue' },
 );
 
-const Footer = glamorous('div', { displayName: 'Footer' })({
+const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
   display: 'flex',
   padding: '1rem',
 });
 
-const FooterRight = glamorous('div', { displayName: 'FooterRight' })({
+const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
   marginLeft: 'auto',
 });
 
@@ -240,16 +240,16 @@ class DevicePicker extends Component {
         >
           {tree && this.renderLists({ tree, leadingPath: path })}
         </ListsContainer>
-        <Footer>
-          <FooterRight>
+        <Toolbar>
+          <ToolbarRight>
             <button
               disabled={path.length === 0}
               onClick={() => this.props.onSubmit(path[path.length - 1])}
             >
               Choose device
             </button>
-          </FooterRight>
-        </Footer>
+          </ToolbarRight>
+        </Toolbar>
       </Container>
     );
   }
