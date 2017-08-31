@@ -9,7 +9,29 @@ export default {
           children: [
             {
               name: 'MacBook Pro',
-              children: [],
+              children: [
+                {
+                  name: 'MacBook Pro 13"',
+                  children: [
+                    {
+                      name: 'MacBook Pro 13" Unibody',
+                      children: [],
+                    },
+                    {
+                      name: 'MacBook Pro 13" Retina Display',
+                      children: [],
+                    },
+                  ],
+                },
+                {
+                  name: 'MacBook Pro 15"',
+                  children: [],
+                },
+                {
+                  name: 'MacBook Pro 17"',
+                  children: [],
+                },
+              ],
             },
             {
               name: 'MacBook Air',
@@ -159,4 +181,4 @@ export default {
       children: [],
     },
   ],
-}
+};
