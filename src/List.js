@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
+const propTypes = {
+  data: PropTypes.arrayOf(PropTypes.any).isRequired,
+  highlightedIndex: PropTypes.number.isRequired,
+  renderItem: PropTypes.func.isRequired,
+};
+
 const Container = glamorous('div', {
   withProps: { role: 'presentation', tabIndex: 0 },
 })({
@@ -13,12 +19,6 @@ const Container = glamorous('div', {
 });
 
 class List extends Component {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.any).isRequired,
-    highlightedIndex: PropTypes.number.isRequired,
-    renderItem: PropTypes.func.isRequired,
-  };
-
   componentDidUpdate(prevProps) {
     const { highlightedIndex } = this.props;
 
@@ -26,27 +26,39 @@ class List extends Component {
       prevProps.highlightedIndex !== highlightedIndex &&
       highlightedIndex > -1
     ) {
+      // if highlightedIndex changed and it's not -1,
+      // scroll to the highlighted item
       this.scrollToItem({
-        itemNode: this.listRef.children[highlightedIndex],
-        listNode: this.listRef,
+        itemElement: this.listRef.children[highlightedIndex],
+        listElement: this.listRef,
       });
     }
   }
 
-  setListRef = node => {
-    this.listRef = node;
+  /**
+   * Store reference to the list DOM element.
+   * @param {HTMLElement} element
+   */
+  setListRef = element => {
+    this.listRef = element;
   };
 
-  scrollToItem = ({ itemNode, listNode }) => {
-    const itemRect = itemNode.getBoundingClientRect();
-    const listRect = listNode.getBoundingClientRect();
+  /**
+   * Scroll item into view.
+   * @param {Object} params
+   * @param {HTMLElement} params.itemElement
+   * @param {HTMLElement} params.listElement
+   */
+  scrollToItem = ({ itemElement, listElement }) => {
+    const itemRect = itemElement.getBoundingClientRect();
+    const listRect = listElement.getBoundingClientRect();
 
     if (itemRect.top < listRect.top) {
-      listNode.scrollTop += itemRect.top - listRect.top;
+      listElement.scrollTop += itemRect.top - listRect.top;
     }
 
     if (itemRect.bottom > listRect.bottom) {
-      listNode.scrollTop += itemRect.bottom - listRect.bottom;
+      listElement.scrollTop += itemRect.bottom - listRect.bottom;
     }
   };
 
@@ -62,5 +74,7 @@ class List extends Component {
     );
   }
 }
+
+List.propTypes = propTypes;
 
 export default List;
