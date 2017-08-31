@@ -128,7 +128,10 @@ class App extends Component {
                 event.stopPropagation();
               }}
             >
-              {item.name}
+              {item.name
+                // remove parent name from child name
+                .replace(trailingPath[trailingPath.length - 1], '')
+                .trim()}
             </Item>
           )}
           onKeyDown={event => {
