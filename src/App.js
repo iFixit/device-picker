@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import List from './List';
+// TODO: add toolbox
 
 smoothscroll.polyfill();
 
@@ -120,16 +121,17 @@ class App extends Component {
     this.setState({ searchValue: event.target.value });
   };
 
-  removeParentFromTitle = ({ title, parentTitle }) => title
-    .split(' ')
-    .filter(
-      word =>
-        !parentTitle
-          .toLowerCase()
-          .split(' ')
-          .includes(word.toLowerCase()),
-    )
-    .join(' ');
+  removeParentFromTitle = ({ title, parentTitle }) =>
+    title
+      .split(' ')
+      .filter(
+        word =>
+          !parentTitle
+            .toLowerCase()
+            .split(' ')
+            .includes(word.toLowerCase()),
+      )
+      .join(' ');
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const highlightedIndex =
