@@ -120,11 +120,16 @@ class App extends Component {
     this.setState({ searchValue: event.target.value });
   };
 
-  removeParentFromTitle = ({ title, parentTitle }) =>
-    title
-      .split(' ')
-      .filter(word => !parentTitle.split(' ').includes(word))
-      .join(' ');
+  removeParentFromTitle = ({ title, parentTitle }) => title
+    .split(' ')
+    .filter(
+      word =>
+        !parentTitle
+          .toLowerCase()
+          .split(' ')
+          .includes(word.toLowerCase()),
+    )
+    .join(' ');
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
     const highlightedIndex =
