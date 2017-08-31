@@ -25,7 +25,7 @@ const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
   borderTop: '1px solid rgba(0, 3, 6, 0.12)',
   borderBottom: '1px solid rgba(0, 3, 6, 0.12)',
   overflowX: 'auto',
-  '-webkit-overflow-scrolling': 'touch',
+  WebkitOverflowScrolling: 'touch',
 });
 
 const Item = glamorous('div', {
