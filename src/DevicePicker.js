@@ -240,6 +240,7 @@ class DevicePicker extends Component {
      */
     const handleListClick = () => {
       // deselect all items in list
+      this.setPath(trailingPath);
     };
 
     /**
@@ -247,7 +248,17 @@ class DevicePicker extends Component {
      * @param {KeyboardEvent} event
      */
     const handleListKeyDown = event => {
-      // change selected item to previous or next item
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        // change selected item to previous or next item
+        const newItem = this.getRelativeItem({
+          list: Object.keys(tree),
+          index: highlightedIndex,
+          distance: event.key === 'ArrowDown' ? 1 : -1,
+        });
+
+        this.setPath([...trailingPath, newItem]);
+        event.preventDefault();
+      }
     };
 
     /**
@@ -257,6 +268,8 @@ class DevicePicker extends Component {
      */
     const handleItemClick = (event, item) => {
       // select item
+      this.setPath([...trailingPath, item]);
+      event.stopPropagation();
     };
 
     const list = tree ? (
@@ -264,28 +277,14 @@ class DevicePicker extends Component {
         key={title}
         data={Object.keys(tree)}
         highlightedIndex={highlightedIndex}
-        onClick={() => this.setPath(trailingPath)}
-        onKeyDown={event => {
-          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-            const newItem = this.getRelativeItem({
-              list: Object.keys(tree),
-              index: highlightedIndex,
-              distance: event.key === 'ArrowDown' ? 1 : -1,
-            });
-
-            this.setPath([...trailingPath, newItem]);
-            event.preventDefault();
-          }
-        }}
+        onClick={handleListClick}
+        onKeyDown={handleListKeyDown}
         renderItem={({ item, isHighlighted }) => (
           <Item
             key={item}
             isHighlighted={isHighlighted}
             isSelected={isHighlighted && leadingPath.length === 1}
-            onClick={event => {
-              this.setPath([...trailingPath, item]);
-              event.stopPropagation();
-            }}
+            onClick={event => handleItemClick(event, item)}
           >
             {this.removeParentFromTitle({
               title: item,
@@ -314,6 +313,7 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path } = this.state;
+    const { onSubmit } = this.props;
 
     return (
       <Container>
@@ -332,7 +332,7 @@ class DevicePicker extends Component {
           <ToolbarRight>
             <button
               disabled={path.length === 0}
-              onClick={() => this.props.onSubmit(path[path.length - 1])}
+              onClick={() => onSubmit(path[path.length - 1])}
             >
               Choose device
             </button>
