@@ -123,6 +123,7 @@ class App extends Component {
 
     const list = tree ? (
       <List
+        key={trailingPath[trailingPath.length - 1] || ''}
         data={Object.keys(tree)}
         highlightedIndex={highlightedIndex}
         onKeyDown={event => {
