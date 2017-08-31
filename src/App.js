@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import glamorous, { Div } from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
-import data from './api';
 import List from './List';
 
 smoothscroll.polyfill();
@@ -59,9 +58,17 @@ const FooterRight = glamorous('div', { displayName: 'FooterRight' })({
 class App extends Component {
   state = {
     searchValue: '',
-    tree: data,
+    tree: null,
     path: [],
   };
+
+  componentDidMount() {
+    fetch('https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy')
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ tree: data.hierarchy });
+      });
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path) {
@@ -90,7 +97,7 @@ class App extends Component {
     }
 
     return this.getNode({
-      tree: tree.children.find(child => child.name === path[0]),
+      tree: tree[path[0]],
       path: path.slice(1),
     });
   };
@@ -111,50 +118,43 @@ class App extends Component {
   };
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
-    const highlightedIndex = tree.children.findIndex(
-      child => child.name === leadingPath[0],
+    const highlightedIndex =
+      tree && Object.keys(tree).findIndex(key => key === leadingPath[0]);
+
+    const list = tree ? (
+      <List
+        data={Object.keys(tree)}
+        highlightedIndex={highlightedIndex}
+        onKeyDown={event => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            const newItem = this.getRelativeItem({
+              list: Object.keys(tree),
+              currentIndex: highlightedIndex,
+              step: event.key === 'ArrowDown' ? 1 : -1,
+            });
+
+            this.setPath([...trailingPath, newItem]);
+            event.preventDefault();
+          }
+        }}
+        onClick={() => this.setPath(trailingPath)}
+        renderItem={({ item, isHighlighted }) => (
+          <Item
+            key={item}
+            isHighlighted={isHighlighted}
+            isSelected={isHighlighted && leadingPath.length === 1}
+            onClick={event => {
+              this.setPath([...trailingPath, item]);
+              event.stopPropagation();
+            }}
+          >
+            {item}
+          </Item>
+        )}
+      />
+    ) : (
+      <div>End!</div>
     );
-
-    const list =
-      tree.children.length > 0 ? (
-        <List
-          key={tree.name}
-          data={tree.children}
-          highlightedIndex={highlightedIndex}
-          renderItem={({ item, isHighlighted }) => (
-            <Item
-              key={item.name}
-              role="button"
-              isHighlighted={isHighlighted}
-              isSelected={isHighlighted && leadingPath.length === 1}
-              onClick={event => {
-                this.setPath([...trailingPath, item.name]);
-                event.stopPropagation();
-              }}
-            >
-              {item.name
-                // remove parent name from child name
-                .replace(trailingPath[trailingPath.length - 1], '')
-                .trim()}
-            </Item>
-          )}
-          onKeyDown={event => {
-            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-              const newItem = this.getRelativeItem({
-                list: tree.children,
-                currentIndex: highlightedIndex,
-                step: event.key === 'ArrowDown' ? 1 : -1,
-              });
-
-              this.setPath([...trailingPath, newItem.name]);
-              event.preventDefault();
-            }
-          }}
-          onClick={() => this.setPath(trailingPath)}
-        />
-      ) : (
-        <div key={tree.name}>{tree.name}</div>
-      );
 
     if (leadingPath.length === 0) {
       return [list];
@@ -163,7 +163,7 @@ class App extends Component {
     return [
       list,
       ...this.renderLists({
-        tree: tree.children.find(child => child.name === leadingPath[0]),
+        tree: tree[leadingPath[0]],
         leadingPath: leadingPath.slice(1),
         trailingPath: [...trailingPath, ...leadingPath.slice(0, 1)],
       }),
@@ -195,16 +195,16 @@ class App extends Component {
             if (event.key === 'ArrowRight') {
               const currentNode = this.getNode({ tree, path });
 
-              if (currentNode.children.length > 0) {
+              if (currentNode && Object.keys(currentNode).length > 0) {
                 this.listsContainerRef.children[path.length].focus();
-                this.setPath([...path, currentNode.children[0].name]);
+                this.setPath([...path, Object.keys(currentNode)[0]]);
               }
 
               event.preventDefault();
             }
           }}
         >
-          {this.renderLists({ tree, leadingPath: path })}
+          {tree && this.renderLists({ tree, leadingPath: path })}
         </ListsContainer>
         <Footer>
           <FooterRight>
