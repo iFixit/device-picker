@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
+
 import List from './List';
+import PreviewContainer from './PreviewContainer';
 // TODO: add toolbox
 
 smoothscroll.polyfill();
@@ -144,12 +146,14 @@ class DevicePicker extends Component {
       .join(' ');
 
   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
+    const title = trailingPath[trailingPath.length - 1] || '';
+
     const highlightedIndex =
       tree && Object.keys(tree).findIndex(key => key === leadingPath[0]);
 
     const list = tree ? (
       <List
-        key={trailingPath[trailingPath.length - 1] || ''}
+        key={title}
         data={Object.keys(tree)}
         highlightedIndex={highlightedIndex}
         onKeyDown={event => {
@@ -177,17 +181,13 @@ class DevicePicker extends Component {
           >
             {this.removeParentFromTitle({
               title: item,
-              parentTitle: trailingPath[trailingPath.length - 1] || '',
+              parentTitle: title,
             })}
           </Item>
         )}
       />
     ) : (
-      <div>
-        {/* TODO: create a Preview component */}
-        {/* TODO: get leaf node data */}
-        End!
-      </div>
+      <PreviewContainer key={title} title={title} />
     );
 
     if (leadingPath.length === 0) {
