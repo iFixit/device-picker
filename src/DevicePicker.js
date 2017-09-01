@@ -12,10 +12,11 @@ import PreviewContainer from './PreviewContainer';
 
 smoothscroll.polyfill();
 
-const { color, fontSize, lineHeight, spacing } = constants;
+const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 const Container = glamorous.div({
@@ -32,7 +33,7 @@ const SearchInput = glamorous('input', {
   width: '100%',
   padding: spacing[3],
   fontFamily: 'inherit',
-  fontSize: fontSize[4],
+  fontSize: fontSize[3],
   color: 'inherit',
   backgroundColor: 'transparent',
   border: 'none',
@@ -40,6 +41,10 @@ const SearchInput = glamorous('input', {
 
   '&::placeholder': {
     color: color.grayAlpha[5],
+  },
+
+  [breakpoint.sm]: {
+    fontSize: fontSize[4],
   },
 });
 
@@ -89,12 +94,25 @@ const ItemText = glamorous.span({
 
 const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
+  order: -1,
   display: 'flex',
-  padding: spacing[3],
+  padding: spacing[2],
+  backgroundColor: color.grayAlpha[2],
+
+  [breakpoint.sm]: {
+    order: 1,
+    padding: spacing[3],
+    backgroundColor: 'transparent',
+  },
 });
 
 const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
   marginLeft: 'auto',
+  display: 'flex',
+
+  '& > :not(:first-child)': {
+    marginLeft: spacing[2],
+  },
 });
 
 class DevicePicker extends Component {
@@ -340,7 +358,7 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path } = this.state;
-    const { onSubmit } = this.props;
+    const { onSubmit, onCancel } = this.props;
 
     return (
       <Container>
@@ -357,6 +375,7 @@ class DevicePicker extends Component {
         </ListsContainer>
         <Toolbar>
           <ToolbarRight>
+            <Button onClick={onCancel}>Cancel</Button>
             <Button
               design="primary"
               disabled={path.length === 0}
