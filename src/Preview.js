@@ -75,7 +75,7 @@ function truncate(string, length) {
 function Preview({ image, title, description }) {
   return (
     <Container>
-      <Image url={image.standard} />
+      <Image url={image ? image.standard : ''} />
       <Title>{title}</Title>
       <Description>{truncate(description, 80)}</Description>
     </Container>
