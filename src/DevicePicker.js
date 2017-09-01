@@ -16,6 +16,7 @@ const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
 };
 
 const Container = glamorous.div({
@@ -107,6 +108,11 @@ const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
 
 const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
   marginLeft: 'auto',
+  display: 'flex',
+
+  '& > :not(:first-child)': {
+    marginLeft: spacing[2],
+  },
 });
 
 class DevicePicker extends Component {
@@ -352,7 +358,7 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path } = this.state;
-    const { onSubmit } = this.props;
+    const { onSubmit, onCancel } = this.props;
 
     return (
       <Container>
@@ -369,6 +375,7 @@ class DevicePicker extends Component {
         </ListsContainer>
         <Toolbar>
           <ToolbarRight>
+            <Button onClick={onCancel}>Cancel</Button>
             <Button
               design="primary"
               disabled={path.length === 0}

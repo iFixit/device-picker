@@ -6,6 +6,7 @@ function App() {
     <div style={{ width: '100vw', height: '100vh' }}>
       <DevicePicker
         onSubmit={deviceTitle => alert(`You chose ${deviceTitle}.`)}
+        onCancel={() => alert('Cancelled!')}
       />
     </div>
   );
