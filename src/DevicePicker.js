@@ -93,8 +93,16 @@ const ItemText = glamorous.span({
 
 const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
+  order: -1,
   display: 'flex',
-  padding: spacing[3],
+  padding: spacing[2],
+  backgroundColor: color.grayAlpha[2],
+
+  [breakpoint.sm]: {
+    order: 1,
+    padding: spacing[3],
+    backgroundColor: 'transparent',
+  },
 });
 
 const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
