@@ -12,7 +12,7 @@ import PreviewContainer from './PreviewContainer';
 
 smoothscroll.polyfill();
 
-const { color, fontSize, lineHeight, spacing } = constants;
+const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   onSubmit: PropTypes.func.isRequired,
@@ -32,7 +32,7 @@ const SearchInput = glamorous('input', {
   width: '100%',
   padding: spacing[3],
   fontFamily: 'inherit',
-  fontSize: fontSize[4],
+  fontSize: fontSize[3],
   color: 'inherit',
   backgroundColor: 'transparent',
   border: 'none',
@@ -40,6 +40,10 @@ const SearchInput = glamorous('input', {
 
   '&::placeholder': {
     color: color.grayAlpha[5],
+  },
+
+  [breakpoint.sm]: {
+    fontSize: fontSize[4],
   },
 });
 
