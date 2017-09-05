@@ -66,6 +66,7 @@ const Item = glamorous('div', {
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: `${spacing[1]} ${spacing[1]} ${spacing[1]} ${spacing[3]}`,
+    fontSize: fontSize[2],
     lineHeight: lineHeight.copy,
     cursor: 'pointer',
     userSelect: 'none',

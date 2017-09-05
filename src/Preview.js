@@ -4,7 +4,7 @@ import glamorous from 'glamorous';
 
 import { constants } from 'toolbox';
 
-const { color, lineHeight, spacing } = constants;
+const { color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   image: PropTypes.shape({
@@ -47,11 +47,13 @@ const Image = glamorous.div(
 
 const Title = glamorous.span({
   margin: `${spacing[3]} 0 ${spacing[1]}`,
+  fontSize: fontSize[2],
   lineHeight: lineHeight.copy,
   fontWeight: 700,
 });
 
 const Description = glamorous.span({
+  fontSize: fontSize[2],
   lineHeight: lineHeight.copy,
   color: color.grayAlpha[6],
 });
