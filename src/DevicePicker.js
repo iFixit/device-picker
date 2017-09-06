@@ -15,6 +15,7 @@ smoothscroll.polyfill();
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
+  getHierarchy: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
@@ -125,11 +126,9 @@ class DevicePicker extends Component {
 
   componentDidMount() {
     // get iFixit's category hierarchy
-    fetch('https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ tree: data.hierarchy });
-      });
+    this.props.getHierarchy().then(data => {
+      this.setState({ tree: data.hierarchy });
+    });
 
     // TODO: investigate caching
   }
