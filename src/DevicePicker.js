@@ -16,6 +16,7 @@ const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
   getHierarchy: PropTypes.func.isRequired,
+  getDevice: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
@@ -339,7 +340,10 @@ class DevicePicker extends Component {
         )}
       />
     ) : (
-      <PreviewContainer key={title} title={title} />
+      <PreviewContainer
+        key={title}
+        getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
+      />
     );
 
     if (leadingPath.length === 0) {
