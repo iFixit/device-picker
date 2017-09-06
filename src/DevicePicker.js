@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
-
-// polyfills
-import 'whatwg-fetch';
 import smoothscroll from 'smoothscroll-polyfill';
 
 import { Button, Icon, constants } from 'toolbox';
