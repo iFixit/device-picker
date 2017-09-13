@@ -1,10 +1,11 @@
 import React from 'react';
-import DevicePicker from './DevicePicker';
+import DevicePickerModal from './DevicePickerModal';
 
 function App() {
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <DevicePicker
+    <div>
+      <DevicePickerModal
+        isOpen
         getHierarchy={() =>
           fetch(
             'https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy',
