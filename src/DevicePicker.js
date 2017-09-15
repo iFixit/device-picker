@@ -221,6 +221,34 @@ class DevicePicker extends Component {
   };
 
   /**
+   * Returns a flat list of [{
+   *   itemName,
+   *   path,
+   * }, ...]
+   */
+  // from the default tree structure.
+  getItemList = (tree, itemName = null, path = []) => {
+    const item = {
+      itemName,
+      path,
+    };
+
+    if (!tree) {
+      // This is a leaf.
+      return item;
+    }
+
+    return [
+      // Include this node in the list, unless it's the root node.
+      ...(itemName ? [item] : []),
+      // Recursively include all child nodes.
+      ...[].concat(...Object.keys(tree).map(itemName => {
+        return this.getItemList(tree[itemName], itemName, [...path, itemName]);
+      })),
+    ];
+  };
+
+  /**
    * Uses the current searchValue to set the selected path.
    */
   applySearch = () => {
@@ -228,33 +256,7 @@ class DevicePicker extends Component {
       return;
     }
 
-    // Returns a flat list of [{
-    //   itemName,
-    //   path,
-    // }, ...]
-    // from the default tree structure.
-    const getItemList = function(tree, itemName = null, path = []) {
-      const item = {
-        itemName,
-        path,
-      };
-
-      if (!tree) {
-        // This is a leaf.
-        return item;
-      }
-
-      return [
-        // Include this node in the list, unless it's the root node.
-        ...(itemName ? [item] : []),
-        // Recursively include all child nodes.
-        ...[].concat(...Object.keys(tree).map(itemName => {
-          return getItemList(tree[itemName], itemName, [...path, itemName]);
-        })),
-      ];
-    };
-
-    const itemList = getItemList(this.state.tree);
+    const itemList = this.getItemList(this.state.tree);
     const fuse = new Fuse(itemList, { keys: ['itemName'] });
     const bestItem = fuse.search(this.state.searchValue)[0];
 
