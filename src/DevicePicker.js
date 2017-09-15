@@ -150,6 +150,10 @@ class DevicePicker extends Component {
         behavior: 'smooth',
       });
     }
+
+    if (prevState.tree !== this.state.tree) {
+      this.itemList = null;
+    }
   }
 
   /**
@@ -227,7 +231,7 @@ class DevicePicker extends Component {
    * }, ...]
    */
   // from the default tree structure.
-  getItemList = (tree, itemName = null, path = []) => {
+  createItemList = (tree, itemName = null, path = []) => {
     const item = {
       itemName,
       path,
@@ -243,7 +247,7 @@ class DevicePicker extends Component {
       ...(itemName ? [item] : []),
       // Recursively include all child nodes.
       ...[].concat(...Object.keys(tree).map(itemName => {
-        return this.getItemList(tree[itemName], itemName, [...path, itemName]);
+        return this.createItemList(tree[itemName], itemName, [...path, itemName]);
       })),
     ];
   };
@@ -256,8 +260,9 @@ class DevicePicker extends Component {
       return;
     }
 
-    const itemList = this.getItemList(this.state.tree);
-    const fuse = new Fuse(itemList, { keys: ['itemName'] });
+    // Creating a flat list from the tree is expensive, so save the result.
+    this.itemList = this.itemList || this.createItemList(this.state.tree);
+    const fuse = new Fuse(this.itemList, { keys: ['itemName'] });
     const bestItem = fuse.search(this.state.searchValue)[0];
 
     if (bestItem) {
