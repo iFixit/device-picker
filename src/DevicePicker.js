@@ -242,14 +242,22 @@ class DevicePicker extends Component {
       return item;
     }
 
-    return [
-      // Include this node in the list, unless it's the root node.
-      ...(itemName ? [item] : []),
-      // Recursively include all child nodes.
-      ...[].concat(...Object.keys(tree).map(itemName => {
-        return this.createItemList(tree[itemName], itemName, [...path, itemName]);
-      })),
-    ];
+    const itemList = [];
+
+    if (itemName) {
+      // If this isn't the root node, include it in the list.
+      itemList.push(item);
+    }
+
+    // Recursively create a list of items for each child.
+    const childItems = Object.keys(tree).map(itemName => {
+      const childTree = tree[itemName];
+      const childPath = [...path, itemName];
+      return this.createItemList(childTree, itemName, childPath);
+    });
+
+    // Flatten the lists together.
+    return itemList.concat(...childItems);
   };
 
   /**
