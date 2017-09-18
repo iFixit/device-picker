@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
-import { Button, constants } from 'toolbox';
+import { Button } from 'toolbox';
 
 const propTypes = {
   itemName: PropTypes.string.isRequired,
@@ -12,6 +12,11 @@ const propTypes = {
 const Container = glamorous('div', {
   withProps: { role: 'presentation', tabIndex: 0 },
 })({
+  flex: '0 0 100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 class NoResults extends Component {
