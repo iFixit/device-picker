@@ -6,7 +6,7 @@ import { Button } from 'toolbox';
 
 const propTypes = {
   itemName: PropTypes.string.isRequired,
-  createItem: PropTypes.func.isRequired,
+  selectItem: PropTypes.func.isRequired,
 };
 
 const Container = glamorous('div', {
@@ -21,12 +21,14 @@ const Container = glamorous('div', {
 
 class NoResults extends Component {
   render() {
-    const { itemName, createItem, ...props } = this.props;
+    const { itemName, selectItem, ...props } = this.props;
 
     return (
       <Container {...props}>
         <p>No matches found. Did you spell it correctly?</p>
-        <Button onClick={createItem}>Create a {itemName} device page</Button>
+        <Button onClick={() => selectItem(itemName)}>
+          Create a {itemName} device page
+        </Button>
       </Container>
     );
   }

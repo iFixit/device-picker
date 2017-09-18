@@ -458,7 +458,7 @@ class DevicePicker extends Component {
         />
         {noResults ? (
           <ListsContainer>
-            <NoResults itemName={searchValue} createItem={() => console.log('created')} />
+            <NoResults itemName={searchValue} selectItem={onSubmit} />
           </ListsContainer>
         ) : (
           <ListsContainer
