@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
+import Fuse from 'fuse.js';
+import { debounce } from 'lodash';
 
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
@@ -118,6 +120,8 @@ const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
 class DevicePicker extends Component {
   state = {
     searchValue: '',
+    isSearching: false,
+    isSearchEmpty: false,
     tree: null,
     path: [],
   };
@@ -131,8 +135,13 @@ class DevicePicker extends Component {
     // TODO: investigate caching
   }
 
+  componentWillUnmount() {
+    // Cancel any trailing calls to this debounced function.
+    this.applySearch.cancel();
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.path !== this.state.path) {
+    if (prevState.path !== this.state.path && this.listsContainerRef) {
       // if path changed,
       // scroll to right edge
       this.listsContainerRef.scroll({
@@ -140,6 +149,10 @@ class DevicePicker extends Component {
         left: this.listsContainerRef.scrollWidth,
         behavior: 'smooth',
       });
+    }
+
+    if (prevState.tree !== this.state.tree) {
+      this.itemList = null;
     }
   }
 
@@ -186,6 +199,7 @@ class DevicePicker extends Component {
   setPath = path => {
     this.setState({
       searchValue: path[path.length - 1] || '',
+      isSearching: false,
       path,
     });
   };
@@ -203,8 +217,79 @@ class DevicePicker extends Component {
    * @param {InputEvent} event
    */
   handleSearchChange = event => {
-    this.setState({ searchValue: event.target.value });
+    this.setState({
+      searchValue: event.target.value,
+      isSearching: !/^\s*$/.test(event.target.value),
+    });
+    this.debouncedApplySearch();
   };
+
+  /**
+   * Returns a flat list of [{
+   *   itemName,
+   *   path,
+   * }, ...]
+   */
+  // from the default tree structure.
+  createItemList = (tree, itemName = null, path = []) => {
+    const item = {
+      itemName,
+      path,
+    };
+
+    if (!tree) {
+      // This is a leaf.
+      return item;
+    }
+
+    const itemList = [];
+
+    if (itemName) {
+      // If this isn't the root node, include it in the list.
+      itemList.push(item);
+    }
+
+    // Recursively create a list of items for each child.
+    const childItems = Object.keys(tree).map(itemName => {
+      const childTree = tree[itemName];
+      const childPath = [...path, itemName];
+      return this.createItemList(childTree, itemName, childPath);
+    });
+
+    // Flatten the lists together.
+    return itemList.concat(...childItems);
+  };
+
+  /**
+   * Uses the current searchValue to set the selected path.
+   */
+  applySearch = () => {
+    if (!this.state.isSearching) {
+      return;
+    }
+
+    // Creating a flat list from the tree is expensive, so save the result.
+    this.itemList = this.itemList || this.createItemList(this.state.tree);
+    const fuse = new Fuse(this.itemList, { keys: ['itemName'] });
+    const bestItem = fuse.search(this.state.searchValue)[0];
+
+    if (bestItem) {
+      this.setState({
+        path: bestItem.path,
+        isSearchEmpty: false,
+      });
+    } else {
+      this.setState({
+        isSearchEmpty: true,
+      });
+    }
+  };
+
+  /**
+   * Debounced version of applySearch, so that the user can finish typing before
+   * the UI jumps around.
+   */
+  debouncedApplySearch = debounce(this.applySearch, 500);
 
   /**
    * Handle lists container key down event.
@@ -358,7 +443,7 @@ class DevicePicker extends Component {
   };
 
   render() {
-    const { searchValue, tree, path } = this.state;
+    const { searchValue, tree, path, isSearching, isSearchEmpty } = this.state;
     const { onSubmit, onCancel } = this.props;
 
     return (
@@ -367,13 +452,18 @@ class DevicePicker extends Component {
           placeholder="Search"
           value={searchValue}
           onChange={this.handleSearchChange}
+          onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
-        <ListsContainer
-          innerRef={this.setListsContainerRef}
-          onKeyDown={this.handleListsContainerKeyDown}
-        >
-          {tree && this.renderLists({ tree, leadingPath: path })}
-        </ListsContainer>
+        {isSearching && isSearchEmpty ? (
+          <p>No matches found.</p>
+        ) : (
+          <ListsContainer
+            innerRef={this.setListsContainerRef}
+            onKeyDown={this.handleListsContainerKeyDown}
+          >
+            {tree && this.renderLists({ tree, leadingPath: path })}
+          </ListsContainer>
+        )}
         <Toolbar>
           <ToolbarRight>
             <Button onClick={onCancel}>Cancel</Button>
