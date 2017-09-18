@@ -8,6 +8,7 @@ import { debounce } from 'lodash';
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
 import PreviewContainer from './PreviewContainer';
+import NoResults from './NoResults';
 
 smoothscroll.polyfill();
 
@@ -445,6 +446,7 @@ class DevicePicker extends Component {
   render() {
     const { searchValue, tree, path, isSearching, isSearchEmpty } = this.state;
     const { onSubmit, onCancel } = this.props;
+    const noResults = isSearching && isSearchEmpty;
 
     return (
       <Container>
@@ -454,8 +456,10 @@ class DevicePicker extends Component {
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
-        {isSearching && isSearchEmpty ? (
-          <p>No matches found.</p>
+        {noResults ? (
+          <ListsContainer>
+            <NoResults itemName={searchValue} createItem={() => console.log('created')} />
+          </ListsContainer>
         ) : (
           <ListsContainer
             innerRef={this.setListsContainerRef}
@@ -469,7 +473,7 @@ class DevicePicker extends Component {
             <Button onClick={onCancel}>Cancel</Button>
             <Button
               design="primary"
-              disabled={path.length === 0}
+              disabled={path.length === 0 || noResults}
               onClick={() => onSubmit(path[path.length - 1])}
             >
               Choose device
