@@ -217,9 +217,15 @@ class DevicePicker extends Component {
    * @param {InputEvent} event
    */
   handleSearchChange = event => {
+    // Don't search if the string is all whitespace.
+    const isSearching = !/^\s*$/.test(event.target.value);
+    // Reset the device picker if the search text gets deleted.
+    const path = isSearching ? this.state.path : [];
+
     this.setState({
       searchValue: event.target.value,
-      isSearching: !/^\s*$/.test(event.target.value),
+      isSearching,
+      path,
     });
     this.debouncedApplySearch();
   };
