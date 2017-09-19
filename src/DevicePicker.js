@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
-import { debounce } from 'lodash';
+import { debounce, minBy } from 'lodash';
 
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
@@ -270,12 +270,20 @@ class DevicePicker extends Component {
 
     // Creating a flat list from the tree is expensive, so save the result.
     this.itemList = this.itemList || this.createItemList(this.state.tree);
-    const fuse = new Fuse(this.itemList, { keys: ['itemName'] });
-    const bestItem = fuse.search(this.state.searchValue)[0];
+    const fuse = new Fuse(this.itemList, {
+      keys: ['itemName'],
+      tokenize: true,
+      includeScore: true,
+    });
+    const results = fuse.search(this.state.searchValue);
 
-    if (bestItem) {
+    if (results) {
+      const bestResult = minBy(results, result => {
+        // Prefer more general categories (which have a smaller path length).
+        return result.score + 0.1 * result.item.path.length;
+      });
       this.setState({
-        path: bestItem.path,
+        path: bestResult.item.path,
         isSearchEmpty: false,
       });
     } else {
