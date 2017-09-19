@@ -235,6 +235,7 @@ class DevicePicker extends Component {
     const item = {
       itemName,
       path,
+      pathText: path.join(' '),
     };
 
     if (!tree) {
@@ -270,17 +271,24 @@ class DevicePicker extends Component {
 
     // Creating a flat list from the tree is expensive, so save the result.
     this.itemList = this.itemList || this.createItemList(this.state.tree);
+
     const fuse = new Fuse(this.itemList, {
-      keys: ['itemName'],
-      tokenize: true,
+      keys: [{
+        name: 'itemName',
+        weight: 0.3,
+      }, {
+        name: 'pathText',
+        weight: 0.7,
+      }],
       includeScore: true,
+      threshold: 0.4,
     });
     const results = fuse.search(this.state.searchValue);
 
-    if (results) {
+    if (results.length > 0) {
       const bestResult = minBy(results, result => {
         // Prefer more general categories (which have a smaller path length).
-        return result.score + 0.1 * result.item.path.length;
+        return result.score * (1 + 0.1 * result.item.path.length);
       });
       this.setState({
         path: bestResult.item.path,
