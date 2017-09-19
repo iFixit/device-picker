@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
-import { Button } from 'toolbox';
+import { Button, constants } from 'toolbox';
 
 const propTypes = {
   itemName: PropTypes.string.isRequired,
@@ -13,6 +13,8 @@ const Container = glamorous('div', {
   withProps: { role: 'presentation', tabIndex: 0 },
 })({
   flex: '0 0 100%',
+  padding: constants.spacing[3],
+  textAlign: 'center',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -27,7 +29,7 @@ class NoResults extends Component {
       <Container {...props}>
         <p>No matches found. Did you spell it correctly?</p>
         <Button onClick={() => selectItem(itemName)}>
-          Create a {itemName} device page
+          Choose {itemName}
         </Button>
       </Container>
     );
