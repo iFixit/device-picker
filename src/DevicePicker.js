@@ -117,11 +117,18 @@ const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
   },
 });
 
+// enum for the state of the user's search
+// INACTIVE is before searching, or after a successful search.
+const SEARCH_INACTIVE = 'inactive';
+// PENDING is during the 500ms debounce before actually performing a search.
+const SEARCH_PENDING = 'pending';
+// NO_RESULTS is when the search is completed, but didn't find a result.
+const SEARCH_NO_RESULTS = 'no_results';
+
 class DevicePicker extends Component {
   state = {
     searchValue: '',
-    isSearching: false,
-    isSearchEmpty: false,
+    search: SEARCH_INACTIVE,
     tree: null,
     path: [],
   };
@@ -199,7 +206,7 @@ class DevicePicker extends Component {
   setPath = path => {
     this.setState({
       searchValue: path[path.length - 1] || '',
-      isSearching: false,
+      search: SEARCH_INACTIVE,
       path,
     });
   };
@@ -224,7 +231,7 @@ class DevicePicker extends Component {
 
     this.setState({
       searchValue: event.target.value,
-      isSearching,
+      search: isSearching ? SEARCH_PENDING : SEARCH_INACTIVE,
       path,
     });
     this.debouncedApplySearch();
@@ -271,7 +278,7 @@ class DevicePicker extends Component {
    * Uses the current searchValue to set the selected path.
    */
   applySearch = () => {
-    if (!this.state.isSearching) {
+    if (this.state.search !== SEARCH_PENDING) {
       return;
     }
 
@@ -298,11 +305,11 @@ class DevicePicker extends Component {
       });
       this.setState({
         path: bestResult.item.path,
-        isSearchEmpty: false,
+        search: SEARCH_INACTIVE,
       });
     } else {
       this.setState({
-        isSearchEmpty: true,
+        search: SEARCH_NO_RESULTS,
       });
     }
   };
@@ -465,7 +472,7 @@ class DevicePicker extends Component {
   };
 
   render() {
-    const { searchValue, tree, path, isSearching, isSearchEmpty } = this.state;
+    const { searchValue, tree, path, search } = this.state;
     const { onSubmit, onCancel } = this.props;
 
     return (
@@ -476,7 +483,7 @@ class DevicePicker extends Component {
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
-        {isSearching && isSearchEmpty ? (
+        {search === SEARCH_NO_RESULTS ? (
           <p>No matches found.</p>
         ) : (
           <ListsContainer
