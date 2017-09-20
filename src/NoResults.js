@@ -19,6 +19,7 @@ const Container = glamorous('div', {
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
+  maxWidth: '100%',
 });
 
 class NoResults extends Component {
@@ -28,8 +29,8 @@ class NoResults extends Component {
     return (
       <Container {...props}>
         <p>No matches found. Did you spell it correctly?</p>
-        <Button onClick={() => selectItem(itemName)}>
-          Choose {itemName}
+        <Button style={{maxWidth: '100%'}} onClick={() => selectItem(itemName)}>
+          {`Choose ${itemName}`}
         </Button>
       </Container>
     );

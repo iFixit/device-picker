@@ -14,7 +14,7 @@
       "react-modal": "^2.3.2",
       "react-scripts": "1.0.12",
       "smoothscroll-polyfill": "^0.3.6",
-      "toolbox": "github:ifixit/toolbox#89ae596a164b0b15c1ac82c491454291e5280e8a"
+      "toolbox": "github:ifixit/toolbox#6fcaab0c2228de93db0d3104fdbefd56d9e0df1b"
    },
    "scripts": {
       "start": "react-scripts start",
