@@ -39,6 +39,17 @@ class List extends Component {
     }
   }
 
+  componentDidMount() {
+    const { highlightedIndex } = this.props;
+
+    if (highlightedIndex > -1) {
+      this.scrollToItem({
+        itemElement: this.listRef.children[highlightedIndex],
+        listElement: this.listRef,
+      });
+    }
+  }
+
   /**
    * Store reference to the list DOM element.
    * @param {HTMLElement} element

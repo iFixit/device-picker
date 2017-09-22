@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
-import { debounce } from 'lodash';
+import { debounce, minBy } from 'lodash';
 
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
@@ -118,11 +118,18 @@ const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
   },
 });
 
+// enum for the state of the user's search
+// INACTIVE is before searching, or after a successful search.
+const SEARCH_INACTIVE = 'inactive';
+// PENDING is during the 500ms debounce before actually performing a search.
+const SEARCH_PENDING = 'pending';
+// NO_RESULTS is when the search is completed, but didn't find a result.
+const SEARCH_NO_RESULTS = 'no_results';
+
 class DevicePicker extends Component {
   state = {
     searchValue: '',
-    isSearching: false,
-    isSearchEmpty: false,
+    search: SEARCH_INACTIVE,
     tree: null,
     path: [],
   };
@@ -200,7 +207,7 @@ class DevicePicker extends Component {
   setPath = path => {
     this.setState({
       searchValue: path[path.length - 1] || '',
-      isSearching: false,
+      search: SEARCH_INACTIVE,
       path,
     });
   };
@@ -218,9 +225,15 @@ class DevicePicker extends Component {
    * @param {InputEvent} event
    */
   handleSearchChange = event => {
+    // Don't search if the string is all whitespace.
+    const isSearching = !/^\s*$/.test(event.target.value);
+    // Reset the device picker if the search text gets deleted.
+    const path = isSearching ? this.state.path : [];
+
     this.setState({
       searchValue: event.target.value,
-      isSearching: !/^\s*$/.test(event.target.value),
+      search: isSearching ? SEARCH_PENDING : SEARCH_INACTIVE,
+      path,
     });
     this.debouncedApplySearch();
   };
@@ -236,6 +249,7 @@ class DevicePicker extends Component {
     const item = {
       itemName,
       path,
+      pathText: path.join(' '),
     };
 
     if (!tree) {
@@ -265,23 +279,38 @@ class DevicePicker extends Component {
    * Uses the current searchValue to set the selected path.
    */
   applySearch = () => {
-    if (!this.state.isSearching) {
+    if (this.state.search !== SEARCH_PENDING) {
       return;
     }
 
     // Creating a flat list from the tree is expensive, so save the result.
     this.itemList = this.itemList || this.createItemList(this.state.tree);
-    const fuse = new Fuse(this.itemList, { keys: ['itemName'] });
-    const bestItem = fuse.search(this.state.searchValue)[0];
 
-    if (bestItem) {
+    const fuse = new Fuse(this.itemList, {
+      keys: [{
+        name: 'itemName',
+        weight: 0.3,
+      }, {
+        name: 'pathText',
+        weight: 0.7,
+      }],
+      includeScore: true,
+      threshold: 0.4,
+    });
+    const results = fuse.search(this.state.searchValue);
+
+    if (results.length > 0) {
+      const bestResult = minBy(results, result => {
+        // Prefer more general categories (which have a smaller path length).
+        return result.score * (1 + 0.1 * result.item.path.length);
+      });
       this.setState({
-        path: bestItem.path,
-        isSearchEmpty: false,
+        path: bestResult.item.path,
+        search: SEARCH_INACTIVE,
       });
     } else {
       this.setState({
-        isSearchEmpty: true,
+        search: SEARCH_NO_RESULTS,
       });
     }
   };
@@ -444,9 +473,8 @@ class DevicePicker extends Component {
   };
 
   render() {
-    const { searchValue, tree, path, isSearching, isSearchEmpty } = this.state;
+    const { searchValue, tree, path, search } = this.state;
     const { onSubmit, onCancel } = this.props;
-    const noResults = isSearching && isSearchEmpty;
 
     return (
       <Container>
@@ -456,7 +484,7 @@ class DevicePicker extends Component {
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
-        {noResults ? (
+        {search === SEARCH_NO_RESULTS ? (
           <ListsContainer>
             <NoResults itemName={searchValue} selectItem={onSubmit} />
           </ListsContainer>
@@ -473,7 +501,7 @@ class DevicePicker extends Component {
             <Button onClick={onCancel}>Cancel</Button>
             <Button
               design="primary"
-              disabled={path.length === 0 || noResults}
+              disabled={path.length === 0 || search === SEARCH_NO_RESULTS}
               onClick={() => onSubmit(path[path.length - 1])}
             >
               Choose device
