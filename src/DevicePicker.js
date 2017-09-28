@@ -161,7 +161,7 @@ class DevicePicker extends Component {
 
   componentWillUnmount() {
     // Cancel any trailing calls to this debounced function.
-    this.applySearch.cancel();
+    this.debouncedApplySearch.cancel();
   }
 
   /**
