@@ -231,12 +231,19 @@ class DevicePicker extends Component {
     this.listsContainerRef = element;
   };
 
-  handleKeyDown = event => {
+  handleKeyDown = ({ key }) => {
     if (
-      /^([\w\s]|Backspace)$/.test(event.key) &&
+      /^([\w\s]|Backspace)$/.test(key) &&
       this.searchInputRef !== document.activeElement
     ) {
       this.searchInputRef.focus();
+    } else if (key === 'Escape') {
+      this.props.onCancel();
+    } else if (
+      key === 'Enter' &&
+      !(this.state.path.length === 0 || this.state.search === SEARCH_NO_RESULTS)
+    ) {
+      this.props.onSubmit(this.state.path[this.state.path.length - 1]);
     }
   };
 
