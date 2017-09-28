@@ -143,11 +143,6 @@ class DevicePicker extends Component {
     // TODO: investigate caching
   }
 
-  componentWillUnmount() {
-    // Cancel any trailing calls to this debounced function.
-    this.applySearch.cancel();
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path && this.listsContainerRef) {
       // if path changed,
@@ -162,6 +157,11 @@ class DevicePicker extends Component {
     if (prevState.tree !== this.state.tree) {
       this.itemList = null;
     }
+  }
+
+  componentWillUnmount() {
+    // Cancel any trailing calls to this debounced function.
+    this.applySearch.cancel();
   }
 
   /**
