@@ -243,9 +243,20 @@ class DevicePicker extends Component {
       event.key === 'Enter' &&
       !(this.state.path.length === 0 || this.state.search === SEARCH_NO_RESULTS)
     ) {
+      // TODO: fix duplicated logic
       this.props.onSubmit(this.state.path[this.state.path.length - 1]);
     } else if (event.key === 'ArrowLeft') {
       this.setPath(this.state.path.slice(0, this.state.path.length - 1));
+      event.preventDefault();
+    } else if (event.key === 'ArrowRight') {
+      const currentNode = this.getNode({
+        tree: this.state.tree,
+        path: this.state.path,
+      });
+      if (currentNode && Object.keys(currentNode).length > 0) {
+        // add first item in right list to path
+        this.setPath([...this.state.path, Object.keys(currentNode)[0]]);
+      }
       event.preventDefault();
     }
   };
