@@ -143,11 +143,6 @@ class DevicePicker extends Component {
     // TODO: investigate caching
   }
 
-  componentWillUnmount() {
-    // Cancel any trailing calls to this debounced function.
-    this.debouncedApplySearch.cancel();
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevState.path !== this.state.path && this.listsContainerRef) {
       // if path changed,
@@ -162,6 +157,11 @@ class DevicePicker extends Component {
     if (prevState.tree !== this.state.tree) {
       this.itemList = null;
     }
+  }
+
+  componentWillUnmount() {
+    // Cancel any trailing calls to this debounced function.
+    this.debouncedApplySearch.cancel();
   }
 
   /**
@@ -300,10 +300,10 @@ class DevicePicker extends Component {
     const results = fuse.search(this.state.searchValue);
 
     if (results.length > 0) {
-      const bestResult = minBy(results, result => {
+      const bestResult = minBy(results, result =>
         // Prefer more general categories (which have a smaller path length).
-        return result.score * (1 + 0.1 * result.item.path.length);
-      });
+        result.score * (1 + (0.1 * result.item.path.length)),
+      );
       this.setState({
         path: bestResult.item.path,
         search: SEARCH_INACTIVE,
