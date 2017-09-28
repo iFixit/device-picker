@@ -136,11 +136,12 @@ class DevicePicker extends Component {
 
   componentDidMount() {
     // get iFixit's category hierarchy
+    // TODO: investigate caching
     this.props.getHierarchy().then(data => {
       this.setState({ tree: data.hierarchy });
     });
 
-    // TODO: investigate caching
+    window.addEventListener('keydown', this.handleKeyDown);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -162,6 +163,8 @@ class DevicePicker extends Component {
   componentWillUnmount() {
     // Cancel any trailing calls to this debounced function.
     this.applySearch.cancel();
+
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   /**
@@ -213,11 +216,28 @@ class DevicePicker extends Component {
   };
 
   /**
+   * Store reference to the search input DOM element.
+   * @param {HTMLElement} element
+   */
+  setSearchInputRef = element => {
+    this.searchInputRef = element;
+  };
+
+  /**
    * Store reference to the lists container DOM element.
    * @param {HTMLElement} element
    */
   setListsContainerRef = element => {
     this.listsContainerRef = element;
+  };
+
+  handleKeyDown = event => {
+    if (
+      /^([\w\s]|Backspace)$/.test(event.key) &&
+      this.searchInputRef !== document.activeElement
+    ) {
+      this.searchInputRef.focus();
+    }
   };
 
   /**
@@ -287,22 +307,27 @@ class DevicePicker extends Component {
     this.itemList = this.itemList || this.createItemList(this.state.tree);
 
     const fuse = new Fuse(this.itemList, {
-      keys: [{
-        name: 'itemName',
-        weight: 0.3,
-      }, {
-        name: 'pathText',
-        weight: 0.7,
-      }],
+      keys: [
+        {
+          name: 'itemName',
+          weight: 0.3,
+        },
+        {
+          name: 'pathText',
+          weight: 0.7,
+        },
+      ],
       includeScore: true,
       threshold: 0.4,
     });
     const results = fuse.search(this.state.searchValue);
 
     if (results.length > 0) {
-      const bestResult = minBy(results, result =>
-        // Prefer more general categories (which have a smaller path length).
-        result.score * (1 + (0.1 * result.item.path.length)),
+      const bestResult = minBy(
+        results,
+        result =>
+          // Prefer more general categories (which have a smaller path length).
+          result.score * (1 + 0.1 * result.item.path.length),
       );
       this.setState({
         path: bestResult.item.path,
@@ -479,6 +504,7 @@ class DevicePicker extends Component {
     return (
       <Container>
         <SearchInput
+          innerRef={this.setSearchInputRef}
           placeholder="Search"
           value={searchValue}
           onChange={this.handleSearchChange}
