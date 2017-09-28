@@ -300,10 +300,10 @@ class DevicePicker extends Component {
     const results = fuse.search(this.state.searchValue);
 
     if (results.length > 0) {
-      const bestResult = minBy(results, result => {
+      const bestResult = minBy(results, result =>
         // Prefer more general categories (which have a smaller path length).
-        return result.score * (1 + 0.1 * result.item.path.length);
-      });
+        result.score * (1 + (0.1 * result.item.path.length)),
+      );
       this.setState({
         path: bestResult.item.path,
         search: SEARCH_INACTIVE,
