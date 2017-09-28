@@ -231,19 +231,22 @@ class DevicePicker extends Component {
     this.listsContainerRef = element;
   };
 
-  handleKeyDown = ({ key }) => {
+  handleKeyDown = event => {
     if (
-      /^([\w\s]|Backspace)$/.test(key) &&
+      /^([\w\s]|Backspace)$/.test(event.key) &&
       this.searchInputRef !== document.activeElement
     ) {
       this.searchInputRef.focus();
-    } else if (key === 'Escape') {
+    } else if (event.key === 'Escape') {
       this.props.onCancel();
     } else if (
-      key === 'Enter' &&
+      event.key === 'Enter' &&
       !(this.state.path.length === 0 || this.state.search === SEARCH_NO_RESULTS)
     ) {
       this.props.onSubmit(this.state.path[this.state.path.length - 1]);
+    } else if (event.key === 'ArrowLeft') {
+      this.setPath(this.state.path.slice(0, this.state.path.length - 1));
+      event.preventDefault();
     }
   };
 
@@ -358,31 +361,26 @@ class DevicePicker extends Component {
    * @param {KeyboardEvent}
    */
   handleListsContainerKeyDown = event => {
-    const { tree, path } = this.state;
-
-    if (event.key === 'ArrowLeft') {
-      if (path.length > 1) {
-        // focus left list
-        this.listsContainerRef.children[path.length - 2].focus();
-        // remove last item from path
-        this.setPath(path.slice(0, path.length - 1));
-      }
-
-      event.preventDefault();
-    }
-
-    if (event.key === 'ArrowRight') {
-      const currentNode = this.getNode({ tree, path });
-
-      if (currentNode && Object.keys(currentNode).length > 0) {
-        // focus right list
-        this.listsContainerRef.children[path.length].focus();
-        // add first item in right list to path
-        this.setPath([...path, Object.keys(currentNode)[0]]);
-      }
-
-      event.preventDefault();
-    }
+    // const { tree, path } = this.state;
+    // if (event.key === 'ArrowLeft') {
+    //   if (path.length > 1) {
+    //     // focus left list
+    //     this.listsContainerRef.children[path.length - 2].focus();
+    //     // remove last item from path
+    //     this.setPath(path.slice(0, path.length - 1));
+    //   }
+    //   event.preventDefault();
+    // }
+    // if (event.key === 'ArrowRight') {
+    //   const currentNode = this.getNode({ tree, path });
+    //   if (currentNode && Object.keys(currentNode).length > 0) {
+    //     // focus right list
+    //     this.listsContainerRef.children[path.length].focus();
+    //     // add first item in right list to path
+    //     this.setPath([...path, Object.keys(currentNode)[0]]);
+    //   }
+    //   event.preventDefault();
+    // }
   };
 
   /**
