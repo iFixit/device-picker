@@ -258,6 +258,52 @@ class DevicePicker extends Component {
         this.setPath([...this.state.path, Object.keys(currentNode)[0]]);
       }
       event.preventDefault();
+    } else if (event.key === 'ArrowDown') {
+      const currentParent = this.getNode({
+        tree: this.state.tree,
+        path: this.state.path.slice(0, this.state.path.length - 1),
+      });
+
+      // TODO: write getHighlightedIndex function
+      const highlightedIndex = Object.keys(currentParent).findIndex(
+        key => key === this.state.path[this.state.path.length - 1],
+      );
+
+      const newItem = this.getRelativeItem({
+        list: Object.keys(currentParent),
+        index: highlightedIndex,
+        distance: 1,
+      });
+
+      this.setPath([
+        ...this.state.path.slice(0, this.state.path.length - 1),
+        newItem,
+      ]);
+
+      event.preventDefault();
+    } else if (event.key === 'ArrowUp') {
+      const currentParent = this.getNode({
+        tree: this.state.tree,
+        path: this.state.path.slice(0, this.state.path.length - 1),
+      });
+
+      // TODO: write getHighlightedIndex function
+      const highlightedIndex = Object.keys(currentParent).findIndex(
+        key => key === this.state.path[this.state.path.length - 1],
+      );
+
+      const newItem = this.getRelativeItem({
+        list: Object.keys(currentParent),
+        index: highlightedIndex,
+        distance: -1,
+      });
+
+      this.setPath([
+        ...this.state.path.slice(0, this.state.path.length - 1),
+        newItem,
+      ]);
+
+      event.preventDefault();
     }
   };
 
@@ -444,17 +490,16 @@ class DevicePicker extends Component {
      * @param {KeyboardEvent} event
      */
     const handleListKeyDown = event => {
-      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-        // change selected item to previous or next item
-        const newItem = this.getRelativeItem({
-          list: Object.keys(tree),
-          index: highlightedIndex,
-          distance: event.key === 'ArrowDown' ? 1 : -1,
-        });
-
-        this.setPath([...trailingPath, newItem]);
-        event.preventDefault();
-      }
+      //   if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      //     // change selected item to previous or next item
+      //     const newItem = this.getRelativeItem({
+      //       list: Object.keys(tree),
+      //       index: highlightedIndex,
+      //       distance: event.key === 'ArrowDown' ? 1 : -1,
+      //     });
+      //     this.setPath([...trailingPath, newItem]);
+      //     event.preventDefault();
+      //   }
     };
 
     /**
