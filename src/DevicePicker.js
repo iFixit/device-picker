@@ -231,80 +231,109 @@ class DevicePicker extends Component {
     this.listsContainerRef = element;
   };
 
+  /**
+   * Determine whether or not a submit action should be allowed.
+   * @returns {boolean}
+   */
+  allowSubmit = () =>
+    this.state.path.length !== 0 && this.state.search !== SEARCH_NO_RESULTS;
+
+  /**
+   * Handle all KeyDown events.
+   * Calls the appropriate event handler based on which key was pressed.
+   * @param {KeyboardEvent} event
+   */
   handleKeyDown = event => {
-    if (
-      /^([\w\s]|Backspace)$/.test(event.key) &&
-      this.searchInputRef !== document.activeElement
-    ) {
-      this.searchInputRef.focus();
-    } else if (event.key === 'Escape') {
-      this.props.onCancel();
-    } else if (
-      event.key === 'Enter' &&
-      !(this.state.path.length === 0 || this.state.search === SEARCH_NO_RESULTS)
-    ) {
-      // TODO: fix duplicated logic
-      this.props.onSubmit(this.state.path[this.state.path.length - 1]);
-    } else if (event.key === 'ArrowLeft') {
-      this.setPath(this.state.path.slice(0, this.state.path.length - 1));
-      event.preventDefault();
-    } else if (event.key === 'ArrowRight') {
-      const currentNode = this.getNode({
-        tree: this.state.tree,
-        path: this.state.path,
-      });
-      if (currentNode && Object.keys(currentNode).length > 0) {
-        // add first item in right list to path
-        this.setPath([...this.state.path, Object.keys(currentNode)[0]]);
-      }
-      event.preventDefault();
-    } else if (event.key === 'ArrowDown') {
-      const currentParent = this.getNode({
-        tree: this.state.tree,
-        path: this.state.path.slice(0, this.state.path.length - 1),
-      });
+    switch (event.key) {
+      case 'Enter':
+        this.handleEnter();
+        break;
 
-      // TODO: write getHighlightedIndex function
-      const highlightedIndex = Object.keys(currentParent).findIndex(
-        key => key === this.state.path[this.state.path.length - 1],
-      );
+      case 'Escape':
+        this.handleEscape();
+        break;
 
-      const newItem = this.getRelativeItem({
-        list: Object.keys(currentParent),
-        index: highlightedIndex,
-        distance: 1,
-      });
+      case 'ArrowLeft':
+        this.handleArrowLeft(event);
+        break;
 
-      this.setPath([
-        ...this.state.path.slice(0, this.state.path.length - 1),
-        newItem,
-      ]);
+      case 'ArrowRight':
+        this.handleArrowRight(event);
+        break;
 
-      event.preventDefault();
-    } else if (event.key === 'ArrowUp') {
-      const currentParent = this.getNode({
-        tree: this.state.tree,
-        path: this.state.path.slice(0, this.state.path.length - 1),
-      });
+      case 'ArrowUp':
+        this.handleArrowUpDown(event);
+        break;
 
-      // TODO: write getHighlightedIndex function
-      const highlightedIndex = Object.keys(currentParent).findIndex(
-        key => key === this.state.path[this.state.path.length - 1],
-      );
+      case 'ArrowDown':
+        this.handleArrowUpDown(event);
+        break;
 
-      const newItem = this.getRelativeItem({
-        list: Object.keys(currentParent),
-        index: highlightedIndex,
-        distance: -1,
-      });
-
-      this.setPath([
-        ...this.state.path.slice(0, this.state.path.length - 1),
-        newItem,
-      ]);
-
-      event.preventDefault();
+      default:
+        if (
+          /^([\w\s]|Backspace)$/.test(event.key) &&
+          this.searchInputRef !== document.activeElement
+        ) {
+          this.searchInputRef.focus();
+        }
     }
+  };
+
+  handleEnter = () => {
+    if (this.allowSubmit()) {
+      const { path } = this.state;
+      this.props.onSubmit(path[path.length - 1]);
+    }
+  };
+
+  handleEscape = () => {
+    this.props.onCancel();
+  };
+
+  handleArrowLeft = event => {
+    const { path } = this.state;
+
+    // go back to the previously highlighted item
+    this.setPath(path.slice(0, path.length - 1));
+
+    event.preventDefault();
+  };
+
+  handleArrowRight = event => {
+    const { tree, path } = this.state;
+
+    const currentNode = this.getNode({ tree, path });
+
+    if (currentNode && Object.keys(currentNode).length > 0) {
+      // add first item in right list to path
+      this.setPath([...path, Object.keys(currentNode)[0]]);
+    }
+
+    event.preventDefault();
+  };
+
+  handleArrowUpDown = event => {
+    const { tree, path } = this.state;
+
+    const currentParentNode = this.getNode({
+      tree,
+      path: path.slice(0, path.length - 1),
+    });
+
+    const highlightedIndex = Object.keys(currentParentNode).findIndex(
+      key => key === path[path.length - 1],
+    );
+
+    const newItem = this.getRelativeItem({
+      list: Object.keys(currentParentNode),
+      index: highlightedIndex,
+      distance: event.key === 'ArrowDown' ? 1 : -1,
+    });
+
+    // highlight the next/previous item in the current list
+    this.setPath([...path.slice(0, path.length - 1), newItem]);
+
+    event.preventDefault();
   };
 
   /**
@@ -414,33 +443,6 @@ class DevicePicker extends Component {
   debouncedApplySearch = debounce(this.applySearch, 500);
 
   /**
-   * Handle lists container key down event.
-   * @param {KeyboardEvent}
-   */
-  handleListsContainerKeyDown = event => {
-    // const { tree, path } = this.state;
-    // if (event.key === 'ArrowLeft') {
-    //   if (path.length > 1) {
-    //     // focus left list
-    //     this.listsContainerRef.children[path.length - 2].focus();
-    //     // remove last item from path
-    //     this.setPath(path.slice(0, path.length - 1));
-    //   }
-    //   event.preventDefault();
-    // }
-    // if (event.key === 'ArrowRight') {
-    //   const currentNode = this.getNode({ tree, path });
-    //   if (currentNode && Object.keys(currentNode).length > 0) {
-    //     // focus right list
-    //     this.listsContainerRef.children[path.length].focus();
-    //     // add first item in right list to path
-    //     this.setPath([...path, Object.keys(currentNode)[0]]);
-    //   }
-    //   event.preventDefault();
-    // }
-  };
-
-  /**
    * Remove words in parent title from category title
    * because category titles are sometimes long and redundant.
    * @param {Object} params
@@ -486,23 +488,6 @@ class DevicePicker extends Component {
     };
 
     /**
-     * Handle list key down event.
-     * @param {KeyboardEvent} event
-     */
-    const handleListKeyDown = event => {
-      //   if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      //     // change selected item to previous or next item
-      //     const newItem = this.getRelativeItem({
-      //       list: Object.keys(tree),
-      //       index: highlightedIndex,
-      //       distance: event.key === 'ArrowDown' ? 1 : -1,
-      //     });
-      //     this.setPath([...trailingPath, newItem]);
-      //     event.preventDefault();
-      //   }
-    };
-
-    /**
      * Handle item click event.
      * @param {MouseEvent} event
      * @param {string} item
@@ -519,7 +504,6 @@ class DevicePicker extends Component {
         data={Object.keys(tree)}
         highlightedIndex={highlightedIndex}
         onClick={handleListClick}
-        onKeyDown={handleListKeyDown}
         renderItem={({ item, isHighlighted }) => (
           <Item
             key={item}
@@ -571,24 +555,19 @@ class DevicePicker extends Component {
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
-        {search === SEARCH_NO_RESULTS ? (
-          <ListsContainer>
+        <ListsContainer innerRef={this.setListsContainerRef}>
+          {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit} />
-          </ListsContainer>
-        ) : (
-          <ListsContainer
-            innerRef={this.setListsContainerRef}
-            onKeyDown={this.handleListsContainerKeyDown}
-          >
-            {tree && this.renderLists({ tree, leadingPath: path })}
-          </ListsContainer>
-        )}
+          ) : (
+            tree && this.renderLists({ tree, leadingPath: path })
+          )}
+        </ListsContainer>
         <Toolbar>
           <ToolbarRight>
             <Button onClick={onCancel}>Cancel</Button>
             <Button
               design="primary"
-              disabled={path.length === 0 || search === SEARCH_NO_RESULTS}
+              disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
               Choose device
