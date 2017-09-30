@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
-import { debounce, minBy } from 'lodash';
+import { debounce, minBy, inRange } from 'lodash';
 
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
@@ -244,34 +244,50 @@ class DevicePicker extends Component {
    * @param {KeyboardEvent} event
    */
   handleKeyDown = event => {
-    switch (event.key) {
-      case 'Enter':
+    switch (event.keyCode) {
+      // Enter
+      case 13:
         this.handleEnter();
         break;
 
-      case 'Escape':
+      // Escape
+      case 27:
         this.handleEscape();
         break;
 
-      case 'ArrowLeft':
+      // ArrowLeft
+      case 37:
         this.handleArrowLeft(event);
         break;
 
-      case 'ArrowRight':
+      // ArrowRight
+      case 39:
         this.handleArrowRight(event);
         break;
 
-      case 'ArrowUp':
+      // ArrowUp
+      case 38:
         this.handleArrowUpDown(event);
         break;
 
-      case 'ArrowDown':
+      // ArrowDown
+      case 40:
         this.handleArrowUpDown(event);
         break;
 
       default:
         if (
-          /^([\w\s]|Backspace)$/.test(event.key) &&
+          (
+            // if key is a-z, or ...
+            inRange(event.keyCode, 65, 91) ||
+            // if key is A-Z, or ...
+            inRange(event.keyCode, 48, 58) ||
+            // if key is backspace, or ...
+            event.keyCode === 8 ||
+            // if key is space
+            event.keyCode === 32
+          ) &&
+          // and the search input is not focused
           this.searchInputRef !== document.activeElement
         ) {
           this.searchInputRef.focus();
@@ -327,7 +343,7 @@ class DevicePicker extends Component {
     const newItem = this.getRelativeItem({
       list: Object.keys(currentParentNode),
       index: highlightedIndex,
-      distance: event.key === 'ArrowDown' ? 1 : -1,
+      distance: event.keyCode === 40 ? 1 : -1, // 40 is the keyCode for ArrowDown
     });
 
     // highlight the next/previous item in the current list
