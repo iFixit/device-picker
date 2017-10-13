@@ -247,7 +247,7 @@ class DevicePicker extends Component {
     switch (event.keyCode) {
       // Enter
       case 13:
-        this.handleEnter();
+        this.handleEnter(event);
         break;
 
       // Escape
@@ -295,11 +295,13 @@ class DevicePicker extends Component {
     }
   };
 
-  handleEnter = () => {
+  handleEnter = event => {
     if (this.allowSubmit()) {
       const { path } = this.state;
       this.props.onSubmit(path[path.length - 1]);
     }
+
+    event.preventDefault();
   };
 
   handleEscape = () => {
