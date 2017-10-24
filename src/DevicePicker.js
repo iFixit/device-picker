@@ -19,11 +19,11 @@ const propTypes = {
   getDevice: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  initialPath: PropTypes.arrayOf(PropTypes.string),
+  initialDevice: PropTypes.string,
 };
 
 const defaultProps = {
-  initialPath: [],
+  initialDevice: '',
 };
 
 const Container = glamorous.div({
@@ -133,13 +133,10 @@ const SEARCH_NO_RESULTS = 'no_results';
 
 class DevicePicker extends Component {
   state = {
-    searchValue:
-      this.props.initialPath.length > 0
-        ? this.props.initialPath[this.props.initialPath.length - 1]
-        : '',
-    search: SEARCH_INACTIVE,
+    searchValue: this.props.initialDevice,
+    search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
     tree: null,
-    path: this.props.initialPath,
+    path: [],
   };
 
   componentDidMount() {
@@ -148,6 +145,10 @@ class DevicePicker extends Component {
     this.props.getHierarchy().then(data => {
       this.setState({ tree: data.hierarchy });
     });
+
+    if (this.state.searchValue) {
+      this.debouncedApplySearch();
+    }
 
     window.addEventListener('keydown', this.handleKeyDown);
   }

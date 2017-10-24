@@ -47,7 +47,7 @@ class DevicePickerModal extends Component {
         }}
       >
         <DevicePicker
-          initialPath={['Mac', 'Mac Desktop']}
+          initialDevice="Electrolux PLD2850RDC2"
           getHierarchy={this.props.getHierarchy}
           getDevice={this.props.getDevice}
           onSubmit={this.props.onSubmit}
