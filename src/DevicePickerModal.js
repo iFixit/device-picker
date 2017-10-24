@@ -10,12 +10,14 @@ class DevicePickerModal extends Component {
   static propTypes = {
     getHierarchy: PropTypes.func.isRequired,
     getDevice: PropTypes.func.isRequired,
+    initialDevice: PropTypes.string,
     isOpen: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
   };
 
   static defaultProps = {
+    initialDevice: '',
     isOpen: false,
     onSubmit: () => {},
     onCancel: () => {},
@@ -47,7 +49,7 @@ class DevicePickerModal extends Component {
         }}
       >
         <DevicePicker
-          initialDevice="Electrolux PLD2850RDC2"
+          initialDevice={this.props.initialDevice}
           getHierarchy={this.props.getHierarchy}
           getDevice={this.props.getDevice}
           onSubmit={this.props.onSubmit}
