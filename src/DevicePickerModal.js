@@ -47,6 +47,7 @@ class DevicePickerModal extends Component {
         }}
       >
         <DevicePicker
+          initialPath={['Mac', 'Mac Desktop']}
           getHierarchy={this.props.getHierarchy}
           getDevice={this.props.getDevice}
           onSubmit={this.props.onSubmit}

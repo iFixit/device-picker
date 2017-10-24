@@ -19,6 +19,11 @@ const propTypes = {
   getDevice: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  initialPath: PropTypes.arrayOf(PropTypes.string),
+};
+
+const defaultProps = {
+  initialPath: [],
 };
 
 const Container = glamorous.div({
@@ -128,10 +133,13 @@ const SEARCH_NO_RESULTS = 'no_results';
 
 class DevicePicker extends Component {
   state = {
-    searchValue: '',
+    searchValue:
+      this.props.initialPath.length > 0
+        ? this.props.initialPath[this.props.initialPath.length - 1]
+        : '',
     search: SEARCH_INACTIVE,
     tree: null,
-    path: [],
+    path: this.props.initialPath,
   };
 
   componentDidMount() {
@@ -598,5 +606,6 @@ class DevicePicker extends Component {
 }
 
 DevicePicker.propTypes = propTypes;
+DevicePicker.defaultProps = defaultProps;
 
 export default DevicePicker;
