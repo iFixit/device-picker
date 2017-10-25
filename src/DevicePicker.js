@@ -139,6 +139,20 @@ class DevicePicker extends Component {
     path: [],
   };
 
+  handleClickOutside = (event) => {
+    if (!this.mouseDownInDevicePicker) {
+      this.handleEscape();
+    }
+  }
+
+  mouseDownHandler = () => {
+    this.mouseDownInDevicePicker = true;
+  }
+
+  mouseUpHandler = () => {
+    this.mouseDownInDevicePicker = false;
+  }
+
   componentDidMount() {
     // get iFixit's category hierarchy
     // TODO: investigate caching
@@ -151,6 +165,7 @@ class DevicePicker extends Component {
     }
 
     window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('mousedown', this.handleClickOutside, false);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -174,6 +189,7 @@ class DevicePicker extends Component {
     this.debouncedApplySearch.cancel();
 
     window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('mousedown', this.handleClickOutside);
   }
 
   /**
@@ -574,7 +590,10 @@ class DevicePicker extends Component {
     const { onSubmit, onCancel } = this.props;
 
     return (
-      <Container>
+      <Container
+        onMouseDown={this.mouseDownHandler}
+        onMouseUp={this.mouseUpHandler}
+      >
         <SearchInput
           innerRef={this.setSearchInputRef}
           placeholder="Search"
