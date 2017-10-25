@@ -138,19 +138,12 @@ class DevicePicker extends Component {
     tree: null,
     path: [],
   };
+  mouseDownInDevicePicker = false;
 
-  handleClickOutside = (event) => {
+  handleClickOutside = event => {
     if (!this.mouseDownInDevicePicker) {
       this.handleEscape();
     }
-  }
-
-  mouseDownHandler = () => {
-    this.mouseDownInDevicePicker = true;
-  }
-
-  mouseUpHandler = () => {
-    this.mouseDownInDevicePicker = false;
   }
 
   componentDidMount() {
@@ -591,8 +584,8 @@ class DevicePicker extends Component {
 
     return (
       <Container
-        onMouseDown={this.mouseDownHandler}
-        onMouseUp={this.mouseUpHandler}
+        onMouseDown={ () => this.mouseDownInDevicePicker = true }
+        onMouseUp={ () => this.mouseDownInDevicePicker = false }
       >
         <SearchInput
           innerRef={this.setSearchInputRef}
