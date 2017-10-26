@@ -142,13 +142,15 @@ class DevicePicker extends Component {
   componentDidMount() {
     // get iFixit's category hierarchy
     // TODO: investigate caching
-    this.props.getHierarchy().then(data => {
-      this.setState({ tree: data.hierarchy });
-    });
-
-    if (this.state.searchValue) {
-      this.debouncedApplySearch();
-    }
+    this.props.getHierarchy()
+      .then(data => {
+        this.setState({ tree: data.hierarchy });
+      })
+      .then(() => {
+        if (this.state.searchValue) {
+          this.debouncedApplySearch();
+        }
+      });
 
     window.addEventListener('keydown', this.handleKeyDown);
   }
