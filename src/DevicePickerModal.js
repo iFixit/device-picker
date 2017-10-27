@@ -28,6 +28,7 @@ class DevicePickerModal extends Component {
       <Modal
         isOpen={this.props.isOpen}
         contentLabel="Device Picker Modal"
+        onRequestClose={this.props.onCancel}
         style={{
           overlay: {
             display: 'flex',
