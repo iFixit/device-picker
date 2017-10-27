@@ -14,7 +14,7 @@ class PreviewContainer extends Component {
     // get device data
     this.props.getDevice()
       .then(data => this.setState({ data }))
-      .catch(reason => console.error(reason));
+      .catch(reason => { throw reason; });
   }
 
   render() {
