@@ -144,7 +144,6 @@ class DevicePicker extends Component {
     // TODO: investigate caching
     this.props.getHierarchy()
       .then(data => {
-        data = "foo";
         if (typeof data.hierarchy === 'undefined') {
           throw new Error('API response has no `hierarchy` property.');
         }
