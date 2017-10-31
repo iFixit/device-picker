@@ -461,7 +461,7 @@ class DevicePicker extends Component {
       includeScore: true,
       threshold: 0.4,
     });
-    const results = fuse.search(this.state.searchValue);
+    const results = fuse.search(this.state.searchValue.trim());
 
     if (results.length > 0) {
       const bestResult = minBy(
@@ -603,7 +603,7 @@ class DevicePicker extends Component {
 
         {searchValue &&
           path.length > 0 &&
-          search !== SEARCH_NO_RESULTS &&
+          search === SEARCH_INACTIVE &&
           searchValue.trim().toLowerCase() !==
             path[path.length - 1].toLowerCase() && (
             <BannerContainer>
