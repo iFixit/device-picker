@@ -7,6 +7,7 @@ import { debounce, minBy, inRange } from 'lodash';
 
 import { Button, Icon, constants } from 'toolbox';
 import List from './List';
+import Banner from './Banner';
 import PreviewContainer from './PreviewContainer';
 import NoResults from './NoResults';
 
@@ -45,6 +46,7 @@ const SearchInput = glamorous('input', {
   backgroundColor: 'transparent',
   border: 'none',
   outline: 0,
+  borderBottom: `1px solid ${color.grayAlpha[3]}`,
 
   '&::placeholder': {
     color: color.grayAlpha[5],
@@ -58,8 +60,6 @@ const SearchInput = glamorous('input', {
 const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
   flex: '1 1 auto',
   display: 'flex',
-  borderTop: `1px solid ${color.grayAlpha[3]}`,
-  borderBottom: `1px solid ${color.grayAlpha[3]}`,
   overflowX: 'auto',
   WebkitOverflowScrolling: 'touch',
 });
@@ -100,6 +100,15 @@ const ItemText = glamorous.span({
   overflow: 'hidden',
 });
 
+const BannerContainer = glamorous.div({
+  flex: '0 0 auto',
+  order: 1,
+
+  [breakpoint.sm]: {
+    order: 0,
+  },
+});
+
 const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
   flex: '0 0 auto',
   order: -1,
@@ -111,6 +120,7 @@ const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
     order: 1,
     padding: spacing[3],
     backgroundColor: 'transparent',
+    borderTop: `1px solid ${color.grayAlpha[3]}`,
   },
 });
 
@@ -142,7 +152,8 @@ class DevicePicker extends Component {
   componentDidMount() {
     // get iFixit's category hierarchy
     // TODO: investigate caching
-    this.props.getHierarchy()
+    this.props
+      .getHierarchy()
       .then(data => {
         if (typeof data.hierarchy === 'undefined') {
           throw new Error('API response has no `hierarchy` property.');
@@ -155,7 +166,9 @@ class DevicePicker extends Component {
           this.debouncedApplySearch();
         }
       })
-      .catch(reason => { throw reason; });
+      .catch(reason => {
+        throw reason;
+      });
 
     window.addEventListener('keydown', this.handleKeyDown);
   }
@@ -293,16 +306,14 @@ class DevicePicker extends Component {
 
       default:
         if (
-          (
-            // if key is a-z, or ...
-            inRange(event.keyCode, 65, 91) ||
+          // if key is a-z, or ...
+          (inRange(event.keyCode, 65, 91) ||
             // if key is A-Z, or ...
             inRange(event.keyCode, 48, 58) ||
             // if key is backspace, or ...
             event.keyCode === 8 ||
             // if key is space
-            event.keyCode === 32
-          ) &&
+            event.keyCode === 32) &&
           // and the search input is not focused
           this.searchInputRef !== document.activeElement
         ) {
@@ -589,6 +600,22 @@ class DevicePicker extends Component {
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
+
+        {searchValue &&
+          path.length > 0 &&
+          search !== SEARCH_NO_RESULTS &&
+          searchValue.trim().toLowerCase() !==
+            path[path.length - 1].toLowerCase() && (
+            <BannerContainer>
+              <Banner
+                callToAction={`Choose "${searchValue}"`}
+                onClick={() => onSubmit(searchValue)}
+              >
+                Don&apos;t see what you&apos;re looking for?
+              </Banner>
+            </BannerContainer>
+          )}
+
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit} />
@@ -596,6 +623,7 @@ class DevicePicker extends Component {
             tree && this.renderLists({ tree, leadingPath: path })
           )}
         </ListsContainer>
+
         <Toolbar>
           <ToolbarRight>
             <Button onClick={onCancel}>Cancel</Button>

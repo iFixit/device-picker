@@ -29,8 +29,11 @@ class NoResults extends Component {
     return (
       <Container {...props}>
         <p>No matches found. Did you spell it correctly?</p>
-        <Button style={{maxWidth: '100%'}} onClick={() => selectItem(itemName)}>
-          {`Choose ${itemName}`}
+        <Button
+          style={{ maxWidth: '100%' }}
+          onClick={() => selectItem(itemName)}
+        >
+          {`Choose "${itemName}"`}
         </Button>
       </Container>
     );
