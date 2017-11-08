@@ -47,6 +47,7 @@ const SearchInput = glamorous('input', {
   border: 'none',
   outline: 0,
   borderBottom: `1px solid ${color.grayAlpha[3]}`,
+  marginBottom: 0,
 
   '&::placeholder': {
     color: color.grayAlpha[5],
