@@ -39,6 +39,7 @@ const SearchInput = glamorous('input', {
 })({
   flex: '0 0 auto',
   width: '100%',
+  marginBottom: 0,
   padding: spacing[3],
   fontFamily: 'inherit',
   fontSize: fontSize[3],
