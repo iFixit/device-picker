@@ -1,6 +1,6 @@
 {
    "name": "device-picker",
-   "version": "0.1.1",
+   "version": "0.1.2",
    "main": "dist/DevicePickerModal.js",
    "private": true,
    "dependencies": {
@@ -14,7 +14,7 @@
       "react-modal": "^2.3.2",
       "react-scripts": "1.0.12",
       "smoothscroll-polyfill": "^0.3.6",
-      "toolbox": "github:ifixit/toolbox#6fcaab0c2228de93db0d3104fdbefd56d9e0df1b"
+      "toolbox": "github:ifixit/toolbox#semver:^0.0.1"
    },
    "scripts": {
       "start": "react-scripts start",
