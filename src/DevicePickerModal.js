@@ -31,6 +31,7 @@ class DevicePickerModal extends Component {
         onRequestClose={this.props.onCancel}
         style={{
           overlay: {
+            zIndex: 1,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
