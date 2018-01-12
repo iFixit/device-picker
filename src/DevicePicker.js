@@ -15,6 +15,8 @@ smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
+// _js is used as a translation function
+// If no translation function is defined, _js becomes a noop
 if(typeof _js === 'undefined') {
   _js = (s) => {return s};
 }
@@ -613,10 +615,10 @@ class DevicePicker extends Component {
             path[path.length - 1].toLowerCase() && (
             <BannerContainer>
               <Banner
-                callToAction={`Choose "${searchValue}"`}
+                callToAction={_js('Choose %1', searchValue)}
                 onClick={() => onSubmit(searchValue)}
               >
-                Don&apos;t see what you&apos;re looking for?
+                _js("Don't see what you're looking for?")
               </Banner>
             </BannerContainer>
           )}
