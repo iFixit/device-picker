@@ -15,6 +15,12 @@ smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
+// _js is used as a translation function
+// If no translation function is defined, _js becomes a noop
+if (typeof _js === 'undefined') {
+  var _js = s => s;
+}
+
 const propTypes = {
   getHierarchy: PropTypes.func.isRequired,
   getDevice: PropTypes.func.isRequired,
@@ -544,12 +550,6 @@ class DevicePicker extends Component {
       event.stopPropagation();
     };
 
-    // _js is used as a translation function
-    // If no translation function is defined, _js becomes a noop
-    if (typeof _js === 'undefined') {
-      var _js = s => s;
-    }
-
     const list = tree ? (
       <List
         key={title}
@@ -597,12 +597,6 @@ class DevicePicker extends Component {
   render() {
     const { searchValue, tree, path, search } = this.state;
     const { onSubmit, onCancel } = this.props;
-
-    // _js is used as a translation function
-    // If no translation function is defined, _js becomes a noop
-    if (typeof _js === 'undefined') {
-      var _js = s => s;
-    }
 
     return (
       <Container>

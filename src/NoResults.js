@@ -26,12 +26,6 @@ class NoResults extends Component {
   render() {
     const { itemName, selectItem, ...props } = this.props;
 
-    // _js is used as a translation function
-    // If no translation function is defined, _js becomes a noop
-    if (typeof _js === 'undefined') {
-      var _js = s => s;
-    }
-
     return (
       <Container {...props}>
         <p>{_js('No matches found. Did you spell it correctly?')}</p>

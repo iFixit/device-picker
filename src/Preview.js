@@ -75,12 +75,6 @@ function truncate(string, length) {
 }
 
 function Preview({ image, title, description }) {
-  // _js is used as a translation function
-  // If no translation function is defined, _js becomes a noop
-  if (typeof _js === 'undefined') {
-    var _js = s => s;
-  }
-
   return (
     <Container>
       <Image url={image ? image.standard : ''} />
