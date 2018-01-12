@@ -45,6 +45,7 @@ const SearchInput = glamorous('input', {
 })({
   flex: '0 0 auto',
   width: '100%',
+  marginBottom: 0,
   padding: spacing[3],
   fontFamily: 'inherit',
   fontSize: fontSize[3],
@@ -53,7 +54,6 @@ const SearchInput = glamorous('input', {
   border: 'none',
   outline: 0,
   borderBottom: `1px solid ${color.grayAlpha[3]}`,
-  marginBottom: 0,
 
   '&::placeholder': {
     color: color.grayAlpha[5],

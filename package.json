@@ -1,7 +1,7 @@
 {
    "name": "device-picker",
-   "version": "0.1.0",
-   "main": "src/DevicePickerModal.js",
+   "version": "0.1.1",
+   "main": "dist/DevicePickerModal.js",
    "private": true,
    "dependencies": {
       "fuse.js": "^3.1.0",
@@ -21,10 +21,16 @@
       "build": "react-scripts build",
       "test": "react-scripts test --env=jsdom",
       "lint": "eslint .",
-      "eject": "react-scripts eject"
+      "eject": "react-scripts eject",
+      "prepare": "babel src -d dist"
    },
    "devDependencies": {
+      "babel-cli": "^6.26.0",
       "babel-eslint": "^7.2.3",
+      "babel-plugin-transform-object-rest-spread": "^6.26.0",
+      "babel-preset-env": "^1.6.1",
+      "babel-preset-react": "^6.24.1",
+      "babel-preset-stage-2": "^6.24.1",
       "eslint": "^4.5.0",
       "eslint-config-airbnb": "^15.1.0",
       "eslint-plugin-import": "^2.7.0",
