@@ -15,6 +15,10 @@ smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
+if(typeof _js === 'undefined') {
+  _js = (s) => {return s};
+}
+
 const propTypes = {
   getHierarchy: PropTypes.func.isRequired,
   getDevice: PropTypes.func.isRequired,
@@ -558,10 +562,10 @@ class DevicePicker extends Component {
             onClick={event => handleItemClick(event, item)}
           >
             <ItemText>
-              {this.removeParentFromTitle({
+              {_js(this.removeParentFromTitle({
                 title: item,
                 parentTitle: title,
-              })}
+              }))}
             </ItemText>
             {tree[item] && <Icon name="chevron-right" size={20} />}
           </Item>
@@ -596,7 +600,7 @@ class DevicePicker extends Component {
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder="Search"
+          placeholder={_js("Search")}
           value={searchValue}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
@@ -627,13 +631,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>Cancel</Button>
+            <Button onClick={onCancel}>{_js("Cancel")}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              Choose device
+              {_js("Choose device")}
             </Button>
           </ToolbarRight>
         </Toolbar>
