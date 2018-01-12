@@ -17,8 +17,8 @@ const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 // _js is used as a translation function
 // If no translation function is defined, _js becomes a noop
-if(typeof _js === 'undefined') {
-  _js = (s) => {return s};
+if (typeof _js === 'undefined') {
+  var _js = s => s;
 }
 
 const propTypes = {
@@ -602,7 +602,7 @@ class DevicePicker extends Component {
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder={_js("Search")}
+          placeholder={_js('Search')}
           value={_js(searchValue)}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
@@ -618,7 +618,7 @@ class DevicePicker extends Component {
                 callToAction={_js('Choose %1', searchValue)}
                 onClick={() => onSubmit(searchValue)}
               >
-                _js("Don't see what you're looking for?")
+                _js('Don\'t see what you\'re looking for?')
               </Banner>
             </BannerContainer>
           )}
@@ -633,13 +633,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>{_js("Cancel")}</Button>
+            <Button onClick={onCancel}>{_js('Cancel')}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              {_js("Choose device")}
+              {_js('Choose device')}
             </Button>
           </ToolbarRight>
         </Toolbar>
