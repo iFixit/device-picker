@@ -564,7 +564,7 @@ class DevicePicker extends Component {
             onClick={event => handleItemClick(event, item)}
           >
             <ItemText>
-              {window._js(this.removeParentFromTitle({
+              {_js(this.removeParentFromTitle({
                 title: item,
                 parentTitle: title,
               }))}
@@ -575,7 +575,7 @@ class DevicePicker extends Component {
       />
     ) : (
       <PreviewContainer
-        key={window._js(title)}
+        key={_js(title)}
         getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
       />
     );
@@ -602,8 +602,8 @@ class DevicePicker extends Component {
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder={window._js('Search')}
-          value={window._js(searchValue)}
+          placeholder={_js('Search')}
+          value={_js(searchValue)}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
@@ -615,10 +615,10 @@ class DevicePicker extends Component {
             path[path.length - 1].toLowerCase() && (
             <BannerContainer>
               <Banner
-                callToAction={window._js('Choose %1', searchValue)}
+                callToAction={_js('Choose %1', searchValue)}
                 onClick={() => onSubmit(searchValue)}
               >
-                window._js('Don\'t see what you\'re looking for?')
+                _js('Don\'t see what you\'re looking for?')
               </Banner>
             </BannerContainer>
           )}
@@ -633,13 +633,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>{window._js('Cancel')}</Button>
+            <Button onClick={onCancel}>{_js('Cancel')}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              {window._js('Choose device')}
+              {_js('Choose device')}
             </Button>
           </ToolbarRight>
         </Toolbar>

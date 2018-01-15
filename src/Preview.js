@@ -84,8 +84,8 @@ function Preview({ image, title, description }) {
   return (
     <Container>
       <Image url={image ? image.standard : ''} />
-      <Title>{window._js(title)}</Title>
-      <Description>{window._js(truncate(description, 80))}</Description>
+      <Title>{_js(title)}</Title>
+      <Description>{_js(truncate(description, 80))}</Description>
     </Container>
   );
 }
