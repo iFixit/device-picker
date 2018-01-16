@@ -615,7 +615,7 @@ class DevicePicker extends Component {
             path[path.length - 1].toLowerCase() && (
             <BannerContainer>
               <Banner
-                callToAction={_js('Choose %1', searchValue)}
+                callToAction={_js('Choose %1', `"${searchValue}"`)}
                 onClick={() => onSubmit(searchValue)}
               >
                 {_js('Don\'t see what you\'re looking for?')}

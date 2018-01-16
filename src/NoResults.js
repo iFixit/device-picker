@@ -40,7 +40,7 @@ class NoResults extends Component {
           style={{ maxWidth: '100%' }}
           onClick={() => selectItem(itemName)}
         >
-          {_js('Choose %1', itemName)}
+          {_js('Choose %1', `"${itemName}"`)}
         </Button>
       </Container>
     );
