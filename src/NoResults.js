@@ -4,8 +4,8 @@ import glamorous from 'glamorous';
 
 import { Button, constants } from 'toolbox';
 
-// window.window._js is used as a translation function
-// If no translation function is defined, window.window._js becomes a noop
+// window._js is used as a translation function
+// If no translation function is defined, window._js becomes a noop
 if (typeof window._js === 'undefined') {
   window._js = s => s;
 }

@@ -575,7 +575,7 @@ class DevicePicker extends Component {
       />
     ) : (
       <PreviewContainer
-        key={_js(title)}
+        key={title}
         getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
       />
     );
@@ -603,7 +603,7 @@ class DevicePicker extends Component {
         <SearchInput
           innerRef={this.setSearchInputRef}
           placeholder={_js('Search')}
-          value={_js(searchValue)}
+          value={searchValue}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
         />
@@ -618,7 +618,7 @@ class DevicePicker extends Component {
                 callToAction={_js('Choose %1', searchValue)}
                 onClick={() => onSubmit(searchValue)}
               >
-                _js('Don\'t see what you\'re looking for?')
+                {_js('Don\'t see what you\'re looking for?')}
               </Banner>
             </BannerContainer>
           )}
