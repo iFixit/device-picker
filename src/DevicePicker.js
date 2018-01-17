@@ -618,7 +618,7 @@ class DevicePicker extends Component {
                 callToAction={_js('Choose %1', `"${searchValue}"`)}
                 onClick={() => onSubmit(searchValue)}
               >
-                {_js('Don\'t see what you\'re looking for?')}
+                {_js("Don't see what you're looking for?")}
               </Banner>
             </BannerContainer>
           )}
