@@ -4,6 +4,12 @@ import glamorous from 'glamorous';
 
 import { constants } from 'toolbox';
 
+// window._js is used as a translation function
+// If no translation function is defined, window._js becomes a noop
+if (typeof window._js === 'undefined') {
+  window._js = s => s;
+}
+
 const { color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
@@ -78,8 +84,8 @@ function Preview({ image, title, description }) {
   return (
     <Container>
       <Image url={image ? image.standard : ''} />
-      <Title>{title}</Title>
-      <Description>{truncate(description, 80)}</Description>
+      <Title>{_js(title)}</Title>
+      <Description>{truncate(_js(description), 80)}</Description>
     </Container>
   );
 }

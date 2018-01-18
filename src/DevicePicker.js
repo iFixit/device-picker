@@ -15,6 +15,12 @@ smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
+// window._js is used as a translation function
+// If no translation function is defined, window._js becomes a noop
+if (typeof window._js === 'undefined') {
+  window._js = s => s;
+}
+
 const propTypes = {
   getHierarchy: PropTypes.func.isRequired,
   getDevice: PropTypes.func.isRequired,
@@ -558,10 +564,10 @@ class DevicePicker extends Component {
             onClick={event => handleItemClick(event, item)}
           >
             <ItemText>
-              {this.removeParentFromTitle({
+              {_js(this.removeParentFromTitle({
                 title: item,
                 parentTitle: title,
-              })}
+              }))}
             </ItemText>
             {tree[item] && <Icon name="chevron-right" size={20} />}
           </Item>
@@ -596,7 +602,7 @@ class DevicePicker extends Component {
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder="Search"
+          placeholder={_js('Search')}
           value={searchValue}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
@@ -609,10 +615,10 @@ class DevicePicker extends Component {
             path[path.length - 1].toLowerCase() && (
             <BannerContainer>
               <Banner
-                callToAction={`Choose "${searchValue}"`}
+                callToAction={_js('Choose %1', `"${searchValue}"`)}
                 onClick={() => onSubmit(searchValue)}
               >
-                Don&apos;t see what you&apos;re looking for?
+                {_js("Don't see what you're looking for?")}
               </Banner>
             </BannerContainer>
           )}
@@ -627,13 +633,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>Cancel</Button>
+            <Button onClick={onCancel}>{_js('Cancel')}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              Choose device
+              {_js('Choose device')}
             </Button>
           </ToolbarRight>
         </Toolbar>

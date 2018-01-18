@@ -4,6 +4,13 @@ import glamorous from 'glamorous';
 
 import { Button, constants } from 'toolbox';
 
+// window._js is used as a translation function
+// If no translation function is defined, window._js becomes a noop
+if (typeof window._js === 'undefined') {
+  window._js = s => s;
+}
+
+
 const propTypes = {
   itemName: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
@@ -28,12 +35,12 @@ class NoResults extends Component {
 
     return (
       <Container {...props}>
-        <p>No matches found. Did you spell it correctly?</p>
+        <p>{_js('No matches found. Did you spell it correctly?')}</p>
         <Button
           style={{ maxWidth: '100%' }}
           onClick={() => selectItem(itemName)}
         >
-          {`Choose "${itemName}"`}
+          {_js('Choose %1', `"${itemName}"`)}
         </Button>
       </Container>
     );
