@@ -37,7 +37,7 @@ class NoResults extends Component {
     return (
       <Container {...props}>
         <p>{_js('No matches found. Did you spell it correctly?')}</p>
-        {this.props.workbenchDevice === false ? (
+        {this.props.isWorkbenchDevice === false ? (
          <Button
            style={{ maxWidth: '100%' }}
            onClick={() => selectItem(itemName)}

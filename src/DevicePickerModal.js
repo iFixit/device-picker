@@ -22,7 +22,7 @@ class DevicePickerModal extends Component {
     isOpen: false,
     onSubmit: () => {},
     onCancel: () => {},
-    isWorkbenchDevice: true,
+    isWorkbenchDevice: false,
   };
 
   render() {
