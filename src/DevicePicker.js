@@ -598,7 +598,7 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path, search } = this.state;
-    const { onSubmit, onCancel } = this.props;
+    const { onSubmit, onCancel, isWorkbenchDevice } = this.props;
 
     return (
       <Container>
@@ -628,7 +628,8 @@ class DevicePicker extends Component {
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit}
-             isWorkbenchDevice={isWorkbenchDevice}/>
+             isWorkbenchDevice={typeof isWorkbenchDevice === "undefined" ?
+             this.defaultProps.isWorkbenchDevice : isWorkbenchDevice}/>
           ) : (
             tree && this.renderLists({ tree, leadingPath: path })
           )}
