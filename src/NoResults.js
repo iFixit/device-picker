@@ -43,7 +43,7 @@ class NoResults extends Component {
            onClick={() => selectItem(itemName)}
          >
            {_js('Choose %1', `"${itemName}"`)}
-         </Button>) : ()}
+         </Button>) : ''}
       </Container>
     );
   }
