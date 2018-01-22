@@ -615,21 +615,21 @@ class DevicePicker extends Component {
           search === SEARCH_INACTIVE &&
           searchValue.trim().toLowerCase() !==
             path[path.length - 1].toLowerCase() && (
-            <BannerContainer>
-              <Banner
-                callToAction={_js('Choose %1', `"${searchValue}"`)}
-                onClick={() => onSubmit(searchValue)}
-              >
-                {_js("Don't see what you're looking for?")}
-              </Banner>
-            </BannerContainer>
+            {!allowOrphan ? (
+              <BannerContainer>
+                <Banner
+                  callToAction={_js('Choose %1', `"${searchValue}"`)}
+                  onClick={() => onSubmit(searchValue)}
+                >
+                  {_js("Don't see what you're looking for?")}
+                </Banner>
+              </BannerContainer>) : ''}
           )}
 
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit}
-             allowOrphan={typeof allowOrphan === "undefined" ?
-             this.defaultProps.allowOrphan : allowOrphan}/>
+             allowOrphan={allowOrphan}/>
           ) : (
             tree && this.renderLists({ tree, leadingPath: path })
           )}
