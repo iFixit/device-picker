@@ -14,6 +14,7 @@ if (typeof window._js === 'undefined') {
 const propTypes = {
   itemName: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
+  isWorkbenchDevice: PropTypes.bool,
 };
 
 const Container = glamorous('div', {
@@ -31,17 +32,18 @@ const Container = glamorous('div', {
 
 class NoResults extends Component {
   render() {
-    const { itemName, selectItem, ...props } = this.props;
+    const { itemName, selectItem, isWorkbenchDevice, ...props } = this.props;
 
     return (
       <Container {...props}>
         <p>{_js('No matches found. Did you spell it correctly?')}</p>
-        <Button
-          style={{ maxWidth: '100%' }}
-          onClick={() => selectItem(itemName)}
-        >
-          {_js('Choose %1', `"${itemName}"`)}
-        </Button>
+        {this.props.workbenchDevice === false ? (
+         <Button
+           style={{ maxWidth: '100%' }}
+           onClick={() => selectItem(itemName)}
+         >
+           {_js('Choose %1', `"${itemName}"`)}
+         </Button>) : ()}
       </Container>
     );
   }
