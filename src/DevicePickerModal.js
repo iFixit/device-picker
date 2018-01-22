@@ -14,7 +14,7 @@ class DevicePickerModal extends Component {
     isOpen: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
-    isWorkbenchDevice: PropTypes.bool,
+    allowOrphan: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,7 +22,7 @@ class DevicePickerModal extends Component {
     isOpen: false,
     onSubmit: () => {},
     onCancel: () => {},
-    isWorkbenchDevice: false,
+    allowOrphan: false,
   };
 
   render() {
@@ -58,7 +58,7 @@ class DevicePickerModal extends Component {
           getDevice={this.props.getDevice}
           onSubmit={this.props.onSubmit}
           onCancel={this.props.onCancel}
-          isWorkbenchDevice={this.props.isWorkbenchDevice}
+          allowOrphan={this.props.allowOrphan}
         />
       </Modal>
     );
