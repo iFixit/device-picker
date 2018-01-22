@@ -14,7 +14,7 @@ class DevicePickerModal extends Component {
     isOpen: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
-    allowOrphan: PropTypes.bool,
+    disallowOrphan: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -22,7 +22,7 @@ class DevicePickerModal extends Component {
     isOpen: false,
     onSubmit: () => {},
     onCancel: () => {},
-    allowOrphan: false,
+    disallowOrphan: false,
   };
 
   render() {
@@ -58,7 +58,7 @@ class DevicePickerModal extends Component {
           getDevice={this.props.getDevice}
           onSubmit={this.props.onSubmit}
           onCancel={this.props.onCancel}
-          allowOrphan={this.props.allowOrphan}
+          disallowOrphan={this.props.disallowOrphan}
         />
       </Modal>
     );

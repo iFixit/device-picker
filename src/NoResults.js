@@ -14,7 +14,7 @@ if (typeof window._js === 'undefined') {
 const propTypes = {
   itemName: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  allowOrphan: PropTypes.bool,
+  disallowOrphan: PropTypes.bool,
 };
 
 const Container = glamorous('div', {
@@ -32,12 +32,12 @@ const Container = glamorous('div', {
 
 class NoResults extends Component {
   render() {
-    const { itemName, selectItem, allowOrphan, ...props } = this.props;
+    const { itemName, selectItem, disallowOrphan, ...props } = this.props;
 
     return (
       <Container {...props}>
         <p>{_js('No matches found. Did you spell it correctly?')}</p>
-        {!allowOrphan ? (
+        {!disallowOrphan ? (
          <Button
            style={{ maxWidth: '100%' }}
            onClick={() => selectItem(itemName)}
