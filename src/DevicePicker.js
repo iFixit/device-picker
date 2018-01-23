@@ -15,12 +15,6 @@ smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
-// window._js is used as a translation function
-// If no translation function is defined, window._js becomes a noop
-if (typeof window._js === 'undefined') {
-  window._js = s => s;
-}
-
 const propTypes = {
   getHierarchy: PropTypes.func.isRequired,
   getDevice: PropTypes.func.isRequired,
@@ -28,6 +22,7 @@ const propTypes = {
   onCancel: PropTypes.func.isRequired,
   initialDevice: PropTypes.string,
   allowOrphan: PropTypes.bool,
+  translate: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -565,7 +560,7 @@ class DevicePicker extends Component {
             onClick={event => handleItemClick(event, item)}
           >
             <ItemText>
-              {_js(this.removeParentFromTitle({
+              {this.props.translate(this.removeParentFromTitle({
                 title: item,
                 parentTitle: title,
               }))}
@@ -576,7 +571,7 @@ class DevicePicker extends Component {
       />
     ) : (
       <PreviewContainer
-        key={title}
+        key={title} translate={this.props.translate}
         getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
       />
     );
@@ -603,7 +598,7 @@ class DevicePicker extends Component {
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder={_js('Search')}
+          placeholder={this.props.translate('Search')}
           value={searchValue}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
@@ -613,21 +608,21 @@ class DevicePicker extends Component {
           path.length > 0 &&
           search === SEARCH_INACTIVE &&
           searchValue.trim().toLowerCase() !==
-            path[path.length - 1].toLowerCase() && allowOrphan ? (
+            path[path.length - 1].toLowerCase() && allowOrphan && (
               <BannerContainer>
                 <Banner
-                  callToAction={_js('Choose %1', `"${searchValue}"`)}
+                  callToAction={this.props.translate('Choose %1', `"${searchValue}"`)}
                   onClick={() => onSubmit(searchValue)}
                 >
-                  {_js("Don't see what you're looking for?")}
+                  {this.props.translate("Don't see what you're looking for?")}
                 </Banner>
               </BannerContainer>
-          ) : ''}
+          )}
 
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit}
-             allowOrphan={allowOrphan}/>
+             allowOrphan={allowOrphan} translate={this.props.translate}/>
           ) : (
             tree && this.renderLists({ tree, leadingPath: path })
           )}
@@ -635,13 +630,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>{_js('Cancel')}</Button>
+            <Button onClick={onCancel}>{this.props.translate('Cancel')}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              {_js('Choose device')}
+              {this.props.translate('Choose device')}
             </Button>
           </ToolbarRight>
         </Toolbar>

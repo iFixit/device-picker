@@ -14,6 +14,7 @@ class DevicePickerModal extends Component {
     isOpen: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
+    translate: PropTypes.func,
     allowOrphan: PropTypes.bool,
   };
 
@@ -22,6 +23,7 @@ class DevicePickerModal extends Component {
     isOpen: false,
     onSubmit: () => {},
     onCancel: () => {},
+    translate: s => s,
     allowOrphan: false,
   };
 
@@ -59,6 +61,7 @@ class DevicePickerModal extends Component {
           onSubmit={this.props.onSubmit}
           onCancel={this.props.onCancel}
           allowOrphan={this.props.allowOrphan}
+          translate={this.props.translate}
         />
       </Modal>
     );
