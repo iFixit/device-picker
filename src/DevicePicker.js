@@ -32,7 +32,6 @@ const propTypes = {
 
 const defaultProps = {
   initialDevice: '',
-  allowOrphan: true,
 };
 
 const Container = glamorous.div({
@@ -614,7 +613,7 @@ class DevicePicker extends Component {
           path.length > 0 &&
           search === SEARCH_INACTIVE &&
           searchValue.trim().toLowerCase() !==
-            path[path.length - 1].toLowerCase() && !allowOrphan ? (
+            path[path.length - 1].toLowerCase() && allowOrphan ? (
               <BannerContainer>
                 <Banner
                   callToAction={_js('Choose %1', `"${searchValue}"`)}
