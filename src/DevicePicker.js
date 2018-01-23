@@ -27,12 +27,12 @@ const propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   initialDevice: PropTypes.string,
-  disallowOrphan: PropTypes.bool,
+  allowOrphan: PropTypes.bool,
 };
 
 const defaultProps = {
   initialDevice: '',
-  disallowOrphan: false,
+  allowOrphan: true,
 };
 
 const Container = glamorous.div({
@@ -598,7 +598,7 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path, search } = this.state;
-    const { onSubmit, onCancel, disallowOrphan } = this.props;
+    const { onSubmit, onCancel, allowOrphan } = this.props;
 
     return (
       <Container>
@@ -614,7 +614,7 @@ class DevicePicker extends Component {
           path.length > 0 &&
           search === SEARCH_INACTIVE &&
           searchValue.trim().toLowerCase() !==
-            path[path.length - 1].toLowerCase() && !disallowOrphan ? (
+            path[path.length - 1].toLowerCase() && !allowOrphan ? (
               <BannerContainer>
                 <Banner
                   callToAction={_js('Choose %1', `"${searchValue}"`)}
@@ -628,7 +628,7 @@ class DevicePicker extends Component {
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit}
-             disallowOrphan={disallowOrphan}/>
+             allowOrphan={allowOrphan}/>
           ) : (
             tree && this.renderLists({ tree, leadingPath: path })
           )}
