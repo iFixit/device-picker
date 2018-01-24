@@ -20,9 +20,9 @@ const propTypes = {
   getDevice: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  translate: PropTypes.func.isRequired,
   initialDevice: PropTypes.string,
   allowOrphan: PropTypes.bool,
-  translate: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -592,13 +592,13 @@ class DevicePicker extends Component {
 
   render() {
     const { searchValue, tree, path, search } = this.state;
-    const { onSubmit, onCancel, allowOrphan } = this.props;
+    const { onSubmit, onCancel, allowOrphan, translate } = this.props;
 
     return (
       <Container>
         <SearchInput
           innerRef={this.setSearchInputRef}
-          placeholder={this.props.translate('Search')}
+          placeholder={translate('Search')}
           value={searchValue}
           onChange={this.handleSearchChange}
           onKeyDown={event => event.key === 'Enter' && this.applySearch()}
@@ -611,10 +611,10 @@ class DevicePicker extends Component {
             path[path.length - 1].toLowerCase() && allowOrphan && (
               <BannerContainer>
                 <Banner
-                  callToAction={this.props.translate('Choose %1', `"${searchValue}"`)}
+                  callToAction={translate('Choose %1', `"${searchValue}"`)}
                   onClick={() => onSubmit(searchValue)}
                 >
-                  {this.props.translate("Don't see what you're looking for?")}
+                  {translate("Don't see what you're looking for?")}
                 </Banner>
               </BannerContainer>
           )}
@@ -622,7 +622,7 @@ class DevicePicker extends Component {
         <ListsContainer innerRef={this.setListsContainerRef}>
           {search === SEARCH_NO_RESULTS ? (
             <NoResults itemName={searchValue} selectItem={onSubmit}
-             allowOrphan={allowOrphan} translate={this.props.translate}/>
+             allowOrphan={allowOrphan} translate={translate}/>
           ) : (
             tree && this.renderLists({ tree, leadingPath: path })
           )}
@@ -630,13 +630,13 @@ class DevicePicker extends Component {
 
         <Toolbar>
           <ToolbarRight>
-            <Button onClick={onCancel}>{this.props.translate('Cancel')}</Button>
+            <Button onClick={onCancel}>{translate('Cancel')}</Button>
             <Button
               design="primary"
               disabled={!this.allowSubmit()}
               onClick={() => onSubmit(path[path.length - 1])}
             >
-              {this.props.translate('Choose device')}
+              {translate('Choose device')}
             </Button>
           </ToolbarRight>
         </Toolbar>

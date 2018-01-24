@@ -19,8 +19,7 @@ class PreviewContainer extends Component {
   }
 
   render() {
-    return <Preview translate={this.props.translate}
-     {...this.state.data} />;
+    return <Preview translate={this.props.translate} {...this.state.data} />;
   }
 }
 
