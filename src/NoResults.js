@@ -4,16 +4,11 @@ import glamorous from 'glamorous';
 
 import { Button, constants } from 'toolbox';
 
-// window._js is used as a translation function
-// If no translation function is defined, window._js becomes a noop
-if (typeof window._js === 'undefined') {
-  window._js = s => s;
-}
-
-
 const propTypes = {
   itemName: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
+  translate: PropTypes.func,
+  allowOrphan: PropTypes.bool,
 };
 
 const Container = glamorous('div', {
@@ -31,17 +26,18 @@ const Container = glamorous('div', {
 
 class NoResults extends Component {
   render() {
-    const { itemName, selectItem, ...props } = this.props;
+    const { itemName, selectItem, allowOrphan, translate, ...props } = this.props;
 
     return (
       <Container {...props}>
-        <p>{_js('No matches found. Did you spell it correctly?')}</p>
-        <Button
-          style={{ maxWidth: '100%' }}
-          onClick={() => selectItem(itemName)}
-        >
-          {_js('Choose %1', `"${itemName}"`)}
-        </Button>
+        <p>{translate('No matches found. Did you spell it correctly?')}</p>
+        {allowOrphan && (
+         <Button
+           style={{ maxWidth: '100%' }}
+           onClick={() => selectItem(itemName)}
+         >
+           {translate('Choose %1', `"${itemName}"`)}
+         </Button>)}
       </Container>
     );
   }

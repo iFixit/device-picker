@@ -4,12 +4,6 @@ import glamorous from 'glamorous';
 
 import { constants } from 'toolbox';
 
-// window._js is used as a translation function
-// If no translation function is defined, window._js becomes a noop
-if (typeof window._js === 'undefined') {
-  window._js = s => s;
-}
-
 const { color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
@@ -18,6 +12,7 @@ const propTypes = {
   }),
   title: PropTypes.string,
   description: PropTypes.string,
+  translate: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -80,12 +75,12 @@ function truncate(string, length) {
   return string.slice(0, length - ellipses.length) + ellipses;
 }
 
-function Preview({ image, title, description }) {
+function Preview({ translate, image, title, description }) {
   return (
     <Container>
       <Image url={image ? image.standard : ''} />
-      <Title>{_js(title)}</Title>
-      <Description>{truncate(_js(description), 80)}</Description>
+      <Title>{translate(title)}</Title>
+      <Description>{truncate(translate(description), 80)}</Description>
     </Container>
   );
 }

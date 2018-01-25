@@ -5,6 +5,7 @@ import Preview from './Preview';
 
 const propTypes = {
   getDevice: PropTypes.func.isRequired,
+  translate: PropTypes.func.isRequired,
 };
 
 class PreviewContainer extends Component {
@@ -18,7 +19,7 @@ class PreviewContainer extends Component {
   }
 
   render() {
-    return <Preview {...this.state.data} />;
+    return <Preview translate={this.props.translate} {...this.state.data} />;
   }
 }
 
