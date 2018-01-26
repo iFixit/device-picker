@@ -508,7 +508,7 @@ class DevicePicker extends Component {
             .split(' ')
             .includes(word.toLowerCase()),
       )
-      .join(' ');
+      .join(' ') || title;
 
   /**
    * Render path along a tree.
