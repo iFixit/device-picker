@@ -21,8 +21,8 @@ const propTypes = {
   onSubmit: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   translate: PropTypes.func.isRequired,
+  allowOrphan: PropTypes.bool.isRequired,
   initialDevice: PropTypes.string,
-  allowOrphan: PropTypes.bool,
 };
 
 const defaultProps = {

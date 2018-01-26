@@ -10,9 +10,9 @@ const propTypes = {
   image: PropTypes.shape({
     standard: PropTypes.string.isRequired,
   }),
+  translate: PropTypes.func.isRequired,
   title: PropTypes.string,
   description: PropTypes.string,
-  translate: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
