@@ -7,8 +7,8 @@ import { Button, constants } from 'toolbox';
 const propTypes = {
   itemName: PropTypes.string.isRequired,
   selectItem: PropTypes.func.isRequired,
-  translate: PropTypes.func,
-  allowOrphan: PropTypes.bool,
+  allowOrphan: PropTypes.bool.isRequired,
+  translate: PropTypes.func.isRequired,
 };
 
 const Container = glamorous('div', {
