@@ -1,6 +1,6 @@
 {
    "name": "device-picker",
-   "version": "0.1.5",
+   "version": "0.1.6",
    "main": "dist/DevicePickerModal.js",
    "private": true,
    "dependencies": {
