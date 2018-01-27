@@ -29,7 +29,7 @@ class DevicePickerModal extends Component {
   };
 
   render() {
-    const duration = '0.5s';
+    const duration = '0.3s';
     const fadeScale = glamor.css.keyframes({
        '0%': {
           opacity: '0',
@@ -64,8 +64,8 @@ class DevicePickerModal extends Component {
             height: '85vh',
             padding: 0,
             border: 'none',
-            transform: 'translateZ(0)',
             animation: `${fadeScale} ${duration}`,
+            transform: 'translateZ(0)',
             // translateZ hack forces the browser to
             // create a new layer and send rendering to the GPU
           },
