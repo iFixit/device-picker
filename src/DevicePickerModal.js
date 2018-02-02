@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import { constants } from 'toolbox';
 import DevicePicker from './DevicePicker';
+import * as glamor from 'glamor';
 
 const { color } = constants;
 
@@ -28,6 +29,20 @@ class DevicePickerModal extends Component {
   };
 
   render() {
+    const duration = '0.3s';
+    const fadeScale = glamor.css.keyframes({
+       '0%': {
+          opacity: '0',
+          transform: 'translateY(5%)',
+       }
+    });
+
+    const fadeIn = glamor.css.keyframes({
+       '0%': {
+          opacity: '0',
+       }
+    });
+
     return (
       <Modal
         isOpen={this.props.isOpen}
@@ -41,6 +56,7 @@ class DevicePickerModal extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: color.grayAlpha[5],
+            animation: `${fadeIn} ${duration}`,
           },
           content: {
             position: 'static',
@@ -48,6 +64,7 @@ class DevicePickerModal extends Component {
             height: '85vh',
             padding: 0,
             border: 'none',
+            animation: `${fadeScale} ${duration}`,
             transform: 'translateZ(0)',
             // translateZ hack forces the browser to
             // create a new layer and send rendering to the GPU
