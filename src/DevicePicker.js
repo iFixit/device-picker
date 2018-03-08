@@ -152,6 +152,8 @@ class DevicePicker extends Component {
     path: [],
   };
 
+  translations = [];
+
   componentDidMount() {
     // get iFixit's category hierarchy
     // TODO: investigate caching
@@ -162,7 +164,8 @@ class DevicePicker extends Component {
           throw new Error('API response has no `hierarchy` property.');
         }
 
-        this.setState({ tree: data.hierarchy });
+        this.translations = data.display_titles;
+        this.setState({ tree: data.hierarchy});
       })
       .then(() => {
         if (this.state.searchValue) {
@@ -561,7 +564,7 @@ class DevicePicker extends Component {
           >
             <ItemText>
               {this.props.translate(this.removeParentFromTitle({
-                title: item,
+                title: this.translations[item] || item,
                 parentTitle: title,
               }))}
             </ItemText>
