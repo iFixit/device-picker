@@ -565,7 +565,7 @@ class DevicePicker extends Component {
             <ItemText>
               {this.props.translate(this.removeParentFromTitle({
                 title: this.translations[item] || item,
-                parentTitle: title,
+                parentTitle: this.translations[title] || title,
               }))}
             </ItemText>
             {tree[item] && <Icon name="chevron-right" size={20} />}
