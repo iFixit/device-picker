@@ -165,7 +165,7 @@ class DevicePicker extends Component {
         }
 
         this.translations = data.display_titles;
-        this.setState({ tree: data.hierarchy});
+        this.setState({ tree: data.hierarchy });
       })
       .then(() => {
         if (this.state.searchValue) {
