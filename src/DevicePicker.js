@@ -36,11 +36,18 @@ const Container = glamorous.div({
   color: color.grayAlpha[9],
 });
 
+const SearchContainer = glamorous('div', { displayName: 'SearchContainer' })({
+  display: 'flex',
+  flex: '0 0 auto',
+  alignItems: 'center',
+  paddingLeft: '15px',
+  borderBottom: `1px solid ${color.grayAlpha[3]}`,
+});
+
 const SearchInput = glamorous('input', {
   displayName: 'SearchInput',
 })({
-  flex: '0 0 auto',
-  width: '100%',
+  flex: '1 1 auto',
   marginBottom: 0,
   padding: spacing[3],
   fontFamily: 'inherit',
@@ -49,7 +56,6 @@ const SearchInput = glamorous('input', {
   backgroundColor: 'transparent',
   border: 'none',
   outline: 0,
-  borderBottom: `1px solid ${color.grayAlpha[3]}`,
 
   '&::placeholder': {
     color: color.grayAlpha[5],
@@ -599,13 +605,16 @@ class DevicePicker extends Component {
 
     return (
       <Container>
-        <SearchInput
-          innerRef={this.setSearchInputRef}
-          placeholder={translate('Search')}
-          value={searchValue}
-          onChange={this.handleSearchChange}
-          onKeyDown={event => event.key === 'Enter' && this.applySearch()}
-        />
+        <SearchContainer>
+          <Icon name="search" size={25} color={ color.gray[5] } />
+          <SearchInput
+            innerRef={this.setSearchInputRef}
+            placeholder={translate('Search')}
+            value={searchValue}
+            onChange={this.handleSearchChange}
+            onKeyDown={event => event.key === 'Enter' && this.applySearch()}
+          />
+        </SearchContainer>
 
         {searchValue &&
           path.length > 0 &&
