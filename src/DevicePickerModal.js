@@ -32,6 +32,7 @@ class DevicePickerModal extends Component {
 
   render() {
     const duration = '0.3s';
+
     const fadeScaleIn = glamor.css.keyframes({
        '0%': {
           opacity: '0',
