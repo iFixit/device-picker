@@ -13,6 +13,7 @@ class DevicePickerModal extends Component {
     getDevice: PropTypes.func.isRequired,
     initialDevice: PropTypes.string,
     isOpen: PropTypes.bool,
+    isClosing: PropTypes.bool,
     onSubmit: PropTypes.func,
     onCancel: PropTypes.func,
     translate: PropTypes.func,
@@ -22,6 +23,7 @@ class DevicePickerModal extends Component {
   static defaultProps = {
     initialDevice: '',
     isOpen: false,
+    isClosing: false,
     onSubmit: () => {},
     onCancel: () => {},
     translate: s => s,
@@ -30,15 +32,28 @@ class DevicePickerModal extends Component {
 
   render() {
     const duration = '0.3s';
-    const fadeScale = glamor.css.keyframes({
+    const fadeScaleIn = glamor.css.keyframes({
        '0%': {
           opacity: '0',
           transform: 'translateY(5%)',
        }
     });
 
+    const fadeScaleOut = glamor.css.keyframes({
+       '100%': {
+          opacity: '0',
+          transform: 'translateY(-5%)',
+       }
+    });
+
     const fadeIn = glamor.css.keyframes({
        '0%': {
+          opacity: '0',
+       }
+    });
+
+    const fadeOut = glamor.css.keyframes({
+       '100%': {
           opacity: '0',
        }
     });
@@ -56,7 +71,7 @@ class DevicePickerModal extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: color.grayAlpha[5],
-            animation: `${fadeIn} ${duration}`,
+            animation: `${this.props.isClosing ? fadeOut : fadeIn} ${duration}`,
           },
           content: {
             position: 'static',
@@ -64,7 +79,7 @@ class DevicePickerModal extends Component {
             height: '85vh',
             padding: 0,
             border: 'none',
-            animation: `${fadeScale} ${duration}`,
+            animation: `${this.props.isClosing ? fadeScaleOut : fadeScaleIn} ${duration}`,
             transform: 'translateZ(0)',
             // translateZ hack forces the browser to
             // create a new layer and send rendering to the GPU
