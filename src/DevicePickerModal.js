@@ -9,7 +9,7 @@ const { color } = constants;
 const duration = '0.3s';
 
 const fadeScaleIn = glamor.css.keyframes({
-	'0%': {
+   '0%': {
       opacity: '0',
       transform: 'translateY(5%)',
    }
@@ -47,7 +47,6 @@ class DevicePickerModal extends Component {
       getHierarchy: PropTypes.func.isRequired,
       getDevice: PropTypes.func.isRequired,
       initialDevice: PropTypes.string,
-      isOpen: PropTypes.bool,
       onSubmit: PropTypes.func,
       onCancel: PropTypes.func,
       translate: PropTypes.func,
@@ -56,7 +55,6 @@ class DevicePickerModal extends Component {
 
    static defaultProps = {
       initialDevice: '',
-      isOpen: false,
       onSubmit: () => {},
       onCancel: () => {},
       translate: s => s,
