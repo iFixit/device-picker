@@ -9,7 +9,7 @@ const { color } = constants;
 const duration = '0.3s';
 
 const fadeScaleIn = glamor.css.keyframes({
-   '0%': {
+	'0%': {
       opacity: '0',
       transform: 'translateY(5%)',
    }
@@ -35,69 +35,94 @@ const fadeOut = glamor.css.keyframes({
 });
 
 class DevicePickerModal extends Component {
-  static propTypes = {
-    getHierarchy: PropTypes.func.isRequired,
-    getDevice: PropTypes.func.isRequired,
-    initialDevice: PropTypes.string,
-    isOpen: PropTypes.bool,
-    isClosing: PropTypes.bool,
-    onSubmit: PropTypes.func,
-    onCancel: PropTypes.func,
-    translate: PropTypes.func,
-    allowOrphan: PropTypes.bool,
-  };
+   constructor(props) {
+      super(props);
+      this.state = {
+         isOpen: props.isOpen,
+         isClosing: false,
+      }
+   }
 
-  static defaultProps = {
-    initialDevice: '',
-    isOpen: false,
-    isClosing: false,
-    onSubmit: () => {},
-    onCancel: () => {},
-    translate: s => s,
-    allowOrphan: false,
-  };
+   static propTypes = {
+      getHierarchy: PropTypes.func.isRequired,
+      getDevice: PropTypes.func.isRequired,
+      initialDevice: PropTypes.string,
+      isOpen: PropTypes.bool,
+      isClosing: PropTypes.bool,
+      onSubmit: PropTypes.func,
+      onCancel: PropTypes.func,
+      translate: PropTypes.func,
+      allowOrphan: PropTypes.bool,
+   };
 
-  render() {
-    return (
-      <Modal
-        isOpen={this.props.isOpen}
-        contentLabel="Device Picker Modal"
-        onRequestClose={this.props.onCancel}
-        style={{
-          overlay: {
-            zIndex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: color.grayAlpha[5],
-            animation: `${this.props.isClosing ? fadeOut : fadeIn} ${duration}`,
-          },
-          content: {
-            position: 'static',
-            width: '85vw',
-            height: '85vh',
-            padding: 0,
-            border: 'none',
-            animation: `${this.props.isClosing ? fadeScaleOut : fadeScaleIn} ${duration}`,
-            transform: 'translateZ(0)',
-            // translateZ hack forces the browser to
-            // create a new layer and send rendering to the GPU
-          },
-        }}
-      >
-        <DevicePicker
-          initialDevice={this.props.initialDevice}
-          getHierarchy={this.props.getHierarchy}
-          getDevice={this.props.getDevice}
-          onSubmit={this.props.onSubmit}
-          onCancel={this.props.onCancel}
-          allowOrphan={this.props.allowOrphan}
-          translate={this.props.translate}
-        />
-      </Modal>
-    );
-  }
+   static defaultProps = {
+      initialDevice: '',
+      isOpen: false,
+      isClosing: false,
+      onSubmit: () => {},
+      onCancel: () => {},
+      translate: s => s,
+      allowOrphan: false,
+   };
+
+   updateClosingState = () => {
+      this.setState({ isClosing: true });
+
+      setTimeout(() => {
+         this.setState({
+            isClosing: false,
+            isOpen: false
+         });
+      }, 300);
+   }
+
+   componentDidUpdate(prevProps) {
+      if (this.props.isOpen != prevProps.isOpen) {
+         this.updateClosingState();
+      }
+   }
+
+   render() {
+      return (
+         <Modal
+            isOpen={this.props.isOpen}
+            contentLabel="Device Picker Modal"
+            onRequestClose={this.props.onCancel}
+            style={{
+               overlay: {
+                  zIndex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: color.grayAlpha[5],
+                  animation: `${this.state.isClosing ? fadeOut : fadeIn} ${duration}`,
+               },
+               content: {
+                  position: 'static',
+                  width: '85vw',
+                  height: '85vh',
+                  padding: 0,
+                  border: 'none',
+                  animation: `${this.state.isClosing ? fadeScaleOut : fadeScaleIn} ${duration}`,
+                  transform: 'translateZ(0)',
+                  // translateZ hack forces the browser to
+                  // create a new layer and send rendering to the GPU
+               },
+            }}
+            >
+            <DevicePicker
+               initialDevice={this.props.initialDevice}
+               getHierarchy={this.props.getHierarchy}
+               getDevice={this.props.getDevice}
+               onSubmit={this.props.onSubmit}
+               onCancel={this.props.onCancel}
+               allowOrphan={this.props.allowOrphan}
+               translate={this.props.translate}
+            />
+         </Modal>
+      );
+   }
 }
 
 export default DevicePickerModal;
