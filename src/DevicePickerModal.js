@@ -74,6 +74,12 @@ class DevicePickerModal extends Component {
       }, 300);
    }
 
+   componentWillReceiveProps(nextProps) {
+      if (nextProps.isOpen) {
+         this.setState({ isOpen: nextProps.isOpen });
+      }
+   }
+
    componentDidUpdate(prevProps) {
       if (prevProps.isOpen && !this.props.isOpen) {
          this.updateClosingState();
