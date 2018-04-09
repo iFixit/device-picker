@@ -48,7 +48,6 @@ class DevicePickerModal extends Component {
       getDevice: PropTypes.func.isRequired,
       initialDevice: PropTypes.string,
       isOpen: PropTypes.bool,
-      isClosing: PropTypes.bool,
       onSubmit: PropTypes.func,
       onCancel: PropTypes.func,
       translate: PropTypes.func,
@@ -79,7 +78,7 @@ class DevicePickerModal extends Component {
    }
 
    componentDidUpdate(prevProps) {
-      if (this.props.isOpen != prevProps.isOpen) {
+      if (prevProps.isOpen && !this.props.isOpen) {
          this.updateClosingState();
       }
    }
