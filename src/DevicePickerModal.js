@@ -67,12 +67,14 @@ class DevicePickerModal extends Component {
 
    updateClosingState = () => {
       this.setState({ isClosing: true });
+      console.log("isClosing: ",this.state.isClosing);
 
       setTimeout(() => {
          this.setState({
             isClosing: false,
             isOpen: false
          });
+         console.log("Closed");
       }, 300);
    }
 
