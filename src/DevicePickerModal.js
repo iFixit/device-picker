@@ -6,6 +6,33 @@ import DevicePicker from './DevicePicker';
 import * as glamor from 'glamor';
 
 const { color } = constants;
+const duration = '0.3s';
+
+const fadeScaleIn = glamor.css.keyframes({
+   '0%': {
+      opacity: '0',
+      transform: 'translateY(5%)',
+   }
+});
+
+const fadeScaleOut = glamor.css.keyframes({
+   '100%': {
+      opacity: '0',
+      transform: 'translateY(-5%)',
+   }
+});
+
+const fadeIn = glamor.css.keyframes({
+   '0%': {
+      opacity: '0',
+   }
+});
+
+const fadeOut = glamor.css.keyframes({
+   '100%': {
+      opacity: '0',
+   }
+});
 
 class DevicePickerModal extends Component {
   static propTypes = {
@@ -31,34 +58,6 @@ class DevicePickerModal extends Component {
   };
 
   render() {
-    const duration = '0.3s';
-
-    const fadeScaleIn = glamor.css.keyframes({
-       '0%': {
-          opacity: '0',
-          transform: 'translateY(5%)',
-       }
-    });
-
-    const fadeScaleOut = glamor.css.keyframes({
-       '100%': {
-          opacity: '0',
-          transform: 'translateY(-5%)',
-       }
-    });
-
-    const fadeIn = glamor.css.keyframes({
-       '0%': {
-          opacity: '0',
-       }
-    });
-
-    const fadeOut = glamor.css.keyframes({
-       '100%': {
-          opacity: '0',
-       }
-    });
-
     return (
       <Modal
         isOpen={this.props.isOpen}
