@@ -61,7 +61,7 @@ class DevicePickerModal extends Component {
       allowOrphan: false,
    };
 
-   updateClosingState = () => {
+   updateClosingState() {
       this.setState({ isClosing: true });
 
       setTimeout(() => {
