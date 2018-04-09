@@ -57,7 +57,6 @@ class DevicePickerModal extends Component {
    static defaultProps = {
       initialDevice: '',
       isOpen: false,
-      isClosing: false,
       onSubmit: () => {},
       onCancel: () => {},
       translate: s => s,
@@ -66,14 +65,12 @@ class DevicePickerModal extends Component {
 
    updateClosingState = () => {
       this.setState({ isClosing: true });
-      console.log("isClosing: ",this.state.isClosing);
 
       setTimeout(() => {
          this.setState({
-            isClosing: false,
-            isOpen: false
+            isOpen: false,
+            isClosing: false
          });
-         console.log("Closed");
       }, 300);
    }
 
@@ -86,7 +83,7 @@ class DevicePickerModal extends Component {
    render() {
       return (
          <Modal
-            isOpen={this.props.isOpen}
+            isOpen={this.state.isOpen}
             contentLabel="Device Picker Modal"
             onRequestClose={this.props.onCancel}
             style={{
