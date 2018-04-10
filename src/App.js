@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import DevicePickerModal from './DevicePickerModal';
 import { Button } from 'toolbox';
-import { css } from 'glamor';
+import glamorous from 'glamorous';
 
-const infoContainer = css({
+const InfoContainer = glamorous.div({
    position: 'fixed',
    top: '0',
    bottom: '0',
@@ -18,19 +18,16 @@ const infoContainer = css({
 });
 
 class App extends Component {
-   constructor() {
-      super();
-      this.state = {
-         isOpen: false,
-         currentDevice: 'No Device Selected',
-      }
+   state = {
+      isOpen: false,
+      currentDevice: 'No Device Selected',
    }
 
    handleCancel = () => {
       this.setState({ isOpen: false });
    }
 
-   handleSubmit = (deviceTitle) => {
+   handleSubmit = deviceTitle => {
       this.setState({
          currentDevice: deviceTitle,
          isOpen: false,
@@ -44,10 +41,10 @@ class App extends Component {
    render() {
       return (
          <div>
-            <div { ...css(infoContainer) }>
+            <InfoContainer>
                <h3>{this.state.currentDevice}</h3>
                <Button onClick={this.openModal}>Open Device Picker</Button>
-            </div>
+            </InfoContainer>
             <DevicePickerModal
                isOpen={this.state.isOpen}
                initialDevice="Foth-Flex TLR"
@@ -59,7 +56,7 @@ class App extends Component {
                   fetch(
                      `https://www.ifixit.com/api/2.0/wikis/CATEGORY/${encodedTitle}`,
                   ).then(response => response.json())}
-               onSubmit={(deviceTitle) => {this.handleSubmit(deviceTitle)}}
+               onSubmit={this.handleSubmit}
                onCancel={this.handleCancel}
             />
          </div>

@@ -35,13 +35,6 @@ const fadeOut = glamor.css.keyframes({
 });
 
 class DevicePickerModal extends Component {
-   constructor(props) {
-      super(props);
-      this.state = {
-         isClosing: false,
-      };
-   }
-
    static propTypes = {
       getHierarchy: PropTypes.func.isRequired,
       getDevice: PropTypes.func.isRequired,
@@ -59,6 +52,10 @@ class DevicePickerModal extends Component {
       translate: s => s,
       allowOrphan: false,
    };
+
+   state = {
+      isClosing: false,
+   }
 
    componentDidUpdate(prevProps, prevState) {
       const closeRequested = prevProps.isOpen && !this.props.isOpen;
