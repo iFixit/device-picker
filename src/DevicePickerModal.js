@@ -38,9 +38,8 @@ class DevicePickerModal extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         isOpen: props.isOpen,
          isClosing: false,
-      }
+      };
    }
 
    static propTypes = {
@@ -61,33 +60,29 @@ class DevicePickerModal extends Component {
       allowOrphan: false,
    };
 
-   updateClosingState() {
-      this.setState({ isClosing: true });
+   componentDidUpdate(prevProps, prevState) {
+      const closeRequested = prevProps.isOpen && !this.props.isOpen;
+      if (closeRequested) {
+         this.animateClosed();
+      }
+   }
+
+   animateClosed() {
+      this.setState({
+         isClosing: true,
+      });
 
       setTimeout(() => {
          this.setState({
-            isOpen: false,
-            isClosing: false
+            isClosing: false,
          });
       }, 300);
-   }
-
-   componentWillReceiveProps(nextProps) {
-      if (nextProps.isOpen) {
-         this.setState({ isOpen: nextProps.isOpen });
-      }
-   }
-
-   componentDidUpdate(prevProps) {
-      if (prevProps.isOpen && !this.props.isOpen) {
-         this.updateClosingState();
-      }
    }
 
    render() {
       return (
          <Modal
-            isOpen={this.state.isOpen}
+            isOpen={this.props.isOpen || this.state.isClosing}
             contentLabel="Device Picker Modal"
             onRequestClose={this.props.onCancel}
             style={{
