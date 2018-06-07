@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import DevicePickerModal from './DevicePickerModal';
-import { Button } from 'toolbox';
+import { Button } from '@ifixit/toolbox';
 import glamorous from 'glamorous';
 
 const InfoContainer = glamorous.div({
