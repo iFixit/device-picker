@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
-import { constants } from 'toolbox';
+import { constants } from '@ifixit/toolbox';
 import DevicePicker from './DevicePicker';
 import * as glamor from 'glamor';
 
