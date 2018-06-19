@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
-import { constants } from 'toolbox';
+import { constants } from '@ifixit/toolbox';
 
 const { color, fontSize, lineHeight, spacing } = constants;
 

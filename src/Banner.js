@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 
-import { Button, constants } from 'toolbox';
+import { Button, constants } from '@ifixit/toolbox';
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 

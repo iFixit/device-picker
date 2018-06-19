@@ -5,7 +5,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
 import { debounce, minBy, inRange } from 'lodash';
 
-import { Button, Icon, constants } from 'toolbox';
+import { Button, Icon, constants } from '@ifixit/toolbox';
 import List from './List';
 import Banner from './Banner';
 import PreviewContainer from './PreviewContainer';

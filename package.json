@@ -1,9 +1,10 @@
 {
    "name": "device-picker",
-   "version": "0.1.6",
+   "version": "0.1.7",
    "main": "dist/DevicePickerModal.js",
-   "private": true,
    "dependencies": {
+      "@ifixit/toolbox": "^0.10.3",
+      "enzyme": "^3.3.0",
       "fuse.js": "^3.1.0",
       "glamor": "^2.20.40",
       "glamorous": "^4.13.1",
@@ -16,13 +17,16 @@
       "smoothscroll-polyfill": "^0.3.6",
       "toolbox": "github:ifixit/toolbox#6fcaab0c2228de93db0d3104fdbefd56d9e0df1b"
    },
+   "files": [
+      "dist"
+   ],
    "scripts": {
       "start": "react-scripts start",
       "build": "react-scripts build",
       "test": "react-scripts test --env=jsdom",
       "lint": "eslint .",
       "eject": "react-scripts eject",
-      "prepare": "babel src -d dist"
+      "prepublishOnly": "babel src -d dist"
    },
    "devDependencies": {
       "babel-cli": "^6.26.0",
@@ -32,7 +36,7 @@
       "babel-preset-react": "^6.24.1",
       "babel-preset-stage-2": "^6.24.1",
       "eslint": "^4.19.1",
-      "eslint-config-airbnb": "^15.1.0",
+      "eslint-config-airbnb": "^16.1.0",
       "eslint-plugin-import": "^2.12.0",
       "eslint-plugin-jsx-a11y": "^6.0.3",
       "eslint-plugin-react": "^7.9.1"
