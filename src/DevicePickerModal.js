@@ -5,6 +5,8 @@ import { constants } from '@ifixit/toolbox';
 import DevicePicker from './DevicePicker';
 import * as glamor from 'glamor';
 
+Modal.setAppElement('body');
+
 const { color } = constants;
 const duration = '0.3s';
 

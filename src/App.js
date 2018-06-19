@@ -40,7 +40,7 @@ class App extends Component {
 
    render() {
       return (
-         <div>
+         <div data-reactroot>
             <InfoContainer>
                <h3>{this.state.currentDevice}</h3>
                <Button onClick={this.openModal}>Open Device Picker</Button>
