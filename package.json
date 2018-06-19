@@ -1,6 +1,6 @@
 {
    "name": "device-picker",
-   "version": "0.1.7",
+   "version": "0.1.11",
    "main": "dist/DevicePickerModal.js",
    "dependencies": {
       "@ifixit/toolbox": "^0.10.3",
