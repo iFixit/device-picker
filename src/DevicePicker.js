@@ -604,7 +604,7 @@ class DevicePicker extends Component {
     const { onSubmit, onCancel, allowOrphan, translate } = this.props;
 
     return (
-      <Container data-reactroot>
+      <Container data-reactroot id="devicePickerModal">
         <SearchContainer>
           <Icon name="search" size={25} color={ color.gray[5] } />
           <SearchInput

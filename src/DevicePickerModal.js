@@ -81,7 +81,6 @@ class DevicePickerModal extends Component {
    render() {
       return (
          <Modal
-            id="devicePickerModal"
             isOpen={this.props.isOpen || this.state.isClosing}
             contentLabel="Device Picker Modal"
             onRequestClose={this.props.onCancel}
