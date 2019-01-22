@@ -1,9 +1,9 @@
 {
    "name": "device-picker",
-   "version": "0.1.11",
+   "version": "0.1.14",
    "main": "dist/DevicePickerModal.js",
    "dependencies": {
-      "@ifixit/toolbox": "^0.10.3",
+      "@ifixit/toolbox": "^0.12.4",
       "enzyme": "^3.3.0",
       "fuse.js": "^3.1.0",
       "glamor": "^2.20.40",
@@ -14,8 +14,10 @@
       "react-dom": "^16.4.1",
       "react-modal": "^3.4.5",
       "react-scripts": "1.1.4",
-      "smoothscroll-polyfill": "^0.3.6",
-      "toolbox": "github:ifixit/toolbox#6fcaab0c2228de93db0d3104fdbefd56d9e0df1b"
+      "smoothscroll-polyfill": "^0.3.6"
+   },
+   "peerDependencies": {
+      "styled-components": "^4.1.3"
    },
    "files": [
       "dist"
@@ -39,6 +41,7 @@
       "eslint-config-airbnb": "^16.1.0",
       "eslint-plugin-import": "^2.12.0",
       "eslint-plugin-jsx-a11y": "^6.0.3",
-      "eslint-plugin-react": "^7.9.1"
+      "eslint-plugin-react": "^7.9.1",
+      "styled-components": "^4.1.3"
    }
 }
