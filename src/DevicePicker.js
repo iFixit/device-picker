@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
-import { debounce, minBy, inRange } from 'lodash';
+import { debounce, minBy, inRange, set } from 'lodash';
 
 import { Button, Icon, constants } from '@ifixit/toolbox';
 import List from './List';
@@ -555,7 +555,9 @@ class DevicePicker extends Component {
          event.stopPropagation();
       };
 
-      const list = tree ? (
+      this.preloadLeafPreviews(tree, trailingPath);
+
+      const list = tree && !Array.isArray(tree) ? (
          <List
             key={title}
             data={Object.keys(tree)}
@@ -575,13 +577,18 @@ class DevicePicker extends Component {
                         }),
                      )}
                   </ItemText>
-                  {tree[item] && <Icon name="chevron-right" size={20} />}
+                  {tree[item] &&
+                     !Array.isArray(tree[item]) && (
+                        <Icon name="chevron-right" size={20} />
+                     )}
                </Item>
             )}
          />
       ) : (
          <PreviewContainer
             key={title}
+            path={trailingPath}
+            tree={this.state.tree}
             translate={this.props.translate}
             getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
          />
@@ -600,6 +607,30 @@ class DevicePicker extends Component {
          }),
       ];
    };
+
+   // If the list includes any leaves, fetch their preview data.
+   preloadLeafPreviews(tree, path) {
+      if (!tree || Array.isArray(tree)) {
+         return;
+      }
+
+      const leaves = Object.keys(tree).filter(key => tree[key] == null);
+
+      leaves.forEach((leaf, index) => {
+         this.props.getDevice(leaf).then(previewData => {
+            this.updateTree([...path, leaf], previewData);
+         });
+      });
+   }
+
+   // Update the device tree at a certain path.
+   updateTree(path, value) {
+      this.setState(prevState => {
+         let { tree } = prevState;
+
+         set(tree, path, [value]);
+      });
+   }
 
    render() {
       const { searchValue, tree, path, search } = this.state;
