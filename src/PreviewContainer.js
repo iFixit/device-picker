@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
 
 import Preview from './Preview';
 
 const propTypes = {
-   getDevice: PropTypes.func.isRequired,
    translate: PropTypes.func.isRequired,
 };
 
@@ -15,10 +13,8 @@ class PreviewContainer extends Component {
    };
 
    static getDerivedStateFromProps(nextProps) {
-      const dataArr = get(nextProps.tree, nextProps.path);
-
       return {
-         data: dataArr ? dataArr[0] : null,
+         data: nextProps.data,
       };
    }
 

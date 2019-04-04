@@ -7,16 +7,14 @@ import { constants } from '@ifixit/toolbox';
 const { color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
-  image: PropTypes.shape({
-    standard: PropTypes.string.isRequired,
-  }),
+  image: PropTypes.string,
   translate: PropTypes.func.isRequired,
   title: PropTypes.string,
   description: PropTypes.string,
 };
 
 const defaultProps = {
-  image: { standard: '' },
+  image: '',
   title: '',
   description: '',
 };
@@ -53,7 +51,7 @@ const Title = glamorous.span({
   fontWeight: 700,
 });
 
-const Description = glamorous.span({
+const Summary = glamorous.span({
   fontSize: fontSize[2],
   lineHeight: lineHeight.copy,
   color: color.grayAlpha[6],
@@ -66,7 +64,7 @@ const Description = glamorous.span({
  * @param {string} - Truncated string.
  */
 function truncate(string, length) {
-  if (string.length <= length) {
+  if (!string || string.length <= length) {
     return string;
   }
 
@@ -75,12 +73,12 @@ function truncate(string, length) {
   return string.slice(0, length - ellipses.length) + ellipses;
 }
 
-function Preview({ translate, image, title, description }) {
+function Preview({ translate, image, title, summary }) {
   return (
     <Container>
-      <Image url={image ? image.standard : ''} />
+      <Image url={image} />
       <Title>{translate(title)}</Title>
-      <Description>{truncate(translate(description), 80)}</Description>
+      <Summary>{truncate(translate(summary), 80)}</Summary>
     </Container>
   );
 }

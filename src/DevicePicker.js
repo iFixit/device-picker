@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import glamorous from 'glamorous';
 import smoothscroll from 'smoothscroll-polyfill';
 import Fuse from 'fuse.js';
-import { debounce, minBy, inRange, set } from 'lodash';
+import { debounce, minBy, inRange } from 'lodash';
 
 import { Button, Icon, constants } from '@ifixit/toolbox';
 import List from './List';
@@ -17,7 +17,6 @@ const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
 const propTypes = {
    getHierarchy: PropTypes.func.isRequired,
-   getDevice: PropTypes.func.isRequired,
    onSubmit: PropTypes.func.isRequired,
    onCancel: PropTypes.func.isRequired,
    translate: PropTypes.func.isRequired,
@@ -151,12 +150,20 @@ const SEARCH_PENDING = 'pending';
 const SEARCH_NO_RESULTS = 'no_results';
 
 class DevicePicker extends Component {
-   state = {
-      searchValue: this.props.initialDevice,
-      search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
-      tree: null,
-      path: [],
-   };
+   constructor(props) {
+      super(props);
+
+      this.state = {
+         searchValue: this.props.initialDevice,
+         search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
+         tree: null,
+         loadingPreviews: false,
+         path: [],
+      };
+
+      // Used to store loaded device previews.
+      this.cache = {};
+   }
 
    translations = [];
 
@@ -249,6 +256,7 @@ class DevicePicker extends Component {
     * @param {string[]} path
     */
    setPath = path => {
+      this.preloadLeafPreviews(path);
       this.setState({
          searchValue: path[path.length - 1] || '',
          search: SEARCH_INACTIVE,
@@ -555,44 +563,46 @@ class DevicePicker extends Component {
          event.stopPropagation();
       };
 
-      this.preloadLeafPreviews(tree, trailingPath);
+      if (tree && !Array.isArray(tree)) {
+         this.preloadLeafPreviews(trailingPath);
+      }
 
-      const list = tree && !Array.isArray(tree) ? (
-         <List
-            key={title}
-            data={Object.keys(tree)}
-            highlightedIndex={highlightedIndex}
-            onClick={handleListClick}
-            renderItem={({ item, isHighlighted }) => (
-               <Item
-                  key={item}
-                  isHighlighted={isHighlighted}
-                  isSelected={isHighlighted && leadingPath.length === 1}
-                  onClick={event => handleItemClick(event, item)}>
-                  <ItemText>
-                     {this.props.translate(
-                        this.removeParentFromTitle({
-                           title: this.translations[item] || item,
-                           parentTitle: this.translations[title] || title,
-                        }),
-                     )}
-                  </ItemText>
-                  {tree[item] &&
-                     !Array.isArray(tree[item]) && (
-                        <Icon name="chevron-right" size={20} />
-                     )}
-               </Item>
-            )}
-         />
-      ) : (
-         <PreviewContainer
-            key={title}
-            path={trailingPath}
-            tree={this.state.tree}
-            translate={this.props.translate}
-            getDevice={() => this.props.getDevice(title.replace(/ /g, '_'))}
-         />
-      );
+      const list =
+         tree && !Array.isArray(tree) ? (
+            <List
+               key={title}
+               data={Object.keys(tree)}
+               highlightedIndex={highlightedIndex}
+               onClick={handleListClick}
+               renderItem={({ item, isHighlighted }) => (
+                  <Item
+                     key={item}
+                     isHighlighted={isHighlighted}
+                     isSelected={isHighlighted && leadingPath.length === 1}
+                     onClick={event => handleItemClick(event, item)}>
+                     <ItemText>
+                        {this.props.translate(
+                           this.removeParentFromTitle({
+                              title: this.translations[item] || item,
+                              parentTitle: this.translations[title] || title,
+                           }),
+                        )}
+                     </ItemText>
+                     {tree[item] &&
+                        !Array.isArray(tree[item]) && (
+                           <Icon name="chevron-right" size={20} />
+                        )}
+                  </Item>
+               )}
+            />
+         ) : (
+            <PreviewContainer
+               key={title}
+               path={trailingPath}
+               data={this.cache[title]}
+               translate={this.props.translate}
+            />
+         );
 
       if (leadingPath.length === 0) {
          return [list];
@@ -609,27 +619,35 @@ class DevicePicker extends Component {
    };
 
    // If the list includes any leaves, fetch their preview data.
-   preloadLeafPreviews(tree, path) {
-      if (!tree || Array.isArray(tree)) {
+   preloadLeafPreviews(path) {
+      if (!path || path.length < 1) {
          return;
       }
 
-      const leaves = Object.keys(tree).filter(key => tree[key] == null);
+      const title = path[path.length - 1];
 
-      leaves.forEach((leaf, index) => {
-         this.props.getDevice(leaf).then(previewData => {
-            this.updateTree([...path, leaf], previewData);
+      if (this.alreadyLoadedCategory(title)) {
+         return;
+      }
+
+      // Mark that the parent category's leaves are loaded
+      this.cache[title] = true;
+      fetch(
+         `https://www.ifixit.com/api/2.0/wikis/CATEGORY/${title}/leaves`,
+      )
+         .then(response => response.json())
+         .then(leaves => {
+            leaves.forEach((leaf, index) => {
+               this.cache[leaf.title] = leaf;
+            });
+            this.forceUpdate();
          });
-      });
    }
 
-   // Update the device tree at a certain path.
-   updateTree(path, value) {
-      this.setState(prevState => {
-         let { tree } = prevState;
-
-         set(tree, path, [value]);
-      });
+   // If the cache includes the category title, the device is being or has
+   // already been downloaded.
+   alreadyLoadedCategory(title) {
+      return this.cache[title];
    }
 
    render() {
