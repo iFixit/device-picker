@@ -563,12 +563,10 @@ class DevicePicker extends Component {
          event.stopPropagation();
       };
 
-      if (tree && !Array.isArray(tree)) {
-         this.preloadLeafPreviews(trailingPath);
-      }
+      this.preloadLeafPreviews(trailingPath);
 
       const list =
-         tree && !Array.isArray(tree) ? (
+         tree ? (
             <List
                key={title}
                data={Object.keys(tree)}
@@ -588,8 +586,7 @@ class DevicePicker extends Component {
                            }),
                         )}
                      </ItemText>
-                     {tree[item] &&
-                        !Array.isArray(tree[item]) && (
+                     {tree[item] && (
                            <Icon name="chevron-right" size={20} />
                         )}
                   </Item>
@@ -633,7 +630,7 @@ class DevicePicker extends Component {
       // Mark that the parent category's leaves are loaded
       this.cache[title] = true;
       fetch(
-         `https://www.ifixit.com/api/2.0/wikis/CATEGORY/${title}/leaves`,
+         `https://www.ifixit.com/api/2.0/wikis/leaves/${title}`,
       )
          .then(response => response.json())
          .then(leaves => {
