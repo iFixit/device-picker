@@ -39,7 +39,6 @@ const fadeOut = glamor.css.keyframes({
 class DevicePickerModal extends Component {
    static propTypes = {
       getHierarchy: PropTypes.func.isRequired,
-      getDevice: PropTypes.func.isRequired,
       initialDevice: PropTypes.string,
       onSubmit: PropTypes.func,
       onCancel: PropTypes.func,
@@ -110,7 +109,6 @@ class DevicePickerModal extends Component {
             <DevicePicker
                initialDevice={this.props.initialDevice}
                getHierarchy={this.props.getHierarchy}
-               getDevice={this.props.getDevice}
                onSubmit={this.props.onSubmit}
                onCancel={this.props.onCancel}
                allowOrphan={this.props.allowOrphan}
