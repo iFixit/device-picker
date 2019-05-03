@@ -4,6 +4,7 @@ import Modal from 'react-modal';
 import { constants } from '@ifixit/toolbox';
 import DevicePicker from './DevicePicker';
 import * as glamor from 'glamor';
+export { default as DevicePicker } from './DevicePicker';
 
 Modal.setAppElement('body');
 
