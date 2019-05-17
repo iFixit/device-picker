@@ -1,5 +1,7 @@
 # Device Picker
 
+[![npm version](https://img.shields.io/npm/v/device-picker.svg?style=flat-square)](https://www.npmjs.com/package/device-picker)
+
 
 ## Installation
 
