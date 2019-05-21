@@ -1,23 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import glamorous from 'glamorous';
-
 import { constants } from '@ifixit/toolbox';
+import glamorous from 'glamorous';
+import React from 'react';
+
 
 const { color, fontSize, lineHeight, spacing } = constants;
 
-const propTypes = {
-  image: PropTypes.string,
-  translate: PropTypes.func.isRequired,
-  title: PropTypes.string,
-  description: PropTypes.string,
-};
 
-const defaultProps = {
-  image: '',
-  title: '',
-  description: '',
-};
 
 const Container = glamorous.div({
   flex: '1 0 auto',
@@ -30,7 +18,11 @@ const Container = glamorous.div({
   overflowY: 'auto',
 });
 
-const Image = glamorous.div(
+interface ImageProps {
+  url: string
+}
+
+const Image = glamorous.div<ImageProps>(
   {
     width: '100%',
     height: '14rem',
@@ -63,7 +55,7 @@ const Summary = glamorous.span({
  * @param {number} length
  * @param {string} - Truncated string.
  */
-function truncate(string, length) {
+function truncate(string: string, length: number) {
   if (!string || string.length <= length) {
     return string;
   }
@@ -73,7 +65,14 @@ function truncate(string, length) {
   return string.slice(0, length - ellipses.length) + ellipses;
 }
 
-function Preview({ translate, image, title, summary }) {
+interface PreviewProps {
+  image: string,
+  translate: any,
+  title: string,
+  summary: string
+};
+
+function Preview({ translate, image, title, summary }: PreviewProps) {
   return (
     <Container>
       <Image url={image} />
@@ -82,8 +81,5 @@ function Preview({ translate, image, title, summary }) {
     </Container>
   );
 }
-
-Preview.propTypes = propTypes;
-Preview.defaultProps = defaultProps;
 
 export default Preview;

@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Modal from 'react-modal';
 import { constants } from '@ifixit/toolbox';
+import { keyframes } from 'glamor';
+import React, { Component } from 'react';
+import Modal from 'react-modal';
 import DevicePicker from './DevicePicker';
-import * as glamor from 'glamor';
 export { default as DevicePicker } from './DevicePicker';
 
 Modal.setAppElement('body');
@@ -11,55 +10,56 @@ Modal.setAppElement('body');
 const { color } = constants;
 const duration = '0.3s';
 
-const fadeScaleIn = glamor.css.keyframes({
+const fadeScaleIn = keyframes({
    '0%': {
       opacity: '0',
       transform: 'translateY(5%)',
-   }
+   },
 });
 
-const fadeScaleOut = glamor.css.keyframes({
+const fadeScaleOut = keyframes({
    '100%': {
       opacity: '0',
       transform: 'translateY(-5%)',
-   }
+   },
 });
 
-const fadeIn = glamor.css.keyframes({
+const fadeIn = keyframes({
    '0%': {
       opacity: '0',
-   }
+   },
 });
 
-const fadeOut = glamor.css.keyframes({
+const fadeOut = keyframes({
    '100%': {
       opacity: '0',
-   }
+   },
 });
 
-class DevicePickerModal extends Component {
-   static propTypes = {
-      getHierarchy: PropTypes.func.isRequired,
-      initialDevice: PropTypes.string,
-      onSubmit: PropTypes.func,
-      onCancel: PropTypes.func,
-      translate: PropTypes.func,
-      allowOrphan: PropTypes.bool,
-   };
+interface DevicePickerModalProps {
+   isOpen: boolean;
+   getHierarchy: () => Promise<{ hierarchy: any; display_titles: any }>;
+   onSubmit: (title: string) => void;
+   onCancel: () => void;
+   translate: any;
+   allowOrphan: boolean;
+   initialDevice: string;
+}
 
+class DevicePickerModal extends Component<DevicePickerModalProps> {
    static defaultProps = {
       initialDevice: '',
       onSubmit: () => {},
       onCancel: () => {},
-      translate: s => s,
+      translate: (s: string) => s,
       allowOrphan: false,
    };
 
    state = {
       isClosing: false,
-   }
+   };
 
-   componentDidUpdate(prevProps, prevState) {
+   componentDidUpdate(prevProps: DevicePickerModalProps) {
       const closeRequested = prevProps.isOpen && !this.props.isOpen;
       if (closeRequested) {
          this.animateClosed();
@@ -92,7 +92,9 @@ class DevicePickerModal extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                   backgroundColor: color.grayAlpha[5],
-                  animation: `${this.state.isClosing ? fadeOut : fadeIn} ${duration}`,
+                  animation: `${
+                     this.state.isClosing ? fadeOut : fadeIn
+                  } ${duration}`,
                },
                content: {
                   position: 'static',
@@ -100,13 +102,15 @@ class DevicePickerModal extends Component {
                   height: '85vh',
                   padding: 0,
                   border: 'none',
-                  animation: `${this.state.isClosing ? fadeScaleOut : fadeScaleIn} ${duration}`,
+                  animation: `${
+                     this.state.isClosing ? fadeScaleOut : fadeScaleIn
+                  } ${duration}`,
                   transform: 'translateZ(0)',
                   // translateZ hack forces the browser to
                   // create a new layer and send rendering to the GPU
                },
             }}
-            >
+         >
             <DevicePicker
                initialDevice={this.props.initialDevice}
                getHierarchy={this.props.getHierarchy}

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import DevicePickerModal from './DevicePickerModal';
 import { Button } from '@ifixit/toolbox';
 import glamorous from 'glamorous';
+import React, { Component } from 'react';
+import DevicePickerModal from './DevicePickerModal';
 
 const InfoContainer = glamorous.div({
    position: 'fixed',
@@ -27,7 +27,7 @@ class App extends Component {
       this.setState({ isOpen: false });
    };
 
-   handleSubmit = deviceTitle => {
+   handleSubmit = (deviceTitle: string) => {
       this.setState({
          currentDevice: deviceTitle,
          isOpen: false,
