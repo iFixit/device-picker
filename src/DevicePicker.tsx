@@ -164,8 +164,8 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
-      initialDevice: ''
-   }
+      initialDevice: '',
+   };
 
    constructor(props: DevicePickerProps) {
       super(props);
