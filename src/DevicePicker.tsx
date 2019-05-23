@@ -1,32 +1,34 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import glamorous from 'glamorous';
-import smoothscroll from 'smoothscroll-polyfill';
+import { Button, constants, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
-import { debounce, minBy, inRange } from 'lodash';
-
-import { Button, Icon, constants } from '@ifixit/toolbox';
-import List from './List';
+import glamorous from 'glamorous';
+import { debounce, inRange, minBy } from 'lodash';
+import React, { Component } from 'react';
+import smoothscroll from 'smoothscroll-polyfill';
 import Banner from './Banner';
-import PreviewContainer from './PreviewContainer';
+import List from './List';
 import NoResults from './NoResults';
+import PreviewContainer from './PreviewContainer';
 
 smoothscroll.polyfill();
 
 const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
 
-const propTypes = {
-   getHierarchy: PropTypes.func.isRequired,
-   onSubmit: PropTypes.func.isRequired,
-   onCancel: PropTypes.func.isRequired,
-   translate: PropTypes.func.isRequired,
-   allowOrphan: PropTypes.bool.isRequired,
-   initialDevice: PropTypes.string,
-};
+interface DevicePickerProps {
+   getHierarchy: () => Promise<{ hierarchy: any; display_titles: any }>;
+   onSubmit: (title: string) => void;
+   onCancel: () => void;
+   translate: any;
+   allowOrphan: boolean;
+   initialDevice: string;
+}
 
-const defaultProps = {
-   initialDevice: '',
-};
+interface DevicePickerState {
+   searchValue: string;
+   search: string;
+   tree: any;
+   loadingPreviews: boolean;
+   path: string[];
+}
 
 const Container = glamorous.div({
    display: 'flex',
@@ -72,7 +74,12 @@ const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
    WebkitOverflowScrolling: 'touch',
 });
 
-const Item = glamorous('div', {
+interface ItemProps {
+   isHighlighted: boolean;
+   isSelected: boolean;
+}
+
+const Item = glamorous<ItemProps>('div', {
    displayName: 'Item',
    withProps: { role: 'button' },
 })(
@@ -91,15 +98,17 @@ const Item = glamorous('div', {
       },
    },
    ({ isHighlighted }) =>
-      isHighlighted && { backgroundColor: color.grayAlpha[3] },
+      isHighlighted ? { backgroundColor: color.grayAlpha[3] } : {},
    ({ isSelected }) =>
-      isSelected && {
-         color: color.white,
-         backgroundColor: color.blue[4],
-         '& svg': {
-            opacity: 1,
-         },
-      },
+      isSelected
+         ? {
+              color: color.white,
+              backgroundColor: color.blue[4],
+              '& svg': {
+                 opacity: 1,
+              },
+           }
+         : {},
 );
 
 const ItemText = glamorous.span({
@@ -149,8 +158,16 @@ const SEARCH_PENDING = 'pending';
 // NO_RESULTS is when the search is completed, but didn't find a result.
 const SEARCH_NO_RESULTS = 'no_results';
 
-class DevicePicker extends Component {
-   constructor(props) {
+class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
+   // Used to store loaded device previews.
+   cache: { [title: string]: any } = {};
+   translations: { [key: string]: string } = {};
+
+   static defaultProps = {
+      initialDevice: '',
+   };
+
+   constructor(props: DevicePickerProps) {
       super(props);
 
       this.state = {
@@ -160,12 +177,7 @@ class DevicePicker extends Component {
          loadingPreviews: false,
          path: [],
       };
-
-      // Used to store loaded device previews.
-      this.cache = {};
    }
-
-   translations = [];
 
    componentDidMount() {
       // get iFixit's category hierarchy
@@ -192,7 +204,10 @@ class DevicePicker extends Component {
       window.addEventListener('keydown', this.handleKeyDown);
    }
 
-   componentDidUpdate(prevProps, prevState) {
+   componentDidUpdate(
+      prevProps: DevicePickerProps,
+      prevState: DevicePickerState,
+   ) {
       if (prevState.path !== this.state.path && this.listsContainerRef) {
          // if path changed,
          // scroll to right edge
@@ -223,7 +238,15 @@ class DevicePicker extends Component {
     * @param {number} params.distance
     * @returns {string} - Item given distance away from given index.
     */
-   getRelativeItem = ({ list, index, distance }) => {
+   getRelativeItem = ({
+      list,
+      index,
+      distance,
+   }: {
+      list: string[];
+      index: number;
+      distance: number;
+   }) => {
       let newIndex = (index + distance) % list.length;
 
       if (newIndex < 0) {
@@ -240,7 +263,7 @@ class DevicePicker extends Component {
     * @param {string[]} params.path
     * @returns {Object} - Tree node.
     */
-   getNode = ({ tree, path }) => {
+   getNode = ({ tree, path }: { tree: any; path: string[] }): any => {
       if (path.length === 0) {
          return tree;
       }
@@ -255,7 +278,7 @@ class DevicePicker extends Component {
     * Update path and searchValue state given a path.
     * @param {string[]} path
     */
-   setPath = path => {
+   setPath = (path: string[]) => {
       this.preloadLeafPreviews(path);
       this.setState({
          searchValue: path[path.length - 1] || '',
@@ -268,7 +291,8 @@ class DevicePicker extends Component {
     * Store reference to the search input DOM element.
     * @param {HTMLElement} element
     */
-   setSearchInputRef = element => {
+   searchInputRef: any = null;
+   setSearchInputRef = (element: HTMLElement) => {
       this.searchInputRef = element;
    };
 
@@ -276,7 +300,8 @@ class DevicePicker extends Component {
     * Store reference to the lists container DOM element.
     * @param {HTMLElement} element
     */
-   setListsContainerRef = element => {
+   listsContainerRef: any = null;
+   setListsContainerRef = (element: HTMLElement) => {
       this.listsContainerRef = element;
    };
 
@@ -292,7 +317,7 @@ class DevicePicker extends Component {
     * Calls the appropriate event handler based on which key was pressed.
     * @param {KeyboardEvent} event
     */
-   handleKeyDown = event => {
+   handleKeyDown = (event: KeyboardEvent) => {
       switch (event.keyCode) {
          // Enter
          case 13:
@@ -342,7 +367,7 @@ class DevicePicker extends Component {
       }
    };
 
-   handleEnter = event => {
+   handleEnter = (event: KeyboardEvent) => {
       if (this.allowSubmit()) {
          const { path } = this.state;
          this.props.onSubmit(path[path.length - 1]);
@@ -355,7 +380,7 @@ class DevicePicker extends Component {
       this.props.onCancel();
    };
 
-   handleArrowLeft = event => {
+   handleArrowLeft = (event: KeyboardEvent) => {
       const { path } = this.state;
 
       // go back to the previously highlighted item
@@ -364,7 +389,7 @@ class DevicePicker extends Component {
       event.preventDefault();
    };
 
-   handleArrowRight = event => {
+   handleArrowRight = (event: KeyboardEvent) => {
       const { tree, path } = this.state;
 
       const currentNode = this.getNode({ tree, path });
@@ -377,7 +402,7 @@ class DevicePicker extends Component {
       event.preventDefault();
    };
 
-   handleArrowUpDown = event => {
+   handleArrowUpDown = (event: KeyboardEvent) => {
       const { tree, path } = this.state;
 
       const currentParentNode = this.getNode({
@@ -405,7 +430,7 @@ class DevicePicker extends Component {
     * Handle search input change event.
     * @param {InputEvent} event
     */
-   handleSearchChange = event => {
+   handleSearchChange = (event: any) => {
       // Don't search if the string is all whitespace.
       const isSearching = !/^\s*$/.test(event.target.value);
       // Reset the device picker if the search text gets deleted.
@@ -426,7 +451,11 @@ class DevicePicker extends Component {
     * }, ...]
     */
    // from the default tree structure.
-   createItemList = (tree, itemName = null, path = []) => {
+   createItemList = (
+      tree: any,
+      itemName: string | null = null,
+      path: string[] = [],
+   ): any => {
       const item = {
          itemName,
          path,
@@ -459,6 +488,7 @@ class DevicePicker extends Component {
    /**
     * Uses the current searchValue to set the selected path.
     */
+   itemList: any;
    applySearch = () => {
       if (this.state.search !== SEARCH_PENDING) {
          return;
@@ -467,7 +497,14 @@ class DevicePicker extends Component {
       // Creating a flat list from the tree is expensive, so save the result.
       this.itemList = this.itemList || this.createItemList(this.state.tree);
 
-      const fuse = new Fuse(this.itemList, {
+      const fuse = new Fuse<{
+         score: number;
+         item: {
+            itemName: string;
+            path: string[];
+            pathText: string;
+         };
+      }>(this.itemList, {
          keys: [
             {
                name: 'itemName',
@@ -491,7 +528,7 @@ class DevicePicker extends Component {
                result.score * (1 + 0.1 * result.item.path.length),
          );
          this.setState({
-            path: bestResult.item.path,
+            path: bestResult ? bestResult.item.path : [],
             search: SEARCH_INACTIVE,
          });
       } else {
@@ -515,7 +552,13 @@ class DevicePicker extends Component {
     * @param {string} params.parentTitle
     * @param {string} - Category title without words from parent title.
     */
-   removeParentFromTitle = ({ title, parentTitle }) =>
+   removeParentFromTitle = ({
+      title,
+      parentTitle,
+   }: {
+      title: string;
+      parentTitle: string;
+   }) =>
       title
          .split(' ')
          .filter(
@@ -535,7 +578,15 @@ class DevicePicker extends Component {
     * @param {string[]} params.trailingPath
     * @param {ReactElement[]} - Array of React elements to render.
     */
-   renderLists = ({ tree, leadingPath, trailingPath = [] } = {}) => {
+   renderLists = ({
+      tree,
+      leadingPath,
+      trailingPath = [],
+   }: {
+      tree: any;
+      leadingPath: string[];
+      trailingPath: string[];
+   }): any => {
       // use the last value of trailingPath as title of list
       const title = trailingPath[trailingPath.length - 1] || '';
 
@@ -557,7 +608,7 @@ class DevicePicker extends Component {
        * @param {MouseEvent} event
        * @param {string} item
        */
-      const handleItemClick = (event, item) => {
+      const handleItemClick = (event: any, item: string) => {
          // select item
          this.setPath([...trailingPath, item]);
          event.stopPropagation();
@@ -565,41 +616,38 @@ class DevicePicker extends Component {
 
       this.preloadLeafPreviews(trailingPath);
 
-      const list =
-         tree ? (
-            <List
-               key={title}
-               data={Object.keys(tree)}
-               highlightedIndex={highlightedIndex}
-               onClick={handleListClick}
-               renderItem={({ item, isHighlighted }) => (
-                  <Item
-                     key={item}
-                     isHighlighted={isHighlighted}
-                     isSelected={isHighlighted && leadingPath.length === 1}
-                     onClick={event => handleItemClick(event, item)}>
-                     <ItemText>
-                        {this.props.translate(
-                           this.removeParentFromTitle({
-                              title: this.translations[item] || item,
-                              parentTitle: this.translations[title] || title,
-                           }),
-                        )}
-                     </ItemText>
-                     {tree[item] && (
-                           <Icon name="chevron-right" size={20} />
-                        )}
-                  </Item>
-               )}
-            />
-         ) : (
-            <PreviewContainer
-               key={title}
-               path={trailingPath}
-               data={this.cache[title]}
-               translate={this.props.translate}
-            />
-         );
+      const list = tree ? (
+         <List
+            key={title}
+            data={Object.keys(tree)}
+            highlightedIndex={highlightedIndex}
+            onClick={handleListClick}
+            renderItem={({ item, isHighlighted }: any) => (
+               <Item
+                  key={item}
+                  isHighlighted={isHighlighted}
+                  isSelected={isHighlighted && leadingPath.length === 1}
+                  onClick={event => handleItemClick(event, item)}
+               >
+                  <ItemText>
+                     {this.props.translate(
+                        this.removeParentFromTitle({
+                           title: this.translations[item] || item,
+                           parentTitle: this.translations[title] || title,
+                        }),
+                     )}
+                  </ItemText>
+                  {tree[item] && <Icon name="chevron-right" size={20} />}
+               </Item>
+            )}
+         />
+      ) : (
+         <PreviewContainer
+            key={title}
+            data={this.cache[title]}
+            translate={this.props.translate}
+         />
+      );
 
       if (leadingPath.length === 0) {
          return [list];
@@ -616,7 +664,7 @@ class DevicePicker extends Component {
    };
 
    // If the list includes any leaves, fetch their preview data.
-   preloadLeafPreviews(path) {
+   preloadLeafPreviews(path: string[]) {
       if (!path || path.length < 1) {
          return;
       }
@@ -629,12 +677,10 @@ class DevicePicker extends Component {
 
       // Mark that the parent category's leaves are loaded
       this.cache[title] = true;
-      fetch(
-         `https://www.ifixit.com/api/2.0/wikis/leaves/${title}`,
-      )
+      fetch(`https://www.ifixit.com/api/2.0/wikis/leaves/${title}`)
          .then(response => response.json())
          .then(leaves => {
-            leaves.forEach((leaf, index) => {
+            leaves.forEach((leaf: { title: string }) => {
                this.cache[leaf.title] = leaf;
             });
             this.forceUpdate();
@@ -643,7 +689,7 @@ class DevicePicker extends Component {
 
    // If the cache includes the category title, the device is being or has
    // already been downloaded.
-   alreadyLoadedCategory(title) {
+   alreadyLoadedCategory(title: string) {
       return this.cache[title];
    }
 
@@ -678,7 +724,8 @@ class DevicePicker extends Component {
                            'Choose %1',
                            `"${searchValue}"`,
                         )}
-                        onClick={() => onSubmit(searchValue)}>
+                        onClick={() => onSubmit(searchValue)}
+                     >
                         {translate("Don't see what you're looking for?")}
                      </Banner>
                   </BannerContainer>
@@ -693,7 +740,12 @@ class DevicePicker extends Component {
                      translate={translate}
                   />
                ) : (
-                  tree && this.renderLists({ tree, leadingPath: path })
+                  tree &&
+                  this.renderLists({
+                     tree,
+                     leadingPath: path,
+                     trailingPath: [],
+                  })
                )}
             </ListsContainer>
 
@@ -703,7 +755,8 @@ class DevicePicker extends Component {
                   <Button
                      design="primary"
                      disabled={!this.allowSubmit()}
-                     onClick={() => onSubmit(path[path.length - 1])}>
+                     onClick={() => onSubmit(path[path.length - 1])}
+                  >
                      {translate('Choose device')}
                   </Button>
                </ToolbarRight>
@@ -712,8 +765,5 @@ class DevicePicker extends Component {
       );
    }
 }
-
-DevicePicker.propTypes = propTypes;
-DevicePicker.defaultProps = defaultProps;
 
 export default DevicePicker;
