@@ -123,6 +123,8 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
    static defaultProps = {
       initialDevice: '',
+      allowOrphan: false,
+      translate: (s: string) => s,
    };
 
    constructor(props: DevicePickerProps) {
