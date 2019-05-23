@@ -34,11 +34,7 @@ const ColumnItem = styled.button<ColumnItemProps>`
          : 'transparent'};
    border: 0;
    appearance: none;
-
-   :focus {
-      outline: 0;
-      box-shadow: inset 0 0 0 2px ${color.blue};
-   }
+   outline: 0;
 `;
 
 const ColumnItemText = styled.span`
