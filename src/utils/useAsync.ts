@@ -40,7 +40,7 @@ function useAsync<T>(
       return function cleanup() {
          isFresh = false;
       };
-   }, [fn, ...dependencies]);
+   }, dependencies);
 
    return state;
 }
