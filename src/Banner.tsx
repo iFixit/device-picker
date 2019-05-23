@@ -6,50 +6,49 @@ import {
    space,
 } from '@core-ds/primitives';
 import { Button } from '@ifixit/toolbox';
-import glamorous from 'glamorous';
 import React from 'react';
+import styled from 'styled-components';
 import { above } from './utils/mediaQuery';
 
-const Container = glamorous.div({
-   display: 'flex',
-   flex: '0 0 auto',
-   flexDirection: 'column',
-   alignItems: 'stretch',
-   background: color.gray1,
-   padding: space[4],
+const Container = styled.div`
+   display: flex;
+   flex: 0 0 auto;
+   flex-direction: column;
+   align-items: stretch;
+   background: ${color.gray1};
+   padding: ${space[4]};
 
-   [above(breakpoint.sm)]: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: `${space[2]} ${space[4]}`,
-   },
-});
+   ${above(breakpoint.sm)} {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: ${space[2]} ${space[4]};
+   }
+`;
 
-const Text = glamorous.span({
-   fontSize: fontSize[1],
-   color: color.gray6,
-   lineHeight: lineHeight.tight,
-   textAlign: 'center',
-   marginBottom: space[3],
+const Text = styled.span`
+   font-size: ${fontSize[1]};
+   color: ${color.gray6};
+   line-height: ${lineHeight.tight};
+   text-align: center;
+   margin-bottom: ${space[3]};
 
-   [above(breakpoint.sm)]: {
-      marginBottom: 0,
-      marginRight: space[2],
-      textAlign: 'left',
-   },
-});
+   ${above(breakpoint.sm)} {
+      margin-bottom: 0px;
+      margin-right: ${space[2]};
+      text-align: left;
+   }
+`;
 
 interface BannerProps {
-   className?: string;
    children: string;
    callToAction: string;
    onClick: () => void;
 }
 
-function Banner({ className, children, callToAction, onClick }: BannerProps) {
+function Banner({ children, callToAction, onClick }: BannerProps) {
    return (
-      <Container className={className}>
+      <Container>
          <Text>{children}</Text>
          <Button size="small" onClick={onClick}>
             {callToAction}
