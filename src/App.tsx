@@ -6,7 +6,7 @@ function App() {
       <div data-reactroot style={{ width: '100vw', height: '100vh' }}>
          <DevicePicker
             initialDevice="Foth-Flex TLR"
-            getHierarchy={() =>
+            fetchHierarchy={() =>
                fetch(
                   'https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy',
                ).then(response => response.json())

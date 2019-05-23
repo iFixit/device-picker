@@ -14,7 +14,7 @@ smoothscroll.polyfill();
 const { breakpoint, color, fontSize, spacing } = constants;
 
 interface DevicePickerProps {
-   getHierarchy: () => Promise<{
+   fetchHierarchy: () => Promise<{
       hierarchy: Hierarchy;
       display_titles: Dictionary<string>;
    }>;
@@ -143,7 +143,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       // get iFixit's category hierarchy
       // TODO: investigate caching
       this.props
-         .getHierarchy()
+         .fetchHierarchy()
          .then(data => {
             if (typeof data.hierarchy === 'undefined') {
                throw new Error('API response has no `hierarchy` property.');
