@@ -46,18 +46,22 @@ function ColumnExplorer({
    function handleKeyDown(event: KeyboardEvent) {
       switch (event.key) {
          case 'ArrowLeft':
+            event.preventDefault();
             onChange(moveLeft(hierarchy, path));
             break;
 
          case 'ArrowRight':
+            event.preventDefault();
             onChange(moveRight(hierarchy, path));
             break;
 
          case 'ArrowDown':
+            event.preventDefault();
             onChange(moveDown(hierarchy, path));
             break;
 
          case 'ArrowUp':
+            event.preventDefault();
             onChange(moveUp(hierarchy, path));
             break;
       }
