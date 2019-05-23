@@ -7,7 +7,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import Banner from './Banner';
 import ColumnExplorer from './ColumnExplorer';
 import NoResults from './NoResults';
-import { Hierarchy } from './types';
+import { Hierarchy, Wiki } from './types';
 
 smoothscroll.polyfill();
 
@@ -18,6 +18,7 @@ interface DevicePickerProps {
       hierarchy: Hierarchy;
       display_titles: Dictionary<string>;
    }>;
+   fetchChildren: (title: string) => Promise<Array<Wiki>>;
    onSubmit: (title: string) => void;
    onCancel: () => void;
    translate: (...strings: string[]) => string;
@@ -422,7 +423,13 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
    render() {
       const { searchValue, tree, displayTitles, path, search } = this.state;
-      const { onSubmit, onCancel, allowOrphan, translate } = this.props;
+      const {
+         fetchChildren,
+         onSubmit,
+         onCancel,
+         allowOrphan,
+         translate,
+      } = this.props;
 
       return (
          <Container data-reactroot id="devicePickerModal">
@@ -470,11 +477,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   <ColumnExplorer
                      hierarchy={tree}
                      displayTitles={displayTitles}
-                     fetchChildren={title =>
-                        fetch(
-                           `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
-                        ).then(response => response.json())
-                     }
+                     fetchChildren={fetchChildren}
                      path={path}
                      onChange={this.setPath}
                      translate={this.props.translate}

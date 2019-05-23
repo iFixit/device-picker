@@ -1,5 +1,12 @@
 import React from 'react';
 import DevicePicker from './DevicePicker';
+import { memoize } from 'lodash';
+
+const fetchChildren = memoize(title =>
+   fetch(
+      `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
+   ).then(response => response.json()),
+);
 
 function App() {
    return (
@@ -11,6 +18,7 @@ function App() {
                   'https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy',
                ).then(response => response.json())
             }
+            fetchChildren={fetchChildren}
             onSubmit={title => alert(`Selected "${title}"`)}
             onCancel={() => alert(`Cancelled`)}
          />
