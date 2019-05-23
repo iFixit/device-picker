@@ -1,70 +1,70 @@
 {
-  "name": "device-picker",
-  "version": "0.1.19",
-  "main": "dist/DevicePickerModal.js",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "dev": "react-scripts start",
-    "build": "babel src --out-dir dist --extensions \".ts,.tsx\"",
-    "test": "react-scripts test --env=jsdom",
-    "lint": "eslint .",
-    "prepublishOnly": "npm run build"
-  },
-  "dependencies": {
-    "@core-ds/icons": "^0.5.0",
-    "@core-ds/primitives": "^0.12.0",
-    "@ifixit/toolbox": "^0.12.2",
-    "fuse.js": "^3.1.0",
-    "glamor": "^2.20.40",
-    "glamorous": "^4.13.1",
-    "lodash": "^4.17.10",
-    "prop-types": "^15.5.10",
-    "react-modal": "^3.4.5",
-    "smoothscroll-polyfill": "^0.3.6"
-  },
-  "peerDependencies": {
-    "react": "16.8.x",
-    "react-dom": "16.8.x",
-    "styled-components": "4.x"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.13",
-    "@types/lodash": "^4.14.130",
-    "@types/node": "^12.0.2",
-    "@types/react": "^16.8.18",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-modal": "^3.8.2",
-    "@types/smoothscroll-polyfill": "^0.3.1",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.3.0",
-    "eslint-config-react-app": "^4.0.1",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.13.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "^3.0.1",
-    "styled-components": "^3.3.3",
-    "typescript": "^3.4.5"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+   "name": "device-picker",
+   "version": "0.1.19",
+   "main": "dist/DevicePicker.js",
+   "files": [
+      "dist"
+   ],
+   "scripts": {
+      "dev": "react-scripts start",
+      "build": "babel src --out-dir dist --extensions \".ts,.tsx\"",
+      "test": "react-scripts test --env=jsdom",
+      "lint": "eslint .",
+      "prepublishOnly": "npm run build"
+   },
+   "dependencies": {
+      "@core-ds/icons": "^0.5.0",
+      "@core-ds/primitives": "^0.12.0",
+      "@ifixit/toolbox": "^0.12.2",
+      "fuse.js": "^3.1.0",
+      "glamor": "^2.20.40",
+      "glamorous": "^4.13.1",
+      "lodash": "^4.17.10",
+      "prop-types": "^15.5.10",
+      "react-modal": "^3.4.5",
+      "smoothscroll-polyfill": "^0.3.6"
+   },
+   "peerDependencies": {
+      "react": "16.8.x",
+      "react-dom": "16.8.x",
+      "styled-components": "4.x"
+   },
+   "devDependencies": {
+      "@babel/cli": "^7.4.4",
+      "@babel/plugin-proposal-class-properties": "^7.4.4",
+      "@babel/preset-env": "^7.4.4",
+      "@babel/preset-react": "^7.0.0",
+      "@babel/preset-typescript": "^7.3.3",
+      "@types/jest": "^24.0.13",
+      "@types/lodash": "^4.14.130",
+      "@types/node": "^12.0.2",
+      "@types/react": "^16.8.18",
+      "@types/react-dom": "^16.8.4",
+      "@types/react-modal": "^3.8.2",
+      "@types/smoothscroll-polyfill": "^0.3.1",
+      "babel-eslint": "^10.0.1",
+      "eslint": "^5.16.0",
+      "eslint-config-prettier": "^4.3.0",
+      "eslint-config-react-app": "^4.0.1",
+      "eslint-plugin-import": "^2.17.2",
+      "eslint-plugin-jsx-a11y": "^6.2.1",
+      "eslint-plugin-react": "^7.13.0",
+      "react": "^16.8.6",
+      "react-dom": "^16.8.6",
+      "react-scripts": "^3.0.1",
+      "styled-components": "^3.3.3",
+      "typescript": "^3.4.5"
+   },
+   "browserslist": {
+      "production": [
+         ">0.2%",
+         "not dead",
+         "not op_mini all"
+      ],
+      "development": [
+         "last 1 chrome version",
+         "last 1 firefox version",
+         "last 1 safari version"
+      ]
+   }
 }
