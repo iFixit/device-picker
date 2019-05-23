@@ -1,4 +1,5 @@
-import { Button, constants, Icon } from '@ifixit/toolbox';
+import { breakpoint, color, fontSize, space } from '@core-ds/primitives';
+import { Button, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
 import glamorous from 'glamorous';
 import { debounce, Dictionary, inRange, minBy } from 'lodash';
@@ -8,10 +9,9 @@ import Banner from './Banner';
 import ColumnExplorer from './ColumnExplorer';
 import NoResults from './NoResults';
 import { Hierarchy, Wiki } from './types';
+import { above } from './utils/mediaQuery';
 
 smoothscroll.polyfill();
-
-const { breakpoint, color, fontSize, spacing } = constants;
 
 interface DevicePickerProps {
    fetchHierarchy: () => Promise<{
@@ -38,7 +38,7 @@ const Container = glamorous.div({
    display: 'flex',
    flexDirection: 'column',
    height: '100%',
-   color: color.grayAlpha[9],
+   color: color.gray8,
 });
 
 const SearchContainer = glamorous('div', { displayName: 'SearchContainer' })({
@@ -46,7 +46,7 @@ const SearchContainer = glamorous('div', { displayName: 'SearchContainer' })({
    flex: '0 0 auto',
    alignItems: 'center',
    paddingLeft: '15px',
-   borderBottom: `1px solid ${color.grayAlpha[3]}`,
+   borderBottom: `1px solid ${color.gray2}`,
 });
 
 const SearchInput = glamorous('input', {
@@ -54,7 +54,7 @@ const SearchInput = glamorous('input', {
 })({
    flex: '1 1 auto',
    marginBottom: 0,
-   padding: spacing[3],
+   padding: space[4],
    fontFamily: 'inherit',
    fontSize: fontSize[3],
    color: 'inherit',
@@ -63,26 +63,19 @@ const SearchInput = glamorous('input', {
    outline: 0,
 
    '&::placeholder': {
-      color: color.grayAlpha[5],
+      color: color.gray5,
    },
 
-   [breakpoint.sm]: {
+   [above(breakpoint.sm)]: {
       fontSize: fontSize[4],
    },
-});
-
-const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
-   flex: '1 1 auto',
-   display: 'flex',
-   overflowX: 'auto',
-   WebkitOverflowScrolling: 'touch',
 });
 
 const BannerContainer = glamorous.div({
    flex: '0 0 auto',
    order: 1,
 
-   [breakpoint.sm]: {
+   [above(breakpoint.sm)]: {
       order: 0,
    },
 });
@@ -91,14 +84,14 @@ const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
    flex: '0 0 auto',
    order: -1,
    display: 'flex',
-   padding: spacing[2],
-   backgroundColor: color.grayAlpha[2],
+   padding: space[2],
+   backgroundColor: color.gray1,
 
-   [breakpoint.sm]: {
+   [above(breakpoint.sm)]: {
       order: 1,
-      padding: spacing[3],
+      padding: space[4],
       backgroundColor: 'transparent',
-      borderTop: `1px solid ${color.grayAlpha[3]}`,
+      borderTop: `1px solid ${color.gray2}`,
    },
 });
 
@@ -107,7 +100,7 @@ const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
    display: 'flex',
 
    '& > :not(:first-child)': {
-      marginLeft: spacing[2],
+      marginLeft: space[2],
    },
 });
 
@@ -434,7 +427,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       return (
          <Container data-reactroot id="devicePickerModal">
             <SearchContainer>
-               <Icon name="search" size={25} color={color.gray[5]} />
+               <Icon name="search" size={25} color={color.gray5} />
                <SearchInput
                   innerRef={this.setSearchInputRef}
                   placeholder={translate('Search')}

@@ -1,36 +1,41 @@
-// TODO: move this component to toolbox
-import { Button, constants } from '@ifixit/toolbox';
+import {
+   breakpoint,
+   color,
+   fontSize,
+   lineHeight,
+   space,
+} from '@core-ds/primitives';
+import { Button } from '@ifixit/toolbox';
 import glamorous from 'glamorous';
 import React from 'react';
-
-const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
+import { above } from './utils/mediaQuery';
 
 const Container = glamorous.div({
    display: 'flex',
    flex: '0 0 auto',
    flexDirection: 'column',
    alignItems: 'stretch',
-   background: color.gray[2],
-   padding: `${spacing[2]} ${spacing[3]}`,
+   background: color.gray1,
+   padding: space[4],
 
-   [breakpoint.sm]: {
+   [above(breakpoint.sm)]: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: `${spacing[1]} ${spacing[3]}`,
+      padding: `${space[2]} ${space[4]}`,
    },
 });
 
 const Text = glamorous.span({
    fontSize: fontSize[1],
-   color: color.grayAlpha[6],
-   lineHeight: lineHeight.title,
+   color: color.gray6,
+   lineHeight: lineHeight.tight,
    textAlign: 'center',
-   marginBottom: spacing[2],
+   marginBottom: space[3],
 
-   [breakpoint.sm]: {
+   [above(breakpoint.sm)]: {
       marginBottom: 0,
-      marginRight: spacing[2],
+      marginRight: space[2],
       textAlign: 'left',
    },
 });
