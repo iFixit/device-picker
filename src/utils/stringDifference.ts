@@ -1,15 +1,15 @@
-function stringDifference(string: string, otherString: string) {
+function stringDifference(stringA: string, stringB: string) {
    return (
-      string
+      stringA
          .split(' ')
          .filter(
             word =>
-               !otherString
+               !stringB
                   .toLowerCase()
                   .split(' ')
                   .includes(word.toLowerCase()),
          )
-         .join(' ') || string
+         .join(' ') || stringA
    );
 }
 
