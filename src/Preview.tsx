@@ -1,52 +1,48 @@
-import { constants } from '@ifixit/toolbox';
-import glamorous from 'glamorous';
+import { color, fontSize, lineHeight, space } from '@core-ds/primitives';
 import { truncate } from 'lodash';
 import React from 'react';
+import styled from 'styled-components';
 import { Wiki } from './types';
 
-const { color, fontSize, lineHeight, spacing } = constants;
-
-const Container = glamorous.div({
-   flex: '1 0 auto',
-   display: 'flex',
-   flexDirection: 'column',
-   justifyContent: 'flex-start',
-   width: '16rem',
-   padding: spacing[4],
-   textAlign: 'center',
-   overflowY: 'auto',
-});
+const Container = styled.div`
+   flex: 1 0 auto;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: flex-start;
+   width: 16rem;
+   padding: ${space[5]};
+   text-align: center;
+   overflow-y: auto;
+`;
 
 interface ImageProps {
    url: string;
 }
 
-const Image = glamorous.div<ImageProps>(
-   {
-      width: '100%',
-      height: '14rem',
-      minHeight: '3rem',
-      backgroundSize: 'contain',
-      backgroundPosition: 'center center',
-      backgroundRepeat: 'no-repeat',
-   },
-   ({ url }) => ({
-      backgroundImage: `url(${url})`,
-   }),
-);
+const Image = styled.div<ImageProps>`
+   width: 100%;
+   height: 14rem;
+   min-height: 3rem;
+   background-size: contain;
+   background-position: center center;
+   background-repeat: no-repeat;
+   background-image: url(${props => props.url});
+`;
 
-const Title = glamorous.span({
-   margin: `${spacing[3]} 0 ${spacing[1]}`,
-   fontSize: fontSize[2],
-   lineHeight: lineHeight.copy,
-   fontWeight: 700,
-});
+const Title = styled.span`
+   margin: ${space[5]} 0 ${space[1]};
+   font-size: ${fontSize[3]};
+   line-height: ${lineHeight.normal};
+   font-weight: 700;
+`;
 
-const Summary = glamorous.span({
-   fontSize: fontSize[2],
-   lineHeight: lineHeight.copy,
-   color: color.grayAlpha[6],
-});
+const Summary = styled.span`
+   max-width: 30em;
+   font-size: ${fontSize[2]};
+   line-height: ${lineHeight.normal};
+   color: ${color.gray6};
+`;
 
 interface PreviewProps {
    wiki: Wiki;
