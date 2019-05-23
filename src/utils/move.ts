@@ -2,10 +2,12 @@ import { Dictionary, get } from 'lodash';
 import { Hierarchy } from '../types';
 import isLeaf from './isLeaf';
 
+/** Returns a path to the parent. */
 export function moveLeft(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    return path.slice(0, path.length - 1);
 }
 
+/** Returns a path to the first child. */
 export function moveRight(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    const subHierarchy: Dictionary<Hierarchy> =
       path.length > 0 ? get(hierarchy, path) : hierarchy;
@@ -18,6 +20,7 @@ export function moveRight(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    return [...path, children[0]];
 }
 
+/** Returns a path to the previous sibling. */
 export function moveUp(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    const parentHierarchy: Dictionary<Hierarchy> =
       path.length > 1
@@ -35,6 +38,7 @@ export function moveUp(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    return [...path.slice(0, path.length - 1), siblings[nextIndex]];
 }
 
+/** Returns a path to the next sibling. */
 export function moveDown(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    const parentHierarchy: Dictionary<Hierarchy> =
       path.length > 1

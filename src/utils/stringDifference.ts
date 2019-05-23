@@ -1,3 +1,4 @@
+/** Returns a string containing words from stringA that are not in stringB. */
 function stringDifference(stringA: string, stringB: string) {
    return (
       stringA
