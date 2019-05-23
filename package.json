@@ -13,6 +13,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@core-ds/icons": "^0.5.0",
+    "@core-ds/primitives": "^0.12.0",
     "@ifixit/toolbox": "^0.12.2",
     "fuse.js": "^3.1.0",
     "glamor": "^2.20.40",

@@ -1,6 +1,8 @@
 import { constants } from '@ifixit/toolbox';
 import glamorous from 'glamorous';
+import { truncate } from 'lodash';
 import React from 'react';
+import { Wiki } from './types';
 
 const { color, fontSize, lineHeight, spacing } = constants;
 
@@ -46,35 +48,17 @@ const Summary = glamorous.span({
    color: color.grayAlpha[6],
 });
 
-/**
- * Truncate string to given length.
- * @param {string} string
- * @param {number} length
- * @param {string} - Truncated string.
- */
-function truncate(string: string, length: number) {
-   if (!string || string.length <= length) {
-      return string;
-   }
-
-   const ellipses = '...';
-
-   return string.slice(0, length - ellipses.length) + ellipses;
-}
-
 interface PreviewProps {
-   image: string;
-   translate: any;
-   title: string;
-   summary: string;
+   wiki: Wiki;
+   translate: (...strings: string[]) => string;
 }
 
-function Preview({ translate, image, title, summary }: PreviewProps) {
+function Preview({ wiki, translate }: PreviewProps) {
    return (
       <Container>
-         <Image url={image} />
-         <Title>{translate(title)}</Title>
-         <Summary>{truncate(translate(summary), 80)}</Summary>
+         <Image url={wiki.image} />
+         <Title>{translate(wiki.display_title)}</Title>
+         <Summary>{truncate(translate(wiki.summary), { length: 80 })}</Summary>
       </Container>
    );
 }
