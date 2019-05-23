@@ -1,23 +1,26 @@
 import { Button, constants, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
 import glamorous from 'glamorous';
-import { debounce, inRange, minBy } from 'lodash';
+import { debounce, Dictionary, inRange, minBy } from 'lodash';
 import React, { Component } from 'react';
 import smoothscroll from 'smoothscroll-polyfill';
 import Banner from './Banner';
-import List from './List';
+import ColumnExplorer from './ColumnExplorer';
 import NoResults from './NoResults';
-import PreviewContainer from './PreviewContainer';
+import { Hierarchy } from './types';
 
 smoothscroll.polyfill();
 
-const { breakpoint, color, fontSize, lineHeight, spacing } = constants;
+const { breakpoint, color, fontSize, spacing } = constants;
 
 interface DevicePickerProps {
-   getHierarchy: () => Promise<{ hierarchy: any; display_titles: any }>;
+   getHierarchy: () => Promise<{
+      hierarchy: Hierarchy;
+      display_titles: Dictionary<string>;
+   }>;
    onSubmit: (title: string) => void;
    onCancel: () => void;
-   translate: any;
+   translate: (...strings: string[]) => string;
    allowOrphan: boolean;
    initialDevice: string;
 }
@@ -25,8 +28,8 @@ interface DevicePickerProps {
 interface DevicePickerState {
    searchValue: string;
    search: string;
-   tree: any;
-   loadingPreviews: boolean;
+   tree: Hierarchy;
+   displayTitles: Dictionary<string>;
    path: string[];
 }
 
@@ -74,49 +77,6 @@ const ListsContainer = glamorous('div', { displayName: 'ListsContainer' })({
    WebkitOverflowScrolling: 'touch',
 });
 
-interface ItemProps {
-   isHighlighted: boolean;
-   isSelected: boolean;
-}
-
-const Item = glamorous<ItemProps>('div', {
-   displayName: 'Item',
-   withProps: { role: 'button' },
-})(
-   {
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: `${spacing[1]} ${spacing[1]} ${spacing[1]} ${spacing[3]}`,
-      fontSize: fontSize[2],
-      lineHeight: lineHeight.copy,
-      cursor: 'pointer',
-      userSelect: 'none',
-
-      '& svg': {
-         opacity: 0.5,
-      },
-   },
-   ({ isHighlighted }) =>
-      isHighlighted ? { backgroundColor: color.grayAlpha[3] } : {},
-   ({ isSelected }) =>
-      isSelected
-         ? {
-              color: color.white,
-              backgroundColor: color.blue[4],
-              '& svg': {
-                 opacity: 1,
-              },
-           }
-         : {},
-);
-
-const ItemText = glamorous.span({
-   whiteSpace: 'nowrap',
-   textOverflow: 'ellipsis',
-   overflow: 'hidden',
-});
-
 const BannerContainer = glamorous.div({
    flex: '0 0 auto',
    order: 1,
@@ -159,8 +119,6 @@ const SEARCH_PENDING = 'pending';
 const SEARCH_NO_RESULTS = 'no_results';
 
 class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
-   // Used to store loaded device previews.
-   cache: { [title: string]: any } = {};
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
@@ -174,7 +132,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
          searchValue: this.props.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
          tree: null,
-         loadingPreviews: false,
+         displayTitles: {},
          path: [],
       };
    }
@@ -189,8 +147,10 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                throw new Error('API response has no `hierarchy` property.');
             }
 
-            this.translations = data.display_titles;
-            this.setState({ tree: data.hierarchy });
+            this.setState({
+               tree: data.hierarchy,
+               displayTitles: data.display_titles,
+            });
          })
          .then(() => {
             if (this.state.searchValue) {
@@ -208,16 +168,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       prevProps: DevicePickerProps,
       prevState: DevicePickerState,
    ) {
-      if (prevState.path !== this.state.path && this.listsContainerRef) {
-         // if path changed,
-         // scroll to right edge
-         this.listsContainerRef.scroll({
-            top: 0,
-            left: this.listsContainerRef.scrollWidth,
-            behavior: 'smooth',
-         });
-      }
-
       if (prevState.tree !== this.state.tree) {
          this.itemList = null;
       }
@@ -279,7 +229,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
     * @param {string[]} path
     */
    setPath = (path: string[]) => {
-      this.preloadLeafPreviews(path);
       this.setState({
          searchValue: path[path.length - 1] || '',
          search: SEARCH_INACTIVE,
@@ -294,15 +243,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    searchInputRef: any = null;
    setSearchInputRef = (element: HTMLElement) => {
       this.searchInputRef = element;
-   };
-
-   /**
-    * Store reference to the lists container DOM element.
-    * @param {HTMLElement} element
-    */
-   listsContainerRef: any = null;
-   setListsContainerRef = (element: HTMLElement) => {
-      this.listsContainerRef = element;
    };
 
    /**
@@ -544,157 +484,8 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
     */
    debouncedApplySearch = debounce(this.applySearch, 500);
 
-   /**
-    * Remove words in parent title from category title
-    * because category titles are sometimes long and redundant.
-    * @param {Object} params
-    * @param {string} params.title
-    * @param {string} params.parentTitle
-    * @param {string} - Category title without words from parent title.
-    */
-   removeParentFromTitle = ({
-      title,
-      parentTitle,
-   }: {
-      title: string;
-      parentTitle: string;
-   }) =>
-      title
-         .split(' ')
-         .filter(
-            word =>
-               !parentTitle
-                  .toLowerCase()
-                  .split(' ')
-                  .includes(word.toLowerCase()),
-         )
-         .join(' ') || title;
-
-   /**
-    * Render path along a tree.
-    * @param {Object} params
-    * @param {Object} params.tree
-    * @param {string[]} params.leadingPath
-    * @param {string[]} params.trailingPath
-    * @param {ReactElement[]} - Array of React elements to render.
-    */
-   renderLists = ({
-      tree,
-      leadingPath,
-      trailingPath = [],
-   }: {
-      tree: any;
-      leadingPath: string[];
-      trailingPath: string[];
-   }): any => {
-      // use the last value of trailingPath as title of list
-      const title = trailingPath[trailingPath.length - 1] || '';
-
-      // index of highlighted item in list
-      // index will be -1 if no item is highlighted
-      const highlightedIndex =
-         tree && Object.keys(tree).findIndex(key => key === leadingPath[0]);
-
-      /**
-       * Handle list click event.
-       */
-      const handleListClick = () => {
-         // deselect all items in list
-         this.setPath(trailingPath);
-      };
-
-      /**
-       * Handle item click event.
-       * @param {MouseEvent} event
-       * @param {string} item
-       */
-      const handleItemClick = (event: any, item: string) => {
-         // select item
-         this.setPath([...trailingPath, item]);
-         event.stopPropagation();
-      };
-
-      this.preloadLeafPreviews(trailingPath);
-
-      const list = tree ? (
-         <List
-            key={title}
-            data={Object.keys(tree)}
-            highlightedIndex={highlightedIndex}
-            onClick={handleListClick}
-            renderItem={({ item, isHighlighted }: any) => (
-               <Item
-                  key={item}
-                  isHighlighted={isHighlighted}
-                  isSelected={isHighlighted && leadingPath.length === 1}
-                  onClick={event => handleItemClick(event, item)}
-               >
-                  <ItemText>
-                     {this.props.translate(
-                        this.removeParentFromTitle({
-                           title: this.translations[item] || item,
-                           parentTitle: this.translations[title] || title,
-                        }),
-                     )}
-                  </ItemText>
-                  {tree[item] && <Icon name="chevron-right" size={20} />}
-               </Item>
-            )}
-         />
-      ) : (
-         <PreviewContainer
-            key={title}
-            data={this.cache[title]}
-            translate={this.props.translate}
-         />
-      );
-
-      if (leadingPath.length === 0) {
-         return [list];
-      }
-
-      return [
-         list,
-         ...this.renderLists({
-            tree: tree[leadingPath[0]],
-            leadingPath: leadingPath.slice(1),
-            trailingPath: [...trailingPath, ...leadingPath.slice(0, 1)],
-         }),
-      ];
-   };
-
-   // If the list includes any leaves, fetch their preview data.
-   preloadLeafPreviews(path: string[]) {
-      if (!path || path.length < 1) {
-         return;
-      }
-
-      const title = path[path.length - 1];
-
-      if (this.alreadyLoadedCategory(title)) {
-         return;
-      }
-
-      // Mark that the parent category's leaves are loaded
-      this.cache[title] = true;
-      fetch(`https://www.ifixit.com/api/2.0/wikis/leaves/${title}`)
-         .then(response => response.json())
-         .then(leaves => {
-            leaves.forEach((leaf: { title: string }) => {
-               this.cache[leaf.title] = leaf;
-            });
-            this.forceUpdate();
-         });
-   }
-
-   // If the cache includes the category title, the device is being or has
-   // already been downloaded.
-   alreadyLoadedCategory(title: string) {
-      return this.cache[title];
-   }
-
    render() {
-      const { searchValue, tree, path, search } = this.state;
+      const { searchValue, tree, displayTitles, path, search } = this.state;
       const { onSubmit, onCancel, allowOrphan, translate } = this.props;
 
       return (
@@ -731,7 +522,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   </BannerContainer>
                )}
 
-            <ListsContainer innerRef={this.setListsContainerRef}>
+            <ListsContainer>
                {search === SEARCH_NO_RESULTS ? (
                   <NoResults
                      itemName={searchValue}
@@ -740,12 +531,20 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      translate={translate}
                   />
                ) : (
-                  tree &&
-                  this.renderLists({
-                     tree,
-                     leadingPath: path,
-                     trailingPath: [],
-                  })
+                  tree && (
+                     <ColumnExplorer
+                        hierarchy={tree}
+                        displayTitles={displayTitles}
+                        fetchChildren={title =>
+                           fetch(
+                              `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
+                           ).then(response => response.json())
+                        }
+                        path={path}
+                        onChange={this.setPath}
+                        translate={this.props.translate}
+                     />
+                  )
                )}
             </ListsContainer>
 
