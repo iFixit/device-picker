@@ -13,7 +13,7 @@ const hierarchy = {
 };
 
 describe('moveUp', () => {
-   test('returns previous sibling path', () => {
+   test('returns a path to the previous sibling', () => {
       expect(moveUp(hierarchy, ['Camera', 'Fujifilm Camera'])).toEqual([
          'Camera',
          'Casio Camera',
@@ -27,7 +27,7 @@ describe('moveUp', () => {
 });
 
 describe('moveDown', () => {
-   test('returns next sibling path', () => {
+   test('returns a path to the next sibling', () => {
       expect(moveDown(hierarchy, ['Camera', 'Casio Camera'])).toEqual([
          'Camera',
          'Fujifilm Camera',
@@ -41,7 +41,7 @@ describe('moveDown', () => {
 });
 
 describe('moveLeft', () => {
-   test('returns parent path', () => {
+   test('returns a path to the parent', () => {
       expect(moveLeft(hierarchy, ['Camera', 'Casio Camera'])).toEqual([
          'Camera',
       ]);
@@ -51,7 +51,7 @@ describe('moveLeft', () => {
 });
 
 describe('moveRight', () => {
-   test('returns child path', () => {
+   test('returns a path to the first child', () => {
       expect(moveRight(hierarchy, ['Camera'])).toEqual([
          'Camera',
          'Canon Camera',
