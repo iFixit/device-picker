@@ -1,10 +1,10 @@
 import { breakpoint, color, fontSize, space } from '@core-ds/primitives';
 import { Button, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
-import glamorous from 'glamorous';
 import { debounce, Dictionary, inRange, minBy } from 'lodash';
 import React, { Component } from 'react';
 import smoothscroll from 'smoothscroll-polyfill';
+import styled from 'styled-components';
 import Banner from './Banner';
 import ColumnExplorer from './ColumnExplorer';
 import NoResults from './NoResults';
@@ -34,75 +34,73 @@ interface DevicePickerState {
    path: string[];
 }
 
-const Container = glamorous.div({
-   display: 'flex',
-   flexDirection: 'column',
-   height: '100%',
-   color: color.gray8,
-});
+const Container = styled.div`
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+   color: ${color.gray8};
+`;
 
-const SearchContainer = glamorous('div', { displayName: 'SearchContainer' })({
-   display: 'flex',
-   flex: '0 0 auto',
-   alignItems: 'center',
-   paddingLeft: '15px',
-   borderBottom: `1px solid ${color.gray2}`,
-});
+const SearchContainer = styled.div`
+   display: flex;
+   flex: 0 0 auto;
+   align-items: center;
+   padding-left: 15px;
+   border-bottom: 1px solid ${color.gray2};
+`;
 
-const SearchInput = glamorous('input', {
-   displayName: 'SearchInput',
-})({
-   flex: '1 1 auto',
-   marginBottom: 0,
-   padding: space[4],
-   fontFamily: 'inherit',
-   fontSize: fontSize[3],
-   color: 'inherit',
-   backgroundColor: 'transparent',
-   border: 'none',
-   outline: 0,
+const SearchInput = styled.input`
+   flex: 1 1 auto;
+   margin-bottom: 0px;
+   padding: ${space[4]};
+   font-family: inherit;
+   font-size: ${fontSize[3]};
+   color: inherit;
+   background-color: transparent;
+   border: none;
+   outline: 0px;
 
-   '&::placeholder': {
-      color: color.gray5,
-   },
+   &::placeholder {
+      color: ${color.gray5};
+   }
 
-   [above(breakpoint.sm)]: {
-      fontSize: fontSize[4],
-   },
-});
+   ${above(breakpoint.sm)} {
+      font-size: ${fontSize[4]};
+   }
+`;
 
-const BannerContainer = glamorous.div({
-   flex: '0 0 auto',
-   order: 1,
+const BannerContainer = styled.div`
+   flex: 0 0 auto;
+   order: 1;
 
-   [above(breakpoint.sm)]: {
-      order: 0,
-   },
-});
+   ${above(breakpoint.sm)} {
+      order: 0;
+   }
+`;
 
-const Toolbar = glamorous('div', { displayName: 'Toolbar' })({
-   flex: '0 0 auto',
-   order: -1,
-   display: 'flex',
-   padding: space[2],
-   backgroundColor: color.gray1,
+const Toolbar = styled.div`
+   flex: 0 0 auto;
+   order: -1;
+   display: flex;
+   padding: ${space[2]};
+   background-color: ${color.gray1};
 
-   [above(breakpoint.sm)]: {
-      order: 1,
-      padding: space[4],
-      backgroundColor: 'transparent',
-      borderTop: `1px solid ${color.gray2}`,
-   },
-});
+   ${above(breakpoint.sm)} {
+      order: 1;
+      padding: ${space[4]};
+      background-color: transparent;
+      border-top: 1px solid ${color.gray2};
+   }
+`;
 
-const ToolbarRight = glamorous('div', { displayName: 'ToolbarRight' })({
-   marginLeft: 'auto',
-   display: 'flex',
+const ToolbarRight = styled.div`
+   margin-left: auto;
+   display: flex;
 
-   '& > :not(:first-child)': {
-      marginLeft: space[2],
-   },
-});
+   & > :not(:first-child) {
+      margin-left: ${space[2]};
+   }
+`;
 
 // enum for the state of the user's search
 // INACTIVE is before searching, or after a successful search.
