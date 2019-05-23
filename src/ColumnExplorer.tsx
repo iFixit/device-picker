@@ -3,6 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Columns from './Columns';
 import { Hierarchy, Wiki } from './types';
+import { moveDown, moveLeft, moveRight, moveUp } from './utils/move';
 
 const Container = styled.div`
    display: flex;
@@ -41,6 +42,33 @@ function ColumnExplorer({
          });
       }
    }, [path]);
+
+   function handleKeyDown(event: KeyboardEvent) {
+      switch (event.key) {
+         case 'ArrowLeft':
+            onChange(moveLeft(hierarchy, path));
+            break;
+
+         case 'ArrowRight':
+            onChange(moveRight(hierarchy, path));
+            break;
+
+         case 'ArrowDown':
+            onChange(moveDown(hierarchy, path));
+            break;
+
+         case 'ArrowUp':
+            onChange(moveUp(hierarchy, path));
+            break;
+      }
+   }
+
+   React.useEffect(() => {
+      window.addEventListener('keydown', handleKeyDown);
+      return function cleanup() {
+         window.removeEventListener('keydown', handleKeyDown);
+      };
+   }, [handleKeyDown]);
 
    return (
       <Container innerRef={containerRef}>
