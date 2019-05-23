@@ -19,7 +19,7 @@ interface ColumnExplorerProps {
    path: string[];
    onChange: (path: string[]) => void;
    translate: (...strings: string[]) => string;
-   // TODO: Make translate() available using tne Context API.
+   // TODO: Make translate() available using the Context API.
 }
 
 function ColumnExplorer({
