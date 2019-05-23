@@ -82,7 +82,7 @@ const Toolbar = styled.div`
    flex: 0 0 auto;
    order: -1;
    display: flex;
-   padding: ${space[2]};
+   padding: ${space[3]};
    background-color: ${color.gray1};
 
    ${above(breakpoint.sm)} {
@@ -98,7 +98,7 @@ const ToolbarRight = styled.div`
    display: flex;
 
    & > :not(:first-child) {
-      margin-left: ${space[2]};
+      margin-left: ${space[3]};
    }
 `;
 
