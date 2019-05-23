@@ -269,26 +269,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
             this.handleEscape();
             break;
 
-         // ArrowLeft
-         case 37:
-            this.handleArrowLeft(event);
-            break;
-
-         // ArrowRight
-         case 39:
-            this.handleArrowRight(event);
-            break;
-
-         // ArrowUp
-         case 38:
-            this.handleArrowUpDown(event);
-            break;
-
-         // ArrowDown
-         case 40:
-            this.handleArrowUpDown(event);
-            break;
-
          default:
             if (
                // if key is a-z, or ...
@@ -318,52 +298,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
    handleEscape = () => {
       this.props.onCancel();
-   };
-
-   handleArrowLeft = (event: KeyboardEvent) => {
-      const { path } = this.state;
-
-      // go back to the previously highlighted item
-      this.setPath(path.slice(0, path.length - 1));
-
-      event.preventDefault();
-   };
-
-   handleArrowRight = (event: KeyboardEvent) => {
-      const { tree, path } = this.state;
-
-      const currentNode = this.getNode({ tree, path });
-
-      if (currentNode && Object.keys(currentNode).length > 0) {
-         // add first item in right list to path
-         this.setPath([...path, Object.keys(currentNode)[0]]);
-      }
-
-      event.preventDefault();
-   };
-
-   handleArrowUpDown = (event: KeyboardEvent) => {
-      const { tree, path } = this.state;
-
-      const currentParentNode = this.getNode({
-         tree,
-         path: path.slice(0, path.length - 1),
-      });
-
-      const highlightedIndex = Object.keys(currentParentNode).findIndex(
-         key => key === path[path.length - 1],
-      );
-
-      const newItem = this.getRelativeItem({
-         list: Object.keys(currentParentNode),
-         index: highlightedIndex,
-         distance: event.keyCode === 40 ? 1 : -1, // 40 is the keyCode for ArrowDown
-      });
-
-      // highlight the next/previous item in the current list
-      this.setPath([...path.slice(0, path.length - 1), newItem]);
-
-      event.preventDefault();
    };
 
    /**
