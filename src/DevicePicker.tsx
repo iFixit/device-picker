@@ -456,31 +456,29 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   </BannerContainer>
                )}
 
-            <ListsContainer>
-               {search === SEARCH_NO_RESULTS ? (
-                  <NoResults
-                     itemName={searchValue}
-                     selectItem={onSubmit}
-                     allowOrphan={allowOrphan}
-                     translate={translate}
+            {search === SEARCH_NO_RESULTS ? (
+               <NoResults
+                  query={searchValue}
+                  allowOrphan={allowOrphan}
+                  selectItem={onSubmit}
+                  translate={translate}
+               />
+            ) : (
+               tree && (
+                  <ColumnExplorer
+                     hierarchy={tree}
+                     displayTitles={displayTitles}
+                     fetchChildren={title =>
+                        fetch(
+                           `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
+                        ).then(response => response.json())
+                     }
+                     path={path}
+                     onChange={this.setPath}
+                     translate={this.props.translate}
                   />
-               ) : (
-                  tree && (
-                     <ColumnExplorer
-                        hierarchy={tree}
-                        displayTitles={displayTitles}
-                        fetchChildren={title =>
-                           fetch(
-                              `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
-                           ).then(response => response.json())
-                        }
-                        path={path}
-                        onChange={this.setPath}
-                        translate={this.props.translate}
-                     />
-                  )
-               )}
-            </ListsContainer>
+               )
+            )}
 
             <Toolbar>
                <ToolbarRight>
