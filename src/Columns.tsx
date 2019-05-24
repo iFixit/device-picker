@@ -69,6 +69,7 @@ function Columns({
    onChange,
    translate,
 }: ColumnsProps) {
+   const currentTitle = path[0];
    const parentTitle =
       previousPath.length > 0 ? previousPath[previousPath.length - 1] : 'root';
 
@@ -88,13 +89,13 @@ function Columns({
       if (selectedRef.current) {
          selectedRef.current.scrollIntoView({ block: 'nearest' });
       }
-   }, [path[0]]);
+   }, [currentTitle]);
 
    return (
       <>
          <Column onClick={() => onChange(previousPath)}>
             {Object.keys(hierarchy).map(title => {
-               const isInPath = path[0] === title;
+               const isInPath = currentTitle === title;
                const isSelected = isInPath && path.length === 1;
                return (
                   <ColumnItem
@@ -123,24 +124,24 @@ function Columns({
             })}
          </Column>
          {path.length > 0 ? (
-            isLeaf(hierarchy[path[0]]) ? (
-               isLoading || !childrenByTitle[path[0]] ? (
+            isLeaf(hierarchy[currentTitle]) ? (
+               isLoading || !childrenByTitle[currentTitle] ? (
                   <p style={{ width: '100%', minWidth: '16rem' }}>
-                     Loading "{path[0]}"...
+                     Loading "{currentTitle}"...
                   </p>
                ) : (
                   <Preview
-                     wiki={childrenByTitle[path[0]]}
+                     wiki={childrenByTitle[currentTitle]}
                      translate={translate}
                   />
                )
             ) : (
                <Columns
-                  hierarchy={hierarchy[path[0]] as Dictionary<Hierarchy>}
+                  hierarchy={hierarchy[currentTitle] as Dictionary<Hierarchy>}
                   displayTitles={displayTitles}
                   fetchChildren={fetchChildren}
                   path={path.slice(1)}
-                  previousPath={[...previousPath, ...path.slice(0, 1)]}
+                  previousPath={[...previousPath, currentTitle]}
                   onChange={onChange}
                   translate={translate}
                />
