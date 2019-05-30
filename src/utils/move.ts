@@ -2,6 +2,11 @@ import { Dictionary, get } from 'lodash';
 import { Hierarchy } from '../types';
 import isLeaf from './isLeaf';
 
+enum VerticalDirection {
+   Up,
+   Down,
+}
+
 /** Returns a path to the parent. */
 export function moveLeft(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    return path.slice(0, path.length - 1);
@@ -28,11 +33,6 @@ export function moveUp(hierarchy: Dictionary<Hierarchy>, path: string[]) {
 /** Returns a path to the next sibling. */
 export function moveDown(hierarchy: Dictionary<Hierarchy>, path: string[]) {
    return moveVertical(VerticalDirection.Down, hierarchy, path);
-}
-
-enum VerticalDirection {
-   Up,
-   Down,
 }
 
 /** Returns a path to the next/previous sibling depending on the given direction. */
