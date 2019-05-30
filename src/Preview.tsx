@@ -45,16 +45,18 @@ const Summary = styled.span`
 `;
 
 interface PreviewProps {
-   wiki: Wiki;
+   image: string;
+   title: string;
+   summary: string;
    translate: (...strings: string[]) => string;
 }
 
-function Preview({ wiki, translate }: PreviewProps) {
+function Preview({ image, title, summary, translate }: PreviewProps) {
    return (
       <Container>
-         <Image url={wiki.image} />
-         <Title>{translate(wiki.display_title)}</Title>
-         <Summary>{truncate(translate(wiki.summary), { length: 80 })}</Summary>
+         <Image url={image} />
+         <Title>{translate(title)}</Title>
+         <Summary>{truncate(translate(summary), { length: 80 })}</Summary>
       </Container>
    );
 }
