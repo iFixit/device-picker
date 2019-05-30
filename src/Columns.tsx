@@ -1,6 +1,6 @@
 import { ChevronRight } from '@core-ds/icons/16';
 import { color, fontSize, space } from '@core-ds/primitives';
-import { Dictionary } from 'lodash';
+import { Dictionary, get } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 import Preview from './Preview';
@@ -73,10 +73,9 @@ function Columns({
    const parentTitle =
       previousPath.length > 0 ? previousPath[previousPath.length - 1] : 'root';
 
-   const { data: children, isLoading } = useAsync(
-      () => fetchChildren(parentTitle),
-      [parentTitle],
-   );
+   const { data: children } = useAsync(() => fetchChildren(parentTitle), [
+      parentTitle,
+   ]);
 
    const childrenByTitle: Dictionary<Wiki> = React.useMemo(
       () => (children ? indexBy('title', children) : {}),
@@ -125,16 +124,16 @@ function Columns({
          </Column>
          {path.length > 0 ? (
             isLeaf(hierarchy[currentTitle]) ? (
-               isLoading || !childrenByTitle[currentTitle] ? (
-                  <p style={{ width: '100%', minWidth: '16rem' }}>
-                     Loading "{currentTitle}"...
-                  </p>
-               ) : (
-                  <Preview
-                     wiki={childrenByTitle[currentTitle]}
-                     translate={translate}
-                  />
-               )
+               <Preview
+                  title={get(
+                     childrenByTitle[currentTitle],
+                     'display_title',
+                     currentTitle,
+                  )}
+                  image={get(childrenByTitle[currentTitle], 'image')}
+                  summary={get(childrenByTitle[currentTitle], 'summary')}
+                  translate={translate}
+               />
             ) : (
                <Columns
                   hierarchy={hierarchy[currentTitle] as Dictionary<Hierarchy>}
