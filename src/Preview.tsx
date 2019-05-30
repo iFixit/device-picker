@@ -2,7 +2,6 @@ import { color, fontSize, lineHeight, space } from '@core-ds/primitives';
 import { truncate } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { Wiki } from './types';
 
 const Container = styled.div`
    flex: 1 0 auto;
@@ -17,7 +16,7 @@ const Container = styled.div`
 `;
 
 interface ImageProps {
-   url: string;
+   src: string;
 }
 
 const Image = styled.div<ImageProps>`
@@ -27,7 +26,7 @@ const Image = styled.div<ImageProps>`
    background-size: contain;
    background-position: center center;
    background-repeat: no-repeat;
-   background-image: url(${props => props.url});
+   ${props => (props.src ? `background-image: url(${props.src});` : null)}
 `;
 
 const Title = styled.span`
@@ -54,7 +53,7 @@ interface PreviewProps {
 function Preview({ image, title, summary, translate }: PreviewProps) {
    return (
       <Container>
-         <Image url={image} />
+         <Image src={image} />
          <Title>{translate(title)}</Title>
          <Summary>{truncate(translate(summary), { length: 80 })}</Summary>
       </Container>
