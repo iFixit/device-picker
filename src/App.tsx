@@ -4,7 +4,7 @@ import { memoize } from 'lodash';
 
 const fetchChildren = memoize(title =>
    fetch(
-      `https://cbemis.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
+      `https://www.cominor.com/api/2.0/wikis/CATEGORY/${title}/children`,
    ).then(response => response.json()),
 );
 
@@ -15,7 +15,7 @@ function App() {
             initialDevice="Foth-Flex TLR"
             fetchHierarchy={() =>
                fetch(
-                  'https://www.ifixit.com/api/2.0/wikis/CATEGORY?display=hierarchy',
+                  'https://www.cominor.com/api/2.0/wikis/CATEGORY?display=hierarchy',
                ).then(response => response.json())
             }
             fetchChildren={fetchChildren}
