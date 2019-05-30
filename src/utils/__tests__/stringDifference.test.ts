@@ -7,3 +7,13 @@ test('returns a string containing words from stringA that are not in stringB', (
 test('returns stringA if stringA - stringB yields an empty string', () => {
    expect(stringDifference('MacBook Pro', 'MacBook Pro')).toBe('MacBook Pro');
 });
+
+test('ignores word order', () => {
+   expect(stringDifference('This is a phrase', 'This phrase is red')).toBe('a');
+});
+
+test('ignores word count', () => {
+   expect(
+      stringDifference('This is is a phrase', 'This phrase phrase is red'),
+   ).toBe('a');
+});
