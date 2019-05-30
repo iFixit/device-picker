@@ -1,4 +1,4 @@
-import { Dictionary, get } from 'lodash';
+import { Dictionary, get, indexOf } from 'lodash';
 import { Hierarchy } from '../types';
 import isLeaf from './isLeaf';
 
@@ -50,9 +50,7 @@ function moveVertical(
 
    if (path.length === 0) return [siblings[0]];
 
-   const currentIndex = siblings.findIndex(
-      key => key === path[path.length - 1],
-   );
+   const currentIndex = indexOf(siblings, path[path.length - 1]);
 
    const nextIndex =
       direction === VerticalDirection.Down
