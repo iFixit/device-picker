@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Columns from './Columns';
 import { Hierarchy, Wiki } from './types';
 import { moveDown, moveLeft, moveRight, moveUp } from './utils/move';
+import useEventListener from './utils/useEventListener';
 
 const Container = styled.div`
    display: flex;
@@ -67,12 +68,7 @@ function ColumnExplorer({
       }
    }
 
-   React.useEffect(() => {
-      window.addEventListener('keydown', handleKeyDown);
-      return function cleanup() {
-         window.removeEventListener('keydown', handleKeyDown);
-      };
-   }, [handleKeyDown]);
+   useEventListener(window, 'keydown', handleKeyDown);
 
    return (
       <Container innerRef={containerRef}>
