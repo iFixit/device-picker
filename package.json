@@ -9,7 +9,7 @@
       "dev": "react-scripts start",
       "build": "babel src --out-dir dist --extensions \".ts,.tsx\"",
       "test": "react-scripts test --env=jsdom",
-      "lint": "eslint .",
+      "lint": "eslint --ext .js,.jsx,.tsx,.ts ./",
       "prepublishOnly": "npm run build"
    },
    "dependencies": {
