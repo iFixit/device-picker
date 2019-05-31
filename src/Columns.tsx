@@ -96,6 +96,7 @@ function Columns({
             {Object.keys(hierarchy).map(title => {
                const isInPath = currentTitle === title;
                const isSelected = isInPath && path.length === 1;
+               const displayTitle = displayTitles[title] || title;
                return (
                   <ColumnItem
                      key={title}
@@ -109,9 +110,9 @@ function Columns({
                   >
                      <ColumnItemText>
                         {stringDifference(
-                           displayTitles[title] || title,
+                           displayTitle,
                            displayTitles[parentTitle] || parentTitle,
-                        )}
+                        ) || displayTitle}
                      </ColumnItemText>
                      {!isLeaf(hierarchy[title]) ? (
                         <ChevronRight
