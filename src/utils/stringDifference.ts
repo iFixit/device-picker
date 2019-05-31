@@ -8,7 +8,7 @@ function stringDifference(stringA: string, stringB: string) {
       stringA
          .split(' ')
          .filter(word => !stringBWords.includes(word.toLowerCase()))
-         .join(' ') || stringA
+         .join(' ')
    );
 }
 
