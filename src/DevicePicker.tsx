@@ -478,7 +478,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
             {searchValue &&
                path.length > 0 &&
-               search === SEARCH_INACTIVE &&
                searchValue.trim().toLowerCase() !==
                   path[path.length - 1].toLowerCase() &&
                allowOrphan && (
