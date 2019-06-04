@@ -15,6 +15,7 @@ const Container = styled.div`
    padding: ${space[3]} ${space[4]};
    overflow: auto;
    border-top: 1px solid ${color.gray2};
+   -webkit-overflow-scrolling: touch;
 `;
 
 const BreadcrumbItem = styled.button<BreadcrumbItemProps>`

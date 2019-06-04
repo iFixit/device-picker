@@ -13,6 +13,7 @@ import useAsync from './utils/useAsync';
 const Container = styled.div`
    flex: 1 1 auto;
    overflow-y: auto;
+   -webkit-overflow-scrolling: touch;
 `;
 
 const Grid = styled.div`
