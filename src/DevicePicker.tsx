@@ -469,7 +469,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   <Button
                      design={view === View.Grid ? 'secondary' : 'default'}
                      onClick={() => this.setState({ view: View.Grid })}
-                     css={{ padding: space[2] }}
+                     css={{ margin: 0, padding: space[2] }}
                   >
                      <Grid
                         color={view === View.Grid ? color.gray8 : color.gray5}
@@ -478,7 +478,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   <Button
                      design={view === View.Column ? 'secondary' : 'default'}
                      onClick={() => this.setState({ view: View.Column })}
-                     css={{ padding: space[2] }}
+                     css={{ margin: 0, padding: space[2] }}
                   >
                      <Columns
                         color={view === View.Column ? color.gray8 : color.gray5}
