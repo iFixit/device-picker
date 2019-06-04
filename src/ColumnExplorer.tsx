@@ -11,6 +11,7 @@ const Container = styled.div`
    min-width: 100%;
    height: 100%;
    overflow-x: auto;
+   -webkit-overflow-scrolling: touch;
 `;
 
 interface ColumnExplorerProps {
