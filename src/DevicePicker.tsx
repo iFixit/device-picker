@@ -11,6 +11,7 @@ import Breadcrumbs from './Breadcrumbs';
 import ColumnExplorer from './ColumnExplorer';
 import GridExplorer from './GridExplorer';
 import NoResults from './NoResults';
+import Spinner from './Spinner';
 import { Hierarchy, Wiki } from './types';
 import { above } from './utils/mediaQuery';
 
@@ -111,6 +112,16 @@ const ToolbarRight = styled.div`
    & > :not(:first-child) {
       margin-left: ${space[3]};
    }
+`;
+
+const SpinnerContainer = styled.div`
+   flex: 1 1 100%;
+   padding: ${space[4]};
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   max-width: 100%;
 `;
 
 // enum for the state of the user's search
@@ -522,11 +533,15 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   />
                )
             ) : (
-               <div style={{ flex: '1 1 auto' }}>Loading...</div>
+               <SpinnerContainer>
+                  <Spinner color={color.gray5} />
+               </SpinnerContainer>
             )}
+
             {path.length > 0 ? (
                <Breadcrumbs path={path} onChange={this.setPath} />
             ) : null}
+
             <Toolbar>
                <ToolbarRight>
                   <Button onClick={onCancel}>{translate('Cancel')}</Button>
