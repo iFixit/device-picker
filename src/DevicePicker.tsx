@@ -1,19 +1,25 @@
+import { Columns, Grid } from '@core-ds/icons/16';
 import { breakpoint, color, fontSize, space } from '@core-ds/primitives';
-import { Button, Icon } from '@ifixit/toolbox';
+import { Button, ButtonGroup, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
 import { debounce, Dictionary, inRange, minBy } from 'lodash';
 import React, { Component } from 'react';
 import smoothscroll from 'smoothscroll-polyfill';
 import styled from 'styled-components';
 import Banner from './Banner';
+import Breadcrumbs from './Breadcrumbs';
 import ColumnExplorer from './ColumnExplorer';
 import GridExplorer from './GridExplorer';
 import NoResults from './NoResults';
 import { Hierarchy, Wiki } from './types';
 import { above } from './utils/mediaQuery';
-import Breadcrumbs from './Breadcrumbs';
 
 smoothscroll.polyfill();
+
+export enum View {
+   Grid = 'GRID',
+   Column = 'COLUMN',
+}
 
 interface DevicePickerProps {
    fetchHierarchy: () => Promise<{
@@ -26,6 +32,7 @@ interface DevicePickerProps {
    translate: (...strings: string[]) => string;
    allowOrphan: boolean;
    initialDevice: string;
+   initialView: View;
 }
 
 interface DevicePickerState {
@@ -34,6 +41,7 @@ interface DevicePickerState {
    tree: Hierarchy;
    displayTitles: Dictionary<string>;
    path: string[];
+   view: View;
 }
 
 const Container = styled.div`
@@ -118,6 +126,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
    static defaultProps = {
       initialDevice: '',
+      initialView: View.Grid,
       allowOrphan: false,
       translate: (s: string) => s,
    };
@@ -131,6 +140,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
          tree: null,
          displayTitles: {},
          path: [],
+         view: props.initialView,
       };
    }
 
@@ -272,10 +282,8 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                (inRange(event.keyCode, 65, 91) ||
                   // if key is A-Z, or ...
                   inRange(event.keyCode, 48, 58) ||
-                  // if key is backspace, or ...
-                  event.keyCode === 8 ||
-                  // if key is space
-                  event.keyCode === 32) &&
+                  // if key is backspace
+                  event.keyCode === 8) &&
                // and the search input is not focused
                this.searchInputRef !== document.activeElement
             ) {
@@ -405,6 +413,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       } else {
          this.setState({
             search: SEARCH_NO_RESULTS,
+            path: [],
          });
       }
    };
@@ -416,7 +425,14 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    debouncedApplySearch = debounce(this.applySearch, 500);
 
    render() {
-      const { searchValue, tree, displayTitles, path, search } = this.state;
+      const {
+         searchValue,
+         tree,
+         displayTitles,
+         path,
+         search,
+         view,
+      } = this.state;
       const {
          fetchChildren,
          onSubmit,
@@ -438,6 +454,26 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      event.key === 'Enter' && this.applySearch()
                   }
                />
+               <ButtonGroup css={{ marginRight: space[4] }}>
+                  <Button
+                     design={view === View.Grid ? 'secondary' : 'default'}
+                     onClick={() => this.setState({ view: View.Grid })}
+                     css={{ padding: space[2] }}
+                  >
+                     <Grid
+                        color={view === View.Grid ? color.gray8 : color.gray5}
+                     />
+                  </Button>
+                  <Button
+                     design={view === View.Column ? 'secondary' : 'default'}
+                     onClick={() => this.setState({ view: View.Column })}
+                     css={{ padding: space[2] }}
+                  >
+                     <Columns
+                        color={view === View.Column ? color.gray8 : color.gray5}
+                     />
+                  </Button>
+               </ButtonGroup>
             </SearchContainer>
 
             {searchValue &&
@@ -467,14 +503,25 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   translate={translate}
                />
             ) : tree ? (
-               <GridExplorer
-                  hierarchy={tree}
-                  displayTitles={displayTitles}
-                  fetchChildren={fetchChildren}
-                  path={path}
-                  onChange={this.setPath}
-                  translate={this.props.translate}
-               />
+               view === View.Grid ? (
+                  <GridExplorer
+                     hierarchy={tree}
+                     displayTitles={displayTitles}
+                     fetchChildren={fetchChildren}
+                     path={path}
+                     onChange={this.setPath}
+                     translate={this.props.translate}
+                  />
+               ) : (
+                  <ColumnExplorer
+                     hierarchy={tree}
+                     displayTitles={displayTitles}
+                     fetchChildren={fetchChildren}
+                     path={path}
+                     onChange={this.setPath}
+                     translate={this.props.translate}
+                  />
+               )
             ) : (
                <div style={{ flex: '1 1 auto' }}>Loading...</div>
             )}
