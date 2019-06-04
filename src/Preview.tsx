@@ -9,7 +9,7 @@ const Container = styled.div`
    flex-direction: column;
    align-items: center;
    justify-content: flex-start;
-   width: 16rem;
+   min-width: 16rem;
    padding: ${space[5]};
    text-align: center;
    overflow-y: auto;
@@ -26,6 +26,7 @@ const Image = styled.div<ImageProps>`
    background-size: contain;
    background-position: center center;
    background-repeat: no-repeat;
+   mix-blend-mode: multiply;
    ${props => (props.src ? `background-image: url(${props.src});` : null)}
 `;
 

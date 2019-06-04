@@ -15,7 +15,7 @@ const Container = styled.div`
    flex: 0 0 auto;
    flex-direction: column;
    align-items: stretch;
-   background: ${color.gray1};
+   background: ${color.gray2};
    padding: ${space[4]};
 
    ${above(breakpoint.sm)} {
