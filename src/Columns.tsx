@@ -35,6 +35,7 @@ const ColumnItem = styled.button<ColumnItemProps>`
    border: 0;
    appearance: none;
    outline: 0;
+   cursor: pointer;
 `;
 
 const ColumnItemText = styled.span`
