@@ -71,7 +71,7 @@ function GridExplorer({
                {Object.keys(hierarchy).map(title => (
                   <GridItem
                      key={title}
-                     title={title}
+                     title={displayTitles[title] || title}
                      image={get(childrenByTitle[title], 'image')}
                      onClick={() => onChange([...previousPath, title])}
                   />
@@ -84,11 +84,7 @@ function GridExplorer({
    if (isLeaf(hierarchy[currentTitle])) {
       return (
          <Preview
-            title={get(
-               childrenByTitle[currentTitle],
-               'display_title',
-               currentTitle,
-            )}
+            title={displayTitles[currentTitle] || currentTitle}
             image={get(childrenByTitle[currentTitle], 'image')}
             summary={get(childrenByTitle[currentTitle], 'summary')}
             translate={translate}
