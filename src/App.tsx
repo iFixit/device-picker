@@ -12,6 +12,7 @@ function App() {
    return (
       <div data-reactroot style={{ width: '100vw', height: '100vh' }}>
          <DevicePicker
+            allowOrphan={true}
             initialDevice="Foth-Flex TLR"
             fetchHierarchy={() =>
                fetch(
