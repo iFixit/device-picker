@@ -10,6 +10,7 @@ import ColumnExplorer from './ColumnExplorer';
 import NoResults from './NoResults';
 import { Hierarchy, Wiki } from './types';
 import { above } from './utils/mediaQuery';
+import Breadcrumbs from './Breadcrumbs';
 
 smoothscroll.polyfill();
 
@@ -475,7 +476,9 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   />
                )
             )}
-
+            {path.length > 0 ? (
+               <Breadcrumbs path={path} onChange={this.setPath} />
+            ) : null}
             <Toolbar>
                <ToolbarRight>
                   <Button onClick={onCancel}>{translate('Cancel')}</Button>
