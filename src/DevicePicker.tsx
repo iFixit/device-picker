@@ -7,6 +7,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import styled from 'styled-components';
 import Banner from './Banner';
 import ColumnExplorer from './ColumnExplorer';
+import GridExplorer from './GridExplorer';
 import NoResults from './NoResults';
 import { Hierarchy, Wiki } from './types';
 import { above } from './utils/mediaQuery';
@@ -40,6 +41,7 @@ const Container = styled.div`
    flex-direction: column;
    height: 100%;
    color: ${color.gray8};
+   background-color: ${color.gray1};
 `;
 
 const SearchContainer = styled.div`
@@ -84,7 +86,7 @@ const Toolbar = styled.div`
    order: -1;
    display: flex;
    padding: ${space[3]};
-   background-color: ${color.gray1};
+   background-color: ${color.white};
 
    ${above(breakpoint.sm)} {
       order: 1;
@@ -464,17 +466,17 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   selectItem={onSubmit}
                   translate={translate}
                />
+            ) : tree ? (
+               <GridExplorer
+                  hierarchy={tree}
+                  displayTitles={displayTitles}
+                  fetchChildren={fetchChildren}
+                  path={path}
+                  onChange={this.setPath}
+                  translate={this.props.translate}
+               />
             ) : (
-               tree && (
-                  <ColumnExplorer
-                     hierarchy={tree}
-                     displayTitles={displayTitles}
-                     fetchChildren={fetchChildren}
-                     path={path}
-                     onChange={this.setPath}
-                     translate={this.props.translate}
-                  />
-               )
+               <div style={{ flex: '1 1 auto' }}>Loading...</div>
             )}
             {path.length > 0 ? (
                <Breadcrumbs path={path} onChange={this.setPath} />
