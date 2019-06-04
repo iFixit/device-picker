@@ -54,10 +54,9 @@ function GridExplorer({
    const parentTitle =
       previousPath.length > 0 ? previousPath[previousPath.length - 1] : 'root';
 
-   const { data: children, isLoading } = useAsync(
-      () => fetchChildren(parentTitle),
-      [parentTitle],
-   );
+   const { data: children } = useAsync(() => fetchChildren(parentTitle), [
+      parentTitle,
+   ]);
 
    const childrenByTitle: Dictionary<Wiki> = React.useMemo(
       () => (children ? indexBy('title', children) : {}),
