@@ -225,24 +225,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    };
 
    /**
-    * Get a tree node given a path.
-    * @param {Object} params
-    * @param {Object} params.tree
-    * @param {string[]} params.path
-    * @returns {Object} - Tree node.
-    */
-   getNode = ({ tree, path }: { tree: any; path: string[] }): any => {
-      if (path.length === 0) {
-         return tree;
-      }
-
-      return this.getNode({
-         tree: tree[path[0]],
-         path: path.slice(1),
-      });
-   };
-
-   /**
     * Update path and searchValue state given a path.
     * @param {string[]} path
     */
