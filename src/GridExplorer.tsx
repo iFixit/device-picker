@@ -82,11 +82,12 @@ function GridExplorer({
    }
 
    if (isLeaf(hierarchy[currentTitle])) {
+      const wiki:Wiki = childrenByTitle[currentTitle] || {};
       return (
          <Preview
             title={displayTitles[currentTitle] || currentTitle}
-            image={get(childrenByTitle[currentTitle], 'image')}
-            summary={get(childrenByTitle[currentTitle], 'summary')}
+            image={wiki.image}
+            summary={wiki.summary}
             translate={translate}
          />
       );
