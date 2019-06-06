@@ -14,7 +14,7 @@ const Container = styled.div`
    align-items: center;
    padding: ${space[3]} ${space[4]};
    overflow: auto;
-   border-top: 1px solid ${color.gray2};
+   border-bottom: 1px solid ${color.gray2};
    -webkit-overflow-scrolling: touch;
 `;
 
