@@ -505,6 +505,10 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   </BannerContainer>
                )}
 
+            {path.length > 0 ? (
+               <Breadcrumbs path={path} onChange={this.setPath} />
+            ) : null}
+
             {search === SEARCH_NO_RESULTS ? (
                <NoResults
                   query={searchValue}
@@ -537,10 +541,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   <Spinner color={color.gray5} />
                </SpinnerContainer>
             )}
-
-            {path.length > 0 ? (
-               <Breadcrumbs path={path} onChange={this.setPath} />
-            ) : null}
 
             <Toolbar>
                <ToolbarRight>
