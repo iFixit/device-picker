@@ -1,4 +1,5 @@
-export type Hierarchy = { [title: string]: Hierarchy } | null;
+export type HierarchyTop = { [title: string]: Hierarchy };
+export type Hierarchy = HierarchyTop | null;
 
 export interface Wiki {
    title: string;

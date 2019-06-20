@@ -33,30 +33,40 @@ const Grid = styled.div`
 `;
 
 interface GridExplorerProps {
-   hierarchy: Dictionary<Hierarchy>;
+   hierarchy: Hierarchy;
    displayTitles: Dictionary<string>;
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    path: string[];
-   previousPath: string[];
    onChange: (path: string[]) => void;
    translate: (...strings: string[]) => string;
 }
+
+const traverse = (tree: Hierarchy, path: string[]): Hierarchy => {
+   return path.reduce(
+    (tree, title) => tree && tree[title],
+    tree);
+};
 
 function GridExplorer({
    hierarchy,
    displayTitles,
    fetchChildren,
    path,
-   previousPath,
    onChange,
    translate,
 }: GridExplorerProps) {
-   const currentTitle = path[0];
-   const parentTitle =
-      previousPath.length > 0 ? previousPath[previousPath.length - 1] : 'root';
+   const currentHierarchy = traverse(hierarchy, path);
+   const currentIsLeaf = isLeaf(currentHierarchy);
 
-   const { data: children } = useAsync(() => fetchChildren(parentTitle), [
-      parentTitle,
+   // If path is empty, we're at the root and we'll need to ask the api
+   // for the children of 'root' (the canonical name for the root category)
+   const currentTitle = path[path.length - 1] || 'root';
+   const parentTitle = path[path.length - 2] || 'root';
+   // If not, we ask for current's children
+   const titleToQuery = currentIsLeaf ? parentTitle : currentTitle
+
+   const { data: children } = useAsync(() => fetchChildren(titleToQuery), [
+      titleToQuery
    ]);
 
    const childrenByTitle: Dictionary<Wiki> = React.useMemo(
@@ -64,24 +74,7 @@ function GridExplorer({
       [children],
    );
 
-   if (path.length === 0) {
-      return (
-         <Container>
-            <Grid>
-               {Object.keys(hierarchy).map(title => (
-                  <GridItem
-                     key={title}
-                     title={displayTitles[title] || title}
-                     image={get(childrenByTitle[title], 'image')}
-                     onClick={() => onChange([...previousPath, title])}
-                  />
-               ))}
-            </Grid>
-         </Container>
-      );
-   }
-
-   if (isLeaf(hierarchy[currentTitle])) {
+   if (currentIsLeaf) {
       const wiki:Wiki = childrenByTitle[currentTitle] || {};
       return (
          <Preview
@@ -94,20 +87,19 @@ function GridExplorer({
    }
 
    return (
-      <GridExplorer
-         hierarchy={hierarchy[currentTitle] as Dictionary<Hierarchy>}
-         displayTitles={displayTitles}
-         path={path.slice(1)}
-         previousPath={[...previousPath, currentTitle]}
-         fetchChildren={fetchChildren}
-         onChange={onChange}
-         translate={translate}
-      />
+      <Container>
+         <Grid>
+            {Object.keys(currentHierarchy || {}).map(title => (
+               <GridItem
+                  key={title}
+                  title={displayTitles[title] || title}
+                  image={get(childrenByTitle[title], 'image')}
+                  onClick={() => onChange([...path, title])}
+               />
+            ))}
+         </Grid>
+      </Container>
    );
 }
-
-GridExplorer.defaultProps = {
-   previousPath: [],
-};
 
 export default GridExplorer;

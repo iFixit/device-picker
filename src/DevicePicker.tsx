@@ -148,7 +148,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       this.state = {
          searchValue: this.props.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
-         tree: null,
+         tree: {},
          displayTitles: {},
          path: [],
          view: props.initialView,
