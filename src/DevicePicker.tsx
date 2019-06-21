@@ -248,7 +248,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
     */
    setPath = (path: string[]) => {
       this.setState({
-         searchValue: path[path.length - 1] || '',
+         searchValue: this.getDisplayTitleFromItemName(path[path.length - 1] || ''),
          search: SEARCH_INACTIVE,
          path,
       });
@@ -334,6 +334,12 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       this.debouncedApplySearch();
    };
 
+   getDisplayTitleFromItemName = (
+      itemName: string
+   ): string => {
+      return this.state.displayTitles[itemName] || itemName
+   };
+
    /**
     * Returns a flat list of [{
     *   itemName,
@@ -346,10 +352,15 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
       itemName: string | null = null,
       path: string[] = [],
    ): any => {
+      const displayTitle = itemName
+         ? this.getDisplayTitleFromItemName(itemName)
+         : null;
+
       const item = {
          itemName,
+         displayTitle,
          path,
-         pathText: path.join(' '),
+         pathText: path.map(this.getDisplayTitleFromItemName).join(' '),
       };
 
       if (!tree) {
@@ -391,6 +402,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
          score: number;
          item: {
             itemName: string;
+            displayTitle: string;
             path: string[];
             pathText: string;
          };
@@ -403,6 +415,10 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
             {
                name: 'pathText',
                weight: 0.7,
+            },
+            {
+               name: 'displayTitle',
+               weight: 0.3,
             },
          ],
          includeScore: true,
@@ -490,7 +506,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
             {searchValue &&
                path.length > 0 &&
                searchValue.trim().toLowerCase() !==
-                  path[path.length - 1].toLowerCase() &&
+                  this.getDisplayTitleFromItemName(path[path.length - 1]).toLowerCase() &&
                allowOrphan && (
                   <BannerContainer>
                      <Banner
