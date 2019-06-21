@@ -47,26 +47,32 @@ const ChevronRightIcon = styled(ChevronRight)`
 
 interface BreadcrumbsProps {
    path: string[];
+   getDisplayTitleFromItemName: (itemName: string) => string;
    onChange: (path: string[]) => void;
 }
 
-function Breadcrumbs({ path, onChange }: BreadcrumbsProps) {
+function Breadcrumbs({ path, getDisplayTitleFromItemName, onChange }: BreadcrumbsProps) {
    return (
       <Container>
          <BreadcrumbItem onClick={() => onChange([])}>Home</BreadcrumbItem>
-         {path.map((title, index) => (
-            <React.Fragment key={title}>
-               <ChevronRightIcon />
-               <BreadcrumbItem
-                  isSelected={index + 1 === path.length}
-                  onClick={() => onChange(path.slice(0, index + 1))}
-               >
-                  {index > 0
-                     ? stringDifference(title, path[index - 1]) || title
-                     : title}
-               </BreadcrumbItem>
-            </React.Fragment>
-         ))}
+         {path.map((title, index) => {
+            const displayTitle = getDisplayTitleFromItemName(title);
+            const lastDisplayTitle = getDisplayTitleFromItemName(path[index - 1]);
+            return (
+               <React.Fragment key={title}>
+                  <ChevronRightIcon />
+                  <BreadcrumbItem
+                     isSelected={index + 1 === path.length}
+                     onClick={() => onChange(path.slice(0, index + 1))}
+                  >
+                     {index > 0
+                        ? stringDifference(displayTitle, lastDisplayTitle)
+                           || displayTitle
+                        : getDisplayTitleFromItemName(title)}
+                  </BreadcrumbItem>
+               </React.Fragment>
+            );
+         })}
       </Container>
    );
 }

@@ -522,7 +522,10 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                )}
 
             {path.length > 0 ? (
-               <Breadcrumbs path={path} onChange={this.setPath} />
+               <Breadcrumbs
+                  path={path}
+                  getDisplayTitleFromItemName={this.getDisplayTitleFromItemName}
+                  onChange={this.setPath} />
             ) : null}
 
             {search === SEARCH_NO_RESULTS ? (
