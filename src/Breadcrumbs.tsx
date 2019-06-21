@@ -68,7 +68,7 @@ function Breadcrumbs({ path, getDisplayTitleFromItemName, onChange }: Breadcrumb
                      {index > 0
                         ? stringDifference(displayTitle, lastDisplayTitle)
                            || displayTitle
-                        : getDisplayTitleFromItemName(title)}
+                        : displayTitle}
                   </BreadcrumbItem>
                </React.Fragment>
             );
