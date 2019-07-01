@@ -259,7 +259,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
     * @param {HTMLElement} element
     */
    searchInputRef: any = null;
-   setSearchInputRef = (element: HTMLElement) => {
+   setSearchInputRef = (element: HTMLElement | null) => {
       this.searchInputRef = element;
    };
 
@@ -473,7 +473,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
             <SearchContainer>
                <Icon name="search" size={25} color={color.gray5} />
                <SearchInput
-                  innerRef={this.setSearchInputRef}
+                  ref={this.setSearchInputRef}
                   placeholder={translate('Search')}
                   value={searchValue}
                   onChange={this.handleSearchChange}
