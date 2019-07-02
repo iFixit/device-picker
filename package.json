@@ -16,6 +16,7 @@
       "@core-ds/icons": "^0.5.0",
       "@core-ds/primitives": "^0.12.0",
       "@ifixit/toolbox": "^0.12.2",
+      "@types/styled-components": "^4.1.16",
       "fuse.js": "^3.1.0",
       "lodash": "^4.17.10",
       "prop-types": "^15.5.10",
@@ -25,7 +26,7 @@
    "peerDependencies": {
       "react": "16.8.x",
       "react-dom": "16.8.x",
-      "styled-components": "4.x"
+      "styled-components": "^4.3.1"
    },
    "devDependencies": {
       "@babel/cli": "^7.4.4",
@@ -50,7 +51,7 @@
       "react": "^16.8.6",
       "react-dom": "^16.8.6",
       "react-scripts": "^3.0.1",
-      "styled-components": "^3.3.3",
+      "styled-components": "^4.3.1",
       "typescript": "^3.4.5"
    },
    "browserslist": {

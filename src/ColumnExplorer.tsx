@@ -72,7 +72,7 @@ function ColumnExplorer({
    useEventListener(window, 'keydown', handleKeyDown);
 
    return (
-      <Container innerRef={containerRef}>
+      <Container ref={containerRef}>
          <Columns
             hierarchy={hierarchy}
             displayTitles={displayTitles}

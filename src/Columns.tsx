@@ -101,7 +101,7 @@ function Columns({
                return (
                   <ColumnItem
                      key={title}
-                     innerRef={isSelected ? selectedRef : undefined}
+                     ref={isSelected ? selectedRef : undefined}
                      onClick={event => {
                         event.stopPropagation();
                         onChange([...previousPath, title]);
