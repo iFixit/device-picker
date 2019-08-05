@@ -14,6 +14,7 @@ import NoResults from './NoResults';
 import Spinner from './Spinner';
 import { Hierarchy, Wiki } from './types';
 import { above } from './utils/mediaQuery';
+import isIE from './utils/isIE';
 
 smoothscroll.polyfill();
 
@@ -132,7 +133,7 @@ const SEARCH_PENDING = 'pending';
 // NO_RESULTS is when the search is completed, but didn't find a result.
 const SEARCH_NO_RESULTS = 'no_results';
 
-const HIDE_GRID_VIEW = true;
+const HIDE_GRID_VIEW = isIE();
 
 class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    translations: { [key: string]: string } = {};
