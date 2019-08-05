@@ -1,5 +1,5 @@
 function isIE() {
-   let ua = navigator.userAgent;
+   const ua = navigator.userAgent;
    return /Trident|MSIE/.test(ua);
 }
 
