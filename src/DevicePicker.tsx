@@ -132,12 +132,14 @@ const SEARCH_PENDING = 'pending';
 // NO_RESULTS is when the search is completed, but didn't find a result.
 const SEARCH_NO_RESULTS = 'no_results';
 
+const HIDE_GRID_VIEW = true;
+
 class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
       initialDevice: '',
-      initialView: View.Grid,
+      initialView: HIDE_GRID_VIEW ? View.Column : View.Grid ,
       allowOrphan: false,
       translate: (s: string) => s,
    };
@@ -481,7 +483,8 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      event.key === 'Enter' && this.applySearch()
                   }
                />
-               <ButtonGroup css={{ marginRight: space[4] }}>
+         {!HIDE_GRID_VIEW &&
+            (<ButtonGroup css={{ marginRight: space[4] }}>
                   <Button
                      design={view === View.Grid ? 'secondary' : 'default'}
                      onClick={() => this.setState({ view: View.Grid })}
@@ -500,7 +503,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                         color={view === View.Column ? color.gray8 : color.gray5}
                      />
                   </Button>
-               </ButtonGroup>
+               </ButtonGroup>)}
             </SearchContainer>
 
             {searchValue &&
