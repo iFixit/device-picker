@@ -1,5 +1,6 @@
 function isIE() {
-   return true;
+   let ua = navigator.userAgent;
+   return /Trident|MSIE/.test(ua);
 }
 
 export default isIE;
