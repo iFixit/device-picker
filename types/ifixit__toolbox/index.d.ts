@@ -1,4 +1,4 @@
-// Type definitions for @ifixit/toolbox v0.12.4
+// Type definitions for @ifixit/toolbox v0.13.0
 
 declare module '@ifixit/toolbox' {
    export const constants: any;

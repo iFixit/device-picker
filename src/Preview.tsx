@@ -1,5 +1,6 @@
 import { color, fontSize, lineHeight, space } from '@core-ds/primitives';
 import { truncate } from 'lodash';
+import { _js } from '@ifixit/localize';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -48,15 +49,14 @@ interface PreviewProps {
    image: string;
    title: string;
    summary: string;
-   translate: (...strings: string[]) => string;
 }
 
-function Preview({ image, title, summary, translate }: PreviewProps) {
+function Preview({ image, title, summary }: PreviewProps) {
    return (
       <Container>
          <Image src={image} />
-         <Title>{translate(title)}</Title>
-         <Summary>{truncate(translate(summary), { length: 80 })}</Summary>
+         <Title>{_js(title)}</Title>
+         <Summary>{truncate(_js(summary), { length: 80 })}</Summary>
       </Container>
    );
 }

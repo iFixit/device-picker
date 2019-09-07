@@ -1,4 +1,5 @@
 import { space } from '@core-ds/primitives';
+import { _js } from '@ifixit/localize';
 import { Button } from '@ifixit/toolbox';
 import React from 'react';
 import styled from 'styled-components';
@@ -18,24 +19,22 @@ interface NoResultsProps {
    query: string;
    allowOrphan: boolean;
    selectItem: (title: string) => void;
-   translate: (...strings: string[]) => string;
 }
 
 function NoResults({
    query,
    allowOrphan,
    selectItem,
-   translate,
 }: NoResultsProps) {
    return (
       <Container>
-         <p>{translate('No matches found. Did you spell it correctly?')}</p>
+         <p>{_js('No matches found. Did you spell it correctly?')}</p>
          {allowOrphan ? (
             <Button
                style={{ maxWidth: '100%' }}
                onClick={() => selectItem(query)}
             >
-               {translate('Choose %1', `"${query}"`)}
+               {_js('Choose %1', `"${query}"`)}
             </Button>
          ) : null}
       </Container>

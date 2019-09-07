@@ -1,5 +1,6 @@
 import { Columns, Grid } from '@core-ds/icons/16';
 import { breakpoint, color, fontSize, space } from '@core-ds/primitives';
+import { _js } from '@ifixit/localize';
 import { Button, ButtonGroup, Icon } from '@ifixit/toolbox';
 import Fuse from 'fuse.js';
 import { debounce, Dictionary, inRange, minBy } from 'lodash';
@@ -31,7 +32,6 @@ interface DevicePickerProps {
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    onSubmit: (title: string) => void;
    onCancel: () => void;
-   translate: (...strings: string[]) => string;
    allowOrphan: boolean;
    initialDevice: string;
    initialView: View;
@@ -141,8 +141,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    static defaultProps = {
       initialDevice: '',
       initialView: HIDE_GRID_VIEW ? View.Column : View.Grid ,
-      allowOrphan: false,
-      translate: (s: string) => s,
+      allowOrphan: false
    };
 
    constructor(props: DevicePickerProps) {
@@ -468,7 +467,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
          onSubmit,
          onCancel,
          allowOrphan,
-         translate,
       } = this.props;
 
       return (
@@ -477,7 +475,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                <Icon name="search" size={25} color={color.gray5} />
                <SearchInput
                   ref={this.setSearchInputRef}
-                  placeholder={translate('Search')}
+                  placeholder={_js('Search')}
                   value={searchValue}
                   onChange={this.handleSearchChange}
                   onKeyDown={event =>
@@ -514,13 +512,13 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                allowOrphan && (
                   <BannerContainer>
                      <Banner
-                        callToAction={translate(
+                        callToAction={_js(
                            'Choose %1',
                            `"${searchValue}"`,
                         )}
                         onClick={() => onSubmit(searchValue)}
                      >
-                        {translate("Don't see what you're looking for?")}
+                        {_js("Don't see what you're looking for?")}
                      </Banner>
                   </BannerContainer>
                )}
@@ -537,7 +535,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                   query={searchValue}
                   allowOrphan={allowOrphan}
                   selectItem={onSubmit}
-                  translate={translate}
                />
             ) : tree ? (
                view === View.Grid ? (
@@ -547,7 +544,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      fetchChildren={fetchChildren}
                      path={path}
                      onChange={this.setPath}
-                     translate={this.props.translate}
                   />
                ) : (
                   <ColumnExplorer
@@ -556,7 +552,6 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      fetchChildren={fetchChildren}
                      path={path}
                      onChange={this.setPath}
-                     translate={this.props.translate}
                   />
                )
             ) : (
@@ -567,13 +562,13 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
 
             <Toolbar>
                <ToolbarRight>
-                  <Button onClick={onCancel}>{translate('Cancel')}</Button>
+                  <Button onClick={onCancel}>{_js('Cancel')}</Button>
                   <Button
                      design="primary"
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {translate('Choose device')}
+                     {_js('Choose device')}
                   </Button>
                </ToolbarRight>
             </Toolbar>

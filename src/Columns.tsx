@@ -58,7 +58,6 @@ interface ColumnsProps {
    path: string[];
    previousPath: string[];
    onChange: (path: string[]) => void;
-   translate: (...strings: string[]) => string;
 }
 
 function Columns({
@@ -68,7 +67,6 @@ function Columns({
    path,
    previousPath,
    onChange,
-   translate,
 }: ColumnsProps) {
    const currentTitle = path[0];
    const parentTitle =
@@ -134,7 +132,6 @@ function Columns({
                   )}
                   image={get(childrenByTitle[currentTitle], 'image')}
                   summary={get(childrenByTitle[currentTitle], 'summary')}
-                  translate={translate}
                />
             ) : (
                <Columns
@@ -144,7 +141,6 @@ function Columns({
                   path={path.slice(1)}
                   previousPath={[...previousPath, currentTitle]}
                   onChange={onChange}
-                  translate={translate}
                />
             )
          ) : null}
