@@ -20,8 +20,6 @@ interface ColumnExplorerProps {
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    path: string[];
    onChange: (path: string[]) => void;
-   translate: (...strings: string[]) => string;
-   // TODO: Make translate() available using the Context API.
 }
 
 function ColumnExplorer({
@@ -30,7 +28,6 @@ function ColumnExplorer({
    fetchChildren,
    path,
    onChange,
-   translate,
 }: ColumnExplorerProps) {
    const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -79,7 +76,6 @@ function ColumnExplorer({
             fetchChildren={fetchChildren}
             path={path}
             onChange={onChange}
-            translate={translate}
          />
       </Container>
    );

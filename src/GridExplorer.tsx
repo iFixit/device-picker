@@ -39,7 +39,6 @@ interface GridExplorerProps {
    path: string[];
    previousPath: string[];
    onChange: (path: string[]) => void;
-   translate: (...strings: string[]) => string;
 }
 
 function GridExplorer({
@@ -49,7 +48,6 @@ function GridExplorer({
    path,
    previousPath,
    onChange,
-   translate,
 }: GridExplorerProps) {
    const currentTitle = path[0];
    const parentTitle =
@@ -87,7 +85,6 @@ function GridExplorer({
             title={displayTitles[currentTitle] || currentTitle}
             image={get(childrenByTitle[currentTitle], 'image')}
             summary={get(childrenByTitle[currentTitle], 'summary')}
-            translate={translate}
          />
       );
    }
@@ -100,7 +97,6 @@ function GridExplorer({
          previousPath={[...previousPath, currentTitle]}
          fetchChildren={fetchChildren}
          onChange={onChange}
-         translate={translate}
       />
    );
 }
