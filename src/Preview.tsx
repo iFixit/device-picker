@@ -10,7 +10,7 @@ const Container = styled.div`
    flex-direction: column;
    align-items: center;
    justify-content: flex-start;
-   min-width: 16rem;
+   min-width: 256px;
    padding: ${space[5]};
    text-align: center;
    overflow-y: auto;
@@ -22,8 +22,8 @@ interface ImageProps {
 
 const Image = styled.div<ImageProps>`
    width: 100%;
-   height: 14rem;
-   min-height: 3rem;
+   height: 224px;
+   min-height: 48px;
    background-size: contain;
    background-position: center center;
    background-repeat: no-repeat;

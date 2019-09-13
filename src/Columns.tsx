@@ -45,7 +45,7 @@ const ColumnItemText = styled.span`
 `;
 
 const Column = styled.div`
-   width: 16rem;
+   width: 256px;
    flex: 0 0 auto;
    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
    overflow-y: auto;
