@@ -135,7 +135,7 @@ const SEARCH_NO_RESULTS = 'no_results';
 
 const HIDE_GRID_VIEW = isIE();
 
-class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
+export class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
