@@ -181,6 +181,9 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
             throw reason;
          });
 
+      // Start with the search input focused.
+      this.searchInputRef.focus();
+
       window.addEventListener('keydown', this.handleKeyDown);
    }
 
