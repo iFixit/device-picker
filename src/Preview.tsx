@@ -7,6 +7,7 @@ import styled from 'styled-components';
 const Container = styled.div`
    flex: 1 1 auto;
    display: flex;
+   cursor: pointer;
    flex-direction: column;
    align-items: center;
    justify-content: flex-start;
@@ -49,11 +50,12 @@ interface PreviewProps {
    image: string;
    title: string;
    summary: string;
+   onSubmit: () => void;
 }
 
-function Preview({ image, title, summary }: PreviewProps) {
+function Preview({ image, title, summary, onSubmit}: PreviewProps) {
    return (
-      <Container>
+      <Container onClick={onSubmit}>
          <Image src={image} />
          <Title>{_js(title)}</Title>
          <Summary>{truncate(_js(summary), { length: 80 })}</Summary>

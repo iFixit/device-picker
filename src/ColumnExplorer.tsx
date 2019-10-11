@@ -20,6 +20,7 @@ interface ColumnExplorerProps {
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    path: string[];
    onChange: (path: string[]) => void;
+   onSubmit: (title: string) => void;
 }
 
 function ColumnExplorer({
@@ -28,6 +29,7 @@ function ColumnExplorer({
    fetchChildren,
    path,
    onChange,
+   onSubmit,
 }: ColumnExplorerProps) {
    const containerRef = React.useRef<HTMLDivElement>(null);
 
@@ -76,6 +78,7 @@ function ColumnExplorer({
             fetchChildren={fetchChildren}
             path={path}
             onChange={onChange}
+            onSubmit={onSubmit}
          />
       </Container>
    );

@@ -58,6 +58,7 @@ interface ColumnsProps {
    path: string[];
    previousPath: string[];
    onChange: (path: string[]) => void;
+   onSubmit: (title: string) => void;
 }
 
 function Columns({
@@ -67,6 +68,7 @@ function Columns({
    path,
    previousPath,
    onChange,
+   onSubmit,
 }: ColumnsProps) {
    const currentTitle = path[0];
    const parentTitle =
@@ -132,6 +134,7 @@ function Columns({
                   )}
                   image={get(childrenByTitle[currentTitle], 'image')}
                   summary={get(childrenByTitle[currentTitle], 'summary')}
+                  onSubmit={() => onSubmit(currentTitle)}
                />
             ) : (
                <Columns
@@ -141,6 +144,7 @@ function Columns({
                   path={path.slice(1)}
                   previousPath={[...previousPath, currentTitle]}
                   onChange={onChange}
+                  onSubmit={onSubmit}
                />
             )
          ) : null}
