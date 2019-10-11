@@ -40,6 +40,12 @@ function useAsync<T>(
       return function cleanup() {
          isFresh = false;
       };
+
+      // useAsync() is effectively an extension of `useEffect()`, and as such
+      // it relies on the caller to appropriately specify dependencies. It
+      // doesn't make sense to make `fn` a dependency (just like `useEffect()`
+      // doesn't expect the function it's passed to be a dependency).
+      // eslint-disable-next-line react-hooks/exhaustive-deps
    }, dependencies);
 
    return state;
