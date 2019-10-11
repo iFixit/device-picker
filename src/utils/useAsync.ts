@@ -24,21 +24,21 @@ function useAsync<T>(
    const [state, setState] = React.useState<AsyncState<T>>({ isLoading: true });
 
    React.useEffect(() => {
-      let isFresh = true;
+      let componentIsFresh = true;
       fn()
          .then(data => {
-            if (isFresh) {
+            if (componentIsFresh) {
                setState({ isLoading: false, data });
             }
          })
          .catch(error => {
-            if (isFresh) {
+            if (componentIsFresh) {
                setState({ isLoading: false, error });
             }
          });
 
       return function cleanup() {
-         isFresh = false;
+         componentIsFresh = false;
       };
 
       // useAsync() is effectively an extension of `useEffect()`, and as such
