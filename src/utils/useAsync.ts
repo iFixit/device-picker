@@ -23,22 +23,27 @@ function useAsync<T>(
 ): AsyncState<T> {
    const [state, setState] = React.useState<AsyncState<T>>({ isLoading: true });
 
+
+   // Note that `dependencies` defaults to [], which means that our effect will
+   // be run *only* on component mount unless the caller explicitly passes
+   // `undefined` (run after each render) or an array of dependencies (run only
+   // when a dependency has changed).
    React.useEffect(() => {
-      let componentIsFresh = true;
+      let cancelFetch = false;
       fn()
          .then(data => {
-            if (componentIsFresh) {
+            if (!cancelFetch) {
                setState({ isLoading: false, data });
             }
          })
          .catch(error => {
-            if (componentIsFresh) {
+            if (!cancelFetch) {
                setState({ isLoading: false, error });
             }
          });
 
-      return function cleanup() {
-         componentIsFresh = false;
+      return function dependenciesChanged() {
+         cancelFetch = true;
       };
 
       // useAsync() is effectively an extension of `useEffect()`, and as such
