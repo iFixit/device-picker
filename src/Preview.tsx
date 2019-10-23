@@ -5,8 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-   flex: 1 1 auto;
    display: flex;
+   flex: 1 1 auto;
    flex-direction: column;
    align-items: center;
    justify-content: flex-start;
@@ -16,15 +16,19 @@ const Container = styled.div`
    overflow-y: auto;
 `;
 
+const ClickableContainer = styled.div`
+   display: flex;
+   flex-direction: column;
+   max-width: 30em;
+   cursor: pointer;
+`;
+
 interface ImageProps {
    src: string;
 }
 
-const maxWidth = '30em';
-
 const Image = styled.div<ImageProps>`
    width: 100%;
-   max-width: ${maxWidth};
    height: 224px;
    min-height: 48px;
    background-size: contain;
@@ -32,24 +36,19 @@ const Image = styled.div<ImageProps>`
    background-repeat: no-repeat;
    mix-blend-mode: multiply;
    ${props => (props.src ? `background-image: url(${props.src});` : null)}
-   cursor: pointer;
 `;
 
 const Title = styled.span`
-   max-width: ${maxWidth};
    margin: ${space[5]} 0 ${space[1]};
    font-size: ${fontSize[3]};
    line-height: ${lineHeight.normal};
    font-weight: 700;
-   cursor: pointer;
 `;
 
 const Summary = styled.span`
-   max-width: ${maxWidth};
    font-size: ${fontSize[2]};
    line-height: ${lineHeight.normal};
    color: ${color.gray6};
-   cursor: pointer;
 `;
 
 interface PreviewProps {
@@ -62,11 +61,11 @@ interface PreviewProps {
 function Preview({ image, title, summary, onSubmit}: PreviewProps) {
    return (
       <Container>
-         <Image src={image} onClick={onSubmit} />
-         <Title onClick={onSubmit}>{_js(title)}</Title>
-         <Summary onClick={onSubmit}>
-            {truncate(_js(summary), { length: 80 })}
-         </Summary>
+         <ClickableContainer onClick={onSubmit} >
+            <Image src={image}  />
+            <Title>{_js(title)}</Title>
+            <Summary>{truncate(_js(summary), { length: 80 })}</Summary>
+         </ClickableContainer>
       </Container>
    );
 }
