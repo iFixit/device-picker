@@ -5,8 +5,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
-   flex: 1 1 auto;
    display: flex;
+   flex: 1 1 auto;
    flex-direction: column;
    align-items: center;
    justify-content: flex-start;
@@ -14,6 +14,13 @@ const Container = styled.div`
    padding: ${space[5]};
    text-align: center;
    overflow-y: auto;
+`;
+
+const ClickableContainer = styled.div`
+   display: flex;
+   flex-direction: column;
+   max-width: 30em;
+   cursor: pointer;
 `;
 
 interface ImageProps {
@@ -39,7 +46,6 @@ const Title = styled.span`
 `;
 
 const Summary = styled.span`
-   max-width: 30em;
    font-size: ${fontSize[2]};
    line-height: ${lineHeight.normal};
    color: ${color.gray6};
@@ -49,14 +55,17 @@ interface PreviewProps {
    image: string;
    title: string;
    summary: string;
+   onSubmit: () => void;
 }
 
-function Preview({ image, title, summary }: PreviewProps) {
+function Preview({ image, title, summary, onSubmit}: PreviewProps) {
    return (
       <Container>
-         <Image src={image} />
-         <Title>{_js(title)}</Title>
-         <Summary>{truncate(_js(summary), { length: 80 })}</Summary>
+         <ClickableContainer onClick={onSubmit} >
+            <Image src={image}  />
+            <Title>{_js(title)}</Title>
+            <Summary>{truncate(_js(summary), { length: 80 })}</Summary>
+         </ClickableContainer>
       </Container>
    );
 }

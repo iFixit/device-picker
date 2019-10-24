@@ -544,6 +544,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      fetchChildren={fetchChildren}
                      path={path}
                      onChange={this.setPath}
+                     onSubmit={onSubmit}
                   />
                ) : (
                   <ColumnExplorer
@@ -552,6 +553,7 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
                      fetchChildren={fetchChildren}
                      path={path}
                      onChange={this.setPath}
+                     onSubmit={onSubmit}
                   />
                )
             ) : (
