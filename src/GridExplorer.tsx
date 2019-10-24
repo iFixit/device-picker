@@ -55,7 +55,11 @@ function GridExplorer({
    const parentTitle =
       previousPath.length > 0 ? previousPath[previousPath.length - 1] : 'root';
 
+   // At present, we don't expect fetchChildren to change. It's defined outside
+   // a component at the top level and passed down unmodified, but since we
+   // take it as a prop, we can't guarantee that.
    const { data: children } = useAsync(() => fetchChildren(parentTitle), [
+      fetchChildren,
       parentTitle,
    ]);
 

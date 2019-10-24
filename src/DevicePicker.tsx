@@ -135,7 +135,7 @@ const SEARCH_NO_RESULTS = 'no_results';
 
 const HIDE_GRID_VIEW = isIE();
 
-class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
+export class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
@@ -180,6 +180,9 @@ class DevicePicker extends Component<DevicePickerProps, DevicePickerState> {
          .catch(reason => {
             throw reason;
          });
+
+      // Start with the search input focused.
+      this.searchInputRef.focus();
 
       window.addEventListener('keydown', this.handleKeyDown);
    }
