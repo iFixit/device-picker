@@ -35,6 +35,7 @@ interface DevicePickerProps {
    allowOrphan: boolean;
    initialDevice: string;
    initialView: View;
+   objectName: string;
 }
 
 interface DevicePickerState {
@@ -573,7 +574,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {_js('Choose device')}
+                     {_js(`Choose ${this.props.objectName}`)}
                   </Button>
                </ToolbarRight>
             </Toolbar>

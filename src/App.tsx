@@ -35,6 +35,7 @@ function App() {
             fetchChildren={fetchChildren}
             onSubmit={title => alert(`Selected "${title}"`)}
             onCancel={() => alert(`Cancelled`)}
+            objectName="device/category"
          />
       </div>
    );
