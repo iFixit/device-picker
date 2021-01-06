@@ -142,7 +142,8 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
    static defaultProps = {
       initialDevice: '',
       initialView: HIDE_GRID_VIEW ? View.Column : View.Grid ,
-      allowOrphan: false
+      allowOrphan: false,
+      objectName: "device"
    };
 
    constructor(props: DevicePickerProps) {
