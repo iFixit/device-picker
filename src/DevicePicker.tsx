@@ -35,6 +35,7 @@ interface DevicePickerProps {
    allowOrphan: boolean;
    initialDevice: string;
    initialView: View;
+   objectName: string;
 }
 
 interface DevicePickerState {
@@ -141,7 +142,8 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
    static defaultProps = {
       initialDevice: '',
       initialView: HIDE_GRID_VIEW ? View.Column : View.Grid ,
-      allowOrphan: false
+      allowOrphan: false,
+      objectName: "device"
    };
 
    constructor(props: DevicePickerProps) {
@@ -573,7 +575,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {_js('Choose device')}
+                     {_js(`Choose ${this.props.objectName}`)}
                   </Button>
                </ToolbarRight>
             </Toolbar>
