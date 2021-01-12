@@ -435,9 +435,9 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          const bestResult = minBy(
             results,
             result => {
-		if (!result || !result.score) throw 'fubar result';
+		if (!result || result.score === undefined) throw new Error('The fuse.js result was empty/wrong type.');
 		// Prefer more general categories (which have a smaller path length).
-               return result.score * (1 + 0.1 * result.item.path.length)
+               return result.score * (1 + 0.1 * result.item.path.length);
          });
          this.setState({
             path: bestResult ? bestResult.item.path : [],
