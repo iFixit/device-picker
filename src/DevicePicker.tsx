@@ -471,6 +471,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          onSubmit,
          onCancel,
          allowOrphan,
+         objectName,
       } = this.props;
 
       return (
@@ -574,9 +575,8 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {_js('Choose %1',
-                          this.props.objectName,
-		     )}
+                     /* Translators: %1 -> the singular object name for objects in the parent website; */
+                     {_js('Choose %1', objectName)}
                   </Button>
                </ToolbarRight>
             </Toolbar>
