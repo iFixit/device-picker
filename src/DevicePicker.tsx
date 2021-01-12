@@ -406,10 +406,10 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
       this.itemList = this.itemList || this.createItemList(this.state.tree);
 
       const fuse = new Fuse<{
-		 itemName: string;
-		 displayTitle: string;
-		 path: string[];
-		 pathText: string;
+            itemName: string;
+            displayTitle: string;
+            path: string[];
+            pathText: string;
       }>(this.itemList, {
          keys: [
             {
@@ -435,11 +435,10 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          const bestResult = minBy(
             results,
             result => {
-	           if (!result || !result.score) throw 'fubar result';
-	           // Prefer more general categories (which have a smaller path length).
+		if (!result || !result.score) throw 'fubar result';
+		// Prefer more general categories (which have a smaller path length).
                return result.score * (1 + 0.1 * result.item.path.length)
-         	}
-		 );
+         });
          this.setState({
             path: bestResult ? bestResult.item.path : [],
             search: SEARCH_INACTIVE,
