@@ -574,7 +574,9 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {_js(`Choose ${this.props.objectName}`)}
+                     {_js('Choose %1',
+                          this.props.objectName,
+		     )}
                   </Button>
                </ToolbarRight>
             </Toolbar>
