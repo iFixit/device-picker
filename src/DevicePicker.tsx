@@ -578,7 +578,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     {/* Translators: %1 -> the singular object name for objects in the parent website; */}
+                     {/* Translators: %1 -> the singular object name for objects; usually "Device" or "Category". */}
                      {_js('Choose %1', objectName)}
                   </Button>
                </ToolbarRight>
