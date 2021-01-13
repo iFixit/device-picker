@@ -406,10 +406,10 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
       this.itemList = this.itemList || this.createItemList(this.state.tree);
 
       const fuse = new Fuse<{
-            itemName: string;
-            displayTitle: string;
-            path: string[];
-            pathText: string;
+         itemName: string;
+         displayTitle: string;
+         path: string[];
+         pathText: string;
       }>(this.itemList, {
          keys: [
             {
@@ -435,10 +435,13 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          const bestResult = minBy(
             results,
             result => {
-		if (!result || result.score === undefined) throw new Error('The fuse.js result was empty/wrong type.');
-		// Prefer more general categories (which have a smaller path length).
+               if (!result || result.score === undefined){
+                  throw new Error('The fuse.js result was empty/wrong type.')
+               }
+               // Prefer more general categories (which have a smaller path length).
                return result.score * (1 + 0.1 * result.item.path.length);
-         });
+            }
+         );
          this.setState({
             path: bestResult ? bestResult.item.path : [],
             search: SEARCH_INACTIVE,
@@ -575,7 +578,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
                      disabled={!this.allowSubmit()}
                      onClick={() => onSubmit(path[path.length - 1])}
                   >
-                     /* Translators: %1 -> the singular object name for objects in the parent website; */
+                     {/* Translators: %1 -> the singular object name for objects in the parent website; */}
                      {_js('Choose %1', objectName)}
                   </Button>
                </ToolbarRight>
