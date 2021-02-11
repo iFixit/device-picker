@@ -14,7 +14,7 @@ npm install device-picker
 ``` js
 import React from 'react';
 import { View, DevicePicker } from 'device-picker';
-import { memoize } from 'lodash';
+import memoize from 'lodash/memoize';
 function MyDevicePicker() {
    return (
          <DevicePicker
