@@ -32,10 +32,10 @@ interface DevicePickerProps {
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    onSubmit: (title: string) => void;
    onCancel: () => void;
-   allowOrphan: boolean;
-   initialDevice: string;
-   initialView: View;
-   objectName: string;
+   allowOrphan?: boolean;
+   initialDevice?: string;
+   initialView?: View;
+   objectName?: string;
 }
 
 interface DevicePickerState {
