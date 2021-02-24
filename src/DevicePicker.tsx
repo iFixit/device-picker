@@ -150,12 +150,12 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
       super(props);
 
       this.state = {
-         searchValue: this.props.initialDevice,
+         searchValue: this.props.initialDevice || DevicePicker.defaultProps.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
          tree: null,
          displayTitles: {},
          path: [],
-         view: props.initialView,
+         view: props.initialView || DevicePicker.defaultProps.initialView,
       };
    }
 
@@ -474,7 +474,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          onSubmit,
          onCancel,
          allowOrphan,
-         objectName,
+         objectName = DevicePicker.defaultProps.objectName,
       } = this.props;
 
       return (

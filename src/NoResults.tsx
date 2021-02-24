@@ -3,6 +3,7 @@ import { _js } from '@ifixit/localize';
 import { Button } from '@ifixit/toolbox';
 import React from 'react';
 import styled from 'styled-components';
+import DevicePicker from './DevicePicker';
 
 const Container = styled.div`
    flex: 1 1 100%;
@@ -17,13 +18,13 @@ const Container = styled.div`
 
 interface NoResultsProps {
    query: string;
-   allowOrphan: boolean;
+   allowOrphan?: boolean;
    selectItem: (title: string) => void;
 }
 
 function NoResults({
    query,
-   allowOrphan,
+   allowOrphan = DevicePicker.defaultProps.allowOrphan,
    selectItem,
 }: NoResultsProps) {
    return (
