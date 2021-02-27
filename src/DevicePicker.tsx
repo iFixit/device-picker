@@ -473,7 +473,7 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          fetchChildren,
          onSubmit,
          onCancel,
-         allowOrphan,
+         allowOrphan = DevicePicker.defaultProps.allowOrphan,
          objectName = DevicePicker.defaultProps.objectName,
       } = this.props;
 
