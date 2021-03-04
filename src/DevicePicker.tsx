@@ -32,10 +32,10 @@ interface DevicePickerProps {
    fetchChildren: (title: string) => Promise<Array<Wiki>>;
    onSubmit: (title: string) => void;
    onCancel: () => void;
-   allowOrphan: boolean;
-   initialDevice: string;
-   initialView: View;
-   objectName: string;
+   allowOrphan?: boolean;
+   initialDevice?: string;
+   initialView?: View;
+   objectName?: string;
 }
 
 interface DevicePickerState {
@@ -150,12 +150,12 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
       super(props);
 
       this.state = {
-         searchValue: this.props.initialDevice,
+         searchValue: this.props.initialDevice || DevicePicker.defaultProps.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
          tree: null,
          displayTitles: {},
          path: [],
-         view: props.initialView,
+         view: props.initialView || DevicePicker.defaultProps.initialView,
       };
    }
 
@@ -473,8 +473,8 @@ export class DevicePicker extends Component<DevicePickerProps, DevicePickerState
          fetchChildren,
          onSubmit,
          onCancel,
-         allowOrphan,
-         objectName,
+         allowOrphan = DevicePicker.defaultProps.allowOrphan,
+         objectName = DevicePicker.defaultProps.objectName,
       } = this.props;
 
       return (
