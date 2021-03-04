@@ -16,7 +16,7 @@
       "@core-ds/icons": "^1.0.0",
       "@core-ds/primitives": "^1.0.0",
       "@ifixit/localize": "^1.0.0",
-      "@ifixit/toolbox": "^1.0.1",
+      "@ifixit/toolbox": "^1.1.1",
       "@types/styled-components": "^4.1.16",
       "fuse.js": "^6.4.6",
       "lodash": "^4.17.10",
