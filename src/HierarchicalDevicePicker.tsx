@@ -156,12 +156,12 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       super(props);
 
       this.state = {
-         searchValue: this.props.initialDevice || DevicePicker.defaultProps.initialDevice,
+         searchValue: this.props.initialDevice || HierarchicalDevicePicker.defaultProps.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
          tree: null,
          displayTitles: {},
          path: [],
-         view: props.initialView || DevicePicker.defaultProps.initialView,
+         view: props.initialView || HierarchicalDevicePicker.defaultProps.initialView,
       };
    }
 
@@ -479,8 +479,8 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
          fetchChildren,
          onSubmit,
          onCancel,
-         allowOrphan = DevicePicker.defaultProps.allowOrphan,
-         objectName = DevicePicker.defaultProps.objectName,
+         allowOrphan = HierarchicalDevicePicker.defaultProps.allowOrphan,
+         objectName = HierarchicalDevicePicker.defaultProps.objectName,
       } = this.props;
 
       return (
@@ -594,4 +594,4 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
    }
 }
 
-export default DevicePicker;
+export default HierarchicalDevicePicker;
