@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, DevicePicker } from './DevicePicker';
 import { memoize } from 'lodash';
+import algoliaConfig from './algoliaConfig.json'
 
 const fetchChildren = memoize(title =>
    fetch(
@@ -21,9 +22,16 @@ if (typeof URL === 'function') {
 }
 
 function App() {
+   if (!algoliaConfig.API_KEY || !algoliaConfig.APP_ID) {
+      throw new Error("Missing required Algolia config")
+   }
    return (
       <div data-reactroot style={{ width: '100vw', height: '100vh' }}>
          <DevicePicker
+            algoliaConfig={{
+               apiKey: algoliaConfig.API_KEY,
+               appId: algoliaConfig.APP_ID,
+            }}
             allowOrphan={true}
             initialDevice={initialDevice}
             initialView={initialView}

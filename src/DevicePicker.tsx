@@ -24,6 +24,11 @@ export enum View {
    Column = 'COLUMN',
 }
 
+interface AlgoliaConfig {
+   apiKey: string;
+   appId: string;
+}
+
 interface DevicePickerProps {
    fetchHierarchy: () => Promise<{
       hierarchy: Hierarchy;
@@ -36,6 +41,7 @@ interface DevicePickerProps {
    initialDevice?: string;
    initialView?: View;
    objectName?: string;
+   algoliaConfig?: AlgoliaConfig;
 }
 
 interface DevicePickerState {
