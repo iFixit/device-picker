@@ -1,7 +1,9 @@
 import * as React from 'react'
 
 import algoliasearch, {SearchClient} from 'algoliasearch/lite';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import { InstantSearch, SearchBox, connectHits } from 'react-instantsearch-dom';
+import GridItem from "./GridItem"
+import { Grid } from "./GridExplorer"
 
 import { View } from "./HierarchicalDevicePicker"
 
@@ -33,8 +35,30 @@ function AlgoliaSearchRoot(props: AlgoliaDevicePickerProps & {searchClient: Sear
    const indexName = `${props.algoliaConfig.indexPrefix}${indexRoot}_${langid}`
    return <InstantSearch searchClient={props.searchClient} indexName={indexName}>
       <SearchBox />
-      <Hits />
+      <AlgoliaHitsList />
    </InstantSearch>
+}
+
+function HitsList({ hits }: { hits: DeviceHit[] }) {
+   return <Grid>
+      {hits.map(hit => {
+         return <HitBox hit={hit} />
+      })}
+   </Grid>
+}
+
+const AlgoliaHitsList = connectHits(HitsList);
+
+interface HitBoxProps {
+   hit: DeviceHit;
+}
+
+function HitBox({hit}: HitBoxProps) {
+   return <GridItem
+      title={hit.title}
+      image={hit.image_url}
+      onClick={() => console.log("Clicked %s", hit.title)}
+   />
 }
 
 interface DeviceHit {

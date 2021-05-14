@@ -16,7 +16,7 @@ const Container = styled.div`
    -webkit-overflow-scrolling: touch;
 `;
 
-const Grid = styled.div`
+export const Grid = styled.div`
    padding: ${space[5]};
    display: grid;
    column-gap: ${space[4]};
