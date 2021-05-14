@@ -18,9 +18,11 @@
       "@ifixit/localize": "^1.0.0",
       "@ifixit/toolbox": "^1.1.1",
       "@types/styled-components": "^4.1.16",
+      "algoliasearch": "^4.9.1",
       "fuse.js": "^6.4.6",
       "lodash": "^4.17.10",
       "prop-types": "^15.5.10",
+      "react-instantsearch-dom": "^6.11.0",
       "react-modal": "^3.4.5",
       "smoothscroll-polyfill": "^0.3.6"
    },
