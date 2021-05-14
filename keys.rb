@@ -13,8 +13,10 @@ end
 
 keys = {
   'API_KEY' => algolia_config['apiKey'],
-  'APP_ID' => algolia_config['appId']
+  'APP_ID' => algolia_config['appId'],
+  'ALGOLIA_INDEX_PREFIX' => algolia_config['indexPrefix']
 }
+
 open('src/algoliaConfig.json', 'w') do |fi|
   fi.write(JSON.generate(keys))
 end

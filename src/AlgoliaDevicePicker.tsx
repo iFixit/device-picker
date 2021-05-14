@@ -15,6 +15,7 @@ interface AlgoliaDevicePickerProps {
 export interface AlgoliaConfig {
    apiKey: string;
    appId: string;
+   indexPrefix: string;
 }
 
 export function AlgoliaDevicePicker(props: AlgoliaDevicePickerProps) {

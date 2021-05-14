@@ -22,7 +22,7 @@ if (typeof URL === 'function') {
 }
 
 function App() {
-   if (!algoliaConfig.API_KEY || !algoliaConfig.APP_ID) {
+   if (!algoliaConfig.API_KEY || !algoliaConfig.APP_ID || !algoliaConfig.hasOwnProperty('ALGOLIA_INDEX_PREFIX')) {
       throw new Error("Missing required Algolia config")
    }
    return (
@@ -31,6 +31,7 @@ function App() {
             algoliaConfig={{
                apiKey: algoliaConfig.API_KEY,
                appId: algoliaConfig.APP_ID,
+               indexPrefix: algoliaConfig.ALGOLIA_INDEX_PREFIX,
             }}
             allowOrphan={true}
             initialDevice={initialDevice}
