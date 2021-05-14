@@ -36,3 +36,33 @@ function AlgoliaSearchRoot(props: AlgoliaDevicePickerProps & {searchClient: Sear
       <Hits />
    </InstantSearch>
 }
+
+interface DeviceHit {
+   __position: number;
+   _highlightResult: any;
+   _snippetResult: any;
+   all_titles: Array<string>;
+   answers_url: string;
+   description: string;
+   device: string;
+   doctype: string;
+   flags: Array<any>;
+   has_image: number;
+   headings: Array<string>;
+   image_url: string;
+   langid: string;
+   modified_date: number;
+   namespace: string;
+   objectID: string;
+   objectType: string;
+   parts_url: null|string;
+   public: number;
+   score_device_posts: number;
+   score_wiki_views: number;
+   site: string;
+   tags: Array<any>;
+   title: string;
+   url: string;
+   userid: number;
+   wikiid: number;
+}
