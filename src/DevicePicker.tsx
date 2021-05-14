@@ -2,14 +2,10 @@ import * as React from 'react';
 
 import { Dictionary } from 'lodash';
 import HierarchicalDevicePicker, { View } from "./HierarchicalDevicePicker"
+import { AlgoliaDevicePicker, AlgoliaConfig } from "./AlgoliaDevicePicker"
 import { Hierarchy, Wiki } from './types';
 
 export { View };
-
-interface AlgoliaConfig {
-   apiKey: string;
-   appId: string;
-}
 
 interface DevicePickerProps {
    fetchHierarchy: () => Promise<{
@@ -27,5 +23,10 @@ interface DevicePickerProps {
 }
 
 export function DevicePicker(props: DevicePickerProps) {
-   return <HierarchicalDevicePicker {...props} />
+   const algoliaConfig = props.algoliaConfig;
+   if (algoliaConfig !== undefined) {
+      return <AlgoliaDevicePicker algoliaConfig={algoliaConfig} {...props} />
+   } else {
+      return <HierarchicalDevicePicker {...props} />
+   }
 }
