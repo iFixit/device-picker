@@ -1,5 +1,8 @@
 import * as React from 'react'
 
+import algoliasearch, {SearchClient} from 'algoliasearch/lite';
+import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+
 import { View } from "./HierarchicalDevicePicker"
 
 interface AlgoliaDevicePickerProps {
@@ -19,5 +22,17 @@ export interface AlgoliaConfig {
 }
 
 export function AlgoliaDevicePicker(props: AlgoliaDevicePickerProps) {
-   return <div></div>
+   const searchClient = algoliasearch(props.algoliaConfig.appId, props.algoliaConfig.apiKey);
+
+   return <AlgoliaSearchRoot searchClient={searchClient} {...props} />;
+}
+
+function AlgoliaSearchRoot(props: AlgoliaDevicePickerProps & {searchClient: SearchClient}) {
+   const indexRoot = 'topic';
+   const langid = 'en';
+   const indexName = `${props.algoliaConfig.indexPrefix}${indexRoot}_${langid}`
+   return <InstantSearch searchClient={props.searchClient} indexName={indexName}>
+      <SearchBox />
+      <Hits />
+   </InstantSearch>
 }
