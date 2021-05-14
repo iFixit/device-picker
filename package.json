@@ -17,6 +17,7 @@
       "@core-ds/primitives": "^1.0.0",
       "@ifixit/localize": "^1.0.0",
       "@ifixit/toolbox": "^1.1.1",
+      "@types/react-instantsearch-dom": "^6.10.0",
       "@types/styled-components": "^4.1.16",
       "algoliasearch": "^4.9.1",
       "fuse.js": "^6.4.6",
