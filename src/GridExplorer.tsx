@@ -69,19 +69,26 @@ function GridExplorer({
    );
 
    if (path.length === 0) {
+      const hits = Object.keys(hierarchy).map(title => 
+         ({ 
+            "key" : title,
+            "title" : displayTitles[title] || title,
+            "image" : get(childrenByTitle[title], 'image'),
+            "onClick" : () => onChange([...previousPath, title])
+         })
+      );
+
       return (
-         <Container>
             <Grid>
-               {Object.keys(hierarchy).map(title => (
+               {hits.map(hit => (
                   <GridItem
-                     key={title}
-                     title={displayTitles[title] || title}
-                     image={get(childrenByTitle[title], 'image')}
-                     onClick={() => onChange([...previousPath, title])}
-                  />
-               ))}
+                     key={hit.key}
+                     title={hit.title}
+                     image={hit.image}
+                     onClick={hit.onClick}
+                  />)
+               )}
             </Grid>
-         </Container>
       );
    }
 
