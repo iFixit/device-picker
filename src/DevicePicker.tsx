@@ -1,10 +1,10 @@
 import * as React from 'react';
-
 import { Dictionary } from 'lodash';
-import HierarchicalDevicePicker, { View } from "./HierarchicalDevicePicker"
-import { AlgoliaDevicePicker, AlgoliaConfig } from "./AlgoliaDevicePicker"
+import HierarchicalDevicePicker, { View } from './HierarchicalDevicePicker';
+import { AlgoliaDevicePicker, AlgoliaConfig } from './AlgoliaDevicePicker';
 import { Hierarchy, Wiki } from './types';
-
+import { useState } from 'react';
+import findAllLeaves from './utils/findAllLeaves';
 export { View };
 
 interface DevicePickerProps {
@@ -22,11 +22,49 @@ interface DevicePickerProps {
    algoliaConfig?: AlgoliaConfig;
 }
 
+type Context = {
+   type: 'category' | 'search';
+   value: string;
+};
+
 export function DevicePicker(props: DevicePickerProps) {
    const algoliaConfig = props.algoliaConfig;
-   if (algoliaConfig !== undefined) {
-      return <AlgoliaDevicePicker algoliaConfig={algoliaConfig} {...props} />
-   } else {
-      return <HierarchicalDevicePicker {...props} />
-   }
+   const [hierarchy, setHierarchy] = useState<object | null>(null);
+   const [leaves, setLeaves] = useState<object | null>(null);
+   const [context, setContext] = useState<Context>({
+      type: 'category',
+      value: '',
+   });
+
+   React.useEffect(() => {
+      props.fetchHierarchy().then((json) => {
+         setHierarchy(json);
+         setLeaves(findAllLeaves(json.hierarchy, json.display_titles));
+      });
+   }, []);
+
+   return (
+      <div>
+         {context.type === 'category' ? (
+            <HierarchicalDevicePicker
+               onSearch={(value) => setContext({ type: 'search', value })}
+               category={context.value}
+               {...props}
+            />
+         ) : (
+            algoliaConfig && (
+               <AlgoliaDevicePicker
+                  hierarchy={hierarchy}
+                  leaves={leaves}
+                  onSelectCategory={(category) => {
+                     setContext({ type: 'category', value: category });
+                  }}
+                  query={context.value}
+                  algoliaConfig={algoliaConfig}
+                  {...props}
+               />
+            )
+         )}
+      </div>
+   );
 }
