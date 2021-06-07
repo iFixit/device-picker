@@ -27,6 +27,7 @@ export enum View {
 interface AlgoliaConfig {
    apiKey: string;
    appId: string;
+   indexPrefix: string;
 }
 
 interface DevicePickerProps {
@@ -42,6 +43,8 @@ interface DevicePickerProps {
    initialView?: View;
    objectName?: string;
    algoliaConfig?: AlgoliaConfig;
+   onSearch?: (value: string) => void;
+   category: string;
 }
 
 interface DevicePickerState {
@@ -61,7 +64,7 @@ const Container = styled.div`
    background-color: ${color.gray1};
 `;
 
-const SearchContainer = styled.div`
+export const SearchContainer = styled.div`
    display: flex;
    flex: 0 0 auto;
    align-items: center;
@@ -69,7 +72,7 @@ const SearchContainer = styled.div`
    border-bottom: 1px solid ${color.gray2};
 `;
 
-const SearchInput = styled.input`
+export const SearchInput = styled.input`
    flex: 1 1 auto;
    margin-bottom: 0px;
    padding: ${space[4]};
@@ -142,26 +145,33 @@ const SEARCH_NO_RESULTS = 'no_results';
 
 const HIDE_GRID_VIEW = isIE();
 
-export class HierarchicalDevicePicker extends Component<DevicePickerProps, DevicePickerState> {
+export class HierarchicalDevicePicker extends Component<
+   DevicePickerProps,
+   DevicePickerState
+> {
    translations: { [key: string]: string } = {};
 
    static defaultProps = {
       initialDevice: '',
-      initialView: HIDE_GRID_VIEW ? View.Column : View.Grid ,
+      initialView: HIDE_GRID_VIEW ? View.Column : View.Grid,
       allowOrphan: false,
-      objectName: "device"
+      objectName: 'device',
    };
 
    constructor(props: DevicePickerProps) {
       super(props);
 
       this.state = {
-         searchValue: this.props.initialDevice || HierarchicalDevicePicker.defaultProps.initialDevice,
+         searchValue:
+            this.props.initialDevice ||
+            HierarchicalDevicePicker.defaultProps.initialDevice,
          search: this.props.initialDevice ? SEARCH_PENDING : SEARCH_INACTIVE,
          tree: null,
          displayTitles: {},
          path: [],
-         view: props.initialView || HierarchicalDevicePicker.defaultProps.initialView,
+         view:
+            props.initialView ||
+            HierarchicalDevicePicker.defaultProps.initialView,
       };
    }
 
@@ -170,7 +180,7 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       // TODO: investigate caching
       this.props
          .fetchHierarchy()
-         .then(data => {
+         .then((data) => {
             if (typeof data.hierarchy === 'undefined') {
                throw new Error('API response has no `hierarchy` property.');
             }
@@ -192,7 +202,7 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
                this.setState({ view: View.Grid });
             }
          })
-         .catch(reason => {
+         .catch((reason) => {
             throw reason;
          });
 
@@ -262,13 +272,48 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       });
    };
 
+   getTitle(title: string): string {
+      for (const key in this.state.displayTitles) {
+         if (this.state.displayTitles[key] === title) {
+            return key;
+         }
+      }
+      return title;
+   }
+
+   getPath(key: string): string[] {
+      let path: string[] = [];
+      let tree = this.state.tree;
+      let found = false;
+
+      function recurse(tree: any, key: string, currentPath: string[]): void {
+         for (const i in tree) {
+            if (i === key) {
+               path = currentPath;
+               found = true;
+               break;
+            } else if (typeof tree[i] === 'object') {
+               if (found) {
+                  break;
+               }
+               recurse(tree[i], key, [...currentPath, i]);
+            }
+         }
+      }
+      recurse(tree, key, []);
+
+      return [...path, key];
+   }
+
    /**
     * Update path and searchValue state given a path.
     * @param {string[]} path
     */
    setPath = (path: string[]) => {
       this.setState({
-         searchValue: this.getDisplayTitleFromItemName(path[path.length - 1] || ''),
+         searchValue: this.getDisplayTitleFromItemName(
+            path[path.length - 1] || '',
+         ),
          search: SEARCH_INACTIVE,
          path,
       });
@@ -358,10 +403,8 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       this.debouncedApplySearch();
    };
 
-   getDisplayTitleFromItemName = (
-      itemName: string
-   ): string => {
-      return this.state.displayTitles[itemName] || itemName
+   getDisplayTitleFromItemName = (itemName: string): string => {
+      return this.state.displayTitles[itemName] || itemName;
    };
 
    /**
@@ -400,7 +443,7 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       }
 
       // Recursively create a list of items for each child.
-      const childItems = Object.keys(tree).map(itemName => {
+      const childItems = Object.keys(tree).map((itemName) => {
          const childTree = tree[itemName];
          const childPath = [...path, itemName];
          return this.createItemList(childTree, itemName, childPath);
@@ -448,17 +491,13 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       const results = fuse.search(this.state.searchValue.trim());
 
       if (results.length > 0) {
-	
-         const bestResult = minBy(
-            results,
-            result => {
-               if (!result || result.score === undefined){
-                  throw new Error('The fuse.js result was empty/wrong type.')
-               }
-               // Prefer more general categories (which have a smaller path length).
-               return result.score * (1 + 0.1 * result.item.path.length);
+         const bestResult = minBy(results, (result) => {
+            if (!result || result.score === undefined) {
+               throw new Error('The fuse.js result was empty/wrong type.');
             }
-         );
+            // Prefer more general categories (which have a smaller path length).
+            return result.score * (1 + 0.1 * result.item.path.length);
+         });
          this.setState({
             path: bestResult ? bestResult.item.path : [],
             search: SEARCH_INACTIVE,
@@ -478,14 +517,8 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
    debouncedApplySearch = debounce(this.applySearch, 500);
 
    render() {
-      const {
-         searchValue,
-         tree,
-         displayTitles,
-         path,
-         search,
-         view,
-      } = this.state;
+      const { searchValue, tree, displayTitles, path, search, view } =
+         this.state;
       const {
          fetchChildren,
          onSubmit,
@@ -503,44 +536,48 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
                   placeholder={_js('Search')}
                   value={searchValue}
                   onChange={this.handleSearchChange}
-                  onKeyDown={event =>
+                  onKeyDown={(event) =>
                      event.key === 'Enter' && this.applySearch()
                   }
                />
-         {!HIDE_GRID_VIEW &&
-            (<ButtonGroup css={{ marginRight: space[4] }}>
-                  <Button
-                     design={view === View.Grid ? 'secondary' : 'default'}
-                     onClick={() => this.setState({ view: View.Grid })}
-                     css={{ margin: 0, padding: space[2] }}
-                  >
-                     <Grid
-                        color={view === View.Grid ? color.gray8 : color.gray5}
-                     />
-                  </Button>
-                  <Button
-                     design={view === View.Column ? 'secondary' : 'default'}
-                     onClick={() => this.setState({ view: View.Column })}
-                     css={{ margin: 0, padding: space[2] }}
-                  >
-                     <Columns
-                        color={view === View.Column ? color.gray8 : color.gray5}
-                     />
-                  </Button>
-               </ButtonGroup>)}
+               {!HIDE_GRID_VIEW && (
+                  <ButtonGroup css={{ marginRight: space[4] }}>
+                     <Button
+                        design={view === View.Grid ? 'secondary' : 'default'}
+                        onClick={() => this.setState({ view: View.Grid })}
+                        css={{ margin: 0, padding: space[2] }}
+                     >
+                        <Grid
+                           color={
+                              view === View.Grid ? color.gray8 : color.gray5
+                           }
+                        />
+                     </Button>
+                     <Button
+                        design={view === View.Column ? 'secondary' : 'default'}
+                        onClick={() => this.setState({ view: View.Column })}
+                        css={{ margin: 0, padding: space[2] }}
+                     >
+                        <Columns
+                           color={
+                              view === View.Column ? color.gray8 : color.gray5
+                           }
+                        />
+                     </Button>
+                  </ButtonGroup>
+               )}
             </SearchContainer>
 
             {searchValue &&
                path.length > 0 &&
                searchValue.trim().toLowerCase() !==
-                  this.getDisplayTitleFromItemName(path[path.length - 1]).toLowerCase() &&
+                  this.getDisplayTitleFromItemName(
+                     path[path.length - 1],
+                  ).toLowerCase() &&
                allowOrphan && (
                   <BannerContainer>
                      <Banner
-                        callToAction={_js(
-                           'Choose %1',
-                           `"${searchValue}"`,
-                        )}
+                        callToAction={_js('Choose %1', `"${searchValue}"`)}
                         onClick={() => onSubmit(searchValue)}
                      >
                         {_js("Don't see what you're looking for?")}
@@ -552,7 +589,8 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
                <Breadcrumbs
                   path={path}
                   getDisplayTitleFromItemName={this.getDisplayTitleFromItemName}
-                  onChange={this.setPath} />
+                  onChange={this.setPath}
+               />
             ) : null}
 
             {search === SEARCH_NO_RESULTS ? (
