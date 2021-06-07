@@ -184,6 +184,13 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
             if (this.state.searchValue) {
                this.debouncedApplySearch();
             }
+
+            if (this.props.category) {
+               let category = this.getTitle(this.props.category);
+               let path = this.getPath(category);
+               this.setPath(path);
+               this.setState({ view: View.Grid });
+            }
          })
          .catch(reason => {
             throw reason;
@@ -338,6 +345,10 @@ export class HierarchicalDevicePicker extends Component<DevicePickerProps, Devic
       const isSearching = !/^\s*$/.test(event.target.value);
       // Reset the device picker if the search text gets deleted.
       const path = isSearching ? this.state.path : [];
+
+      if (event.target.value) {
+         this.props.onSearch && this.props.onSearch(event.target.value);
+      }
 
       this.setState({
          searchValue: event.target.value,
