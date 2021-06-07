@@ -284,24 +284,22 @@ export class HierarchicalDevicePicker extends Component<
    getPath(key: string): string[] {
       let path: string[] = [];
       let tree = this.state.tree;
-      let found = false;
 
       function recurse(tree: any, key: string, currentPath: string[]): void {
          for (const i in tree) {
             if (i === key) {
                path = currentPath;
-               found = true;
                break;
             } else if (typeof tree[i] === 'object') {
-               if (found) {
+               if (path.length) {
                   break;
                }
                recurse(tree[i], key, [...currentPath, i]);
             }
          }
       }
-      recurse(tree, key, []);
 
+      recurse(tree, key, []);
       return [...path, key];
    }
 
