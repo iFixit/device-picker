@@ -58,10 +58,10 @@ function GridExplorer({
    // At present, we don't expect fetchChildren to change. It's defined outside
    // a component at the top level and passed down unmodified, but since we
    // take it as a prop, we can't guarantee that.
-   const { data: children } = useAsync(() => fetchChildren(parentTitle), [
-      fetchChildren,
-      parentTitle,
-   ]);
+   const { data: children } = useAsync(
+      () => fetchChildren(parentTitle),
+      [fetchChildren, parentTitle],
+   );
 
    const childrenByTitle: Dictionary<Wiki> = React.useMemo(
       () => (children ? indexBy('title', children) : {}),
@@ -69,37 +69,27 @@ function GridExplorer({
    );
 
    if (path.length === 0) {
-      const hits = Object.keys(hierarchy).map(title => 
-         ({ 
-            "key" : title,
-            "title" : displayTitles[title] || title,
-            "image" : get(childrenByTitle[title], 'image'),
-            "onClick" : () => onChange([...previousPath, title])
-         })
-      );
+      const hits = Object.keys(hierarchy).map((title) => ({
+         key: title,
+         title: displayTitles[title] || title,
+         image: get(childrenByTitle[title], 'image'),
+         onClick: () =>
+            isLeaf(hierarchy[title])
+               ? onSubmit(title)
+               : onChange([...previousPath, title]),
+      }));
 
       return (
-            <Grid>
-               {hits.map(hit => (
-                  <GridItem
-                     key={hit.key}
-                     title={hit.title}
-                     image={hit.image}
-                     onClick={hit.onClick}
-                  />)
-               )}
-            </Grid>
-      );
-   }
-
-   if (isLeaf(hierarchy[currentTitle])) {
-      return (
-         <Preview
-            title={displayTitles[currentTitle] || currentTitle}
-            image={get(childrenByTitle[currentTitle], 'image')}
-            summary={get(childrenByTitle[currentTitle], 'summary')}
-            onSubmit={() => onSubmit(currentTitle)}
-         />
+         <Grid>
+            {hits.map((hit) => (
+               <GridItem
+                  key={hit.key}
+                  title={hit.title}
+                  image={hit.image}
+                  onClick={hit.onClick}
+               />
+            ))}
+         </Grid>
       );
    }
 
