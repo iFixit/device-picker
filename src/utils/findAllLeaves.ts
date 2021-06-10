@@ -1,10 +1,11 @@
-var result = new Set();
+import {Hierarchy} from '../types';
+var result = new Set<string>();
 
-export interface Object {
-    [key: string]: any;
+interface Map {
+    [key: string]: string;
 }
 
-function findAllLeaves(hierarchy: Object | any, display_titles: Object | any): Object {
+function findAllLeaves(hierarchy: Hierarchy, display_titles: Map): Set<string> {
     for (const key in hierarchy) {
         if (key in display_titles) {
             if (hierarchy[display_titles[key]] === null) {
