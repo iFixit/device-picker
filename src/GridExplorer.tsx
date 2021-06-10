@@ -69,27 +69,38 @@ function GridExplorer({
    );
 
    if (path.length === 0) {
-      const hits = Object.keys(hierarchy).map((title) => ({
-         key: title,
-         title: displayTitles[title] || title,
-         image: get(childrenByTitle[title], 'image'),
-         onClick: () =>
-            isLeaf(hierarchy[title])
-               ? onSubmit(title)
-               : onChange([...previousPath, title]),
-      }));
+      const hits = hierarchy ? Object.keys(hierarchy).map((title) => ({
+            key: title,
+            title: displayTitles[title] || title,
+            image: get(childrenByTitle[title], 'image'),
+            onClick: () =>
+               isLeaf(hierarchy[title])
+                  ? onSubmit(title)
+                  : onChange([...previousPath, title]),
+         })) : [];
 
       return (
-         <Grid>
-            {hits.map((hit) => (
-               <GridItem
-                  key={hit.key}
-                  title={hit.title}
-                  image={hit.image}
-                  onClick={hit.onClick}
-               />
-            ))}
-         </Grid>
+            <Grid>
+               {hits.map((hit) => (
+                  <GridItem
+                     key={hit.key}
+                     title={hit.title}
+                     image={hit.image}
+                     onClick={hit.onClick}
+                  />
+               ))}
+            </Grid>
+      );
+   }
+
+   if (isLeaf(hierarchy[currentTitle])) {
+      return (
+         <Preview
+            title={displayTitles[currentTitle] || currentTitle}
+            image={get(childrenByTitle[currentTitle], 'image')}
+            summary={get(childrenByTitle[currentTitle], 'summary')}
+            onSubmit={() => onSubmit(currentTitle)}
+         />
       );
    }
 
