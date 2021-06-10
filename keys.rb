@@ -6,11 +6,6 @@ require 'json'
 app = app_variable
 algolia_config = app['algoliaConfig']
 
-open('.env', 'w') do |fi|
-  fi.puts("API_KEY=#{algolia_config['apiKey']}")
-  fi.puts("APP_ID=#{algolia_config['appId']}")
-end
-
 keys = {
   'API_KEY' => algolia_config['apiKey'],
   'APP_ID' => algolia_config['appId'],
