@@ -43,14 +43,13 @@ export function DevicePicker(props: DevicePickerProps) {
 
    return (
       <div>
-         {context.type === 'category' ? (
+         {context.type === 'category' || algoliaConfig === undefined ? (
             <HierarchicalDevicePicker
                onSearch={(value) => setContext({ type: 'search', value })}
                category={context.value}
                {...props}
             />
          ) : (
-            algoliaConfig && (
                <AlgoliaDevicePicker
                   leaves={leaves}
                   onSelectCategory={(category) => {
@@ -60,7 +59,6 @@ export function DevicePicker(props: DevicePickerProps) {
                   algoliaConfig={algoliaConfig}
                   {...props}
                />
-            )
          )}
       </div>
    );
