@@ -1,17 +1,13 @@
 import {Hierarchy} from '../types';
 var result = new Set<string>();
 
-interface Map {
-    [key: string]: string;
-}
-
-function findAllLeaves(hierarchy: Hierarchy, display_titles: Map): Set<string> {
+function findAllLeaves(hierarchy: Hierarchy, display_titles: Record<string, string>): Set<string> {
     for (const key in hierarchy) {
         if (key in display_titles) {
             if (hierarchy[display_titles[key]] === null) {
                 result.add(display_titles[key]);
             } else {
-                findAllLeaves(hierarchy[key], display_titles);
+                findAllLeaves(hierarchy[display_titles[key]], display_titles);
             }
         }
         else {
