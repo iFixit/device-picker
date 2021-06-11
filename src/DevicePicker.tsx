@@ -29,7 +29,7 @@ type Context = {
 
 export function DevicePicker(props: DevicePickerProps) {
    const algoliaConfig = props.algoliaConfig;
-   const [leaves, setLeaves] = useState<object | null>(null);
+   const [leaves, setLeaves] = useState<Set<string> | null>(null);
    const [context, setContext] = useState<Context>({
       type: 'category',
       value: '',
@@ -37,7 +37,7 @@ export function DevicePicker(props: DevicePickerProps) {
 
    React.useEffect(() => {
       props.fetchHierarchy().then((json) => {
-         setLeaves(findAllLeaves(json.hierarchy, json.display_titles));
+         setLeaves(findAllLeaves(json.hierarchy, json.display_titles, new Set<string>()));
       });
    }, []);
 
