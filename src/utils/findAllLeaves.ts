@@ -7,7 +7,7 @@ function findAllLeaves(hierarchy: Hierarchy, display_titles: Record<string, stri
             if (hierarchy[display_titles[key]] === null) {
                 result.add(display_titles[key]);
             } else {
-                findAllLeaves(hierarchy[display_titles[key]], display_titles);
+                findAllLeaves(hierarchy[key], display_titles);
             }
         }
         else {
