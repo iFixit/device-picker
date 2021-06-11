@@ -196,8 +196,8 @@ export class HierarchicalDevicePicker extends Component<
             }
 
             if (this.props.category) {
-               let category = this.getTitle(this.props.category);
-               let path = this.getPath(category);
+               const category = this.getTitle(this.props.category);
+               const path = this.getPath(category);
                this.setPath(path);
                this.setState({ view: View.Grid });
             }
