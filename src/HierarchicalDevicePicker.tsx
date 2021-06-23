@@ -295,7 +295,7 @@ export class HierarchicalDevicePicker extends Component<
          }
          return null;
       }
-      return recurse(this.state.tree, key) || [key];
+      return recurse(this.state.tree, key) || [];
    }
 
    /**

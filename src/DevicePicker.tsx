@@ -41,25 +41,25 @@ export function DevicePicker(props: DevicePickerProps) {
       });
    }, []);
 
+   if (algoliaConfig === undefined || context.type === 'category') {
+      return (
+         <HierarchicalDevicePicker
+            onSearch={(value) => setContext({ type: 'search', value })}
+            category={context.value}
+            {...props}
+         />
+      );
+   }
+
    return (
-      <div>
-         {context.type === 'category' || algoliaConfig === undefined ? (
-            <HierarchicalDevicePicker
-               onSearch={(value) => setContext({ type: 'search', value })}
-               category={context.value}
-               {...props}
-            />
-         ) : (
-               <AlgoliaDevicePicker
-                  leaves={leaves}
-                  onSelectCategory={(category) => {
-                     setContext({ type: 'category', value: category });
-                  }}
-                  query={context.value}
-                  algoliaConfig={algoliaConfig}
-                  {...props}
-               />
-         )}
-      </div>
+      <AlgoliaDevicePicker
+         leaves={leaves}
+         onSelectCategory={(category) => {
+            setContext({ type: 'category', value: category });
+         }}
+         query={context.value}
+         algoliaConfig={algoliaConfig}
+         {...props}
+      />
    );
 }
