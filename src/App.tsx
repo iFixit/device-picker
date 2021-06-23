@@ -38,7 +38,7 @@ function App() {
             initialView={initialView}
             fetchHierarchy={() =>
                fetch(
-                  'https://www.cominor.com/api/2.0/wikis/CATEGORY?display=hierarchy',
+                  'https://www.cominor.com/api/2.0/wikis/CATEGORY?display=hierarchy&includeStubs=true',
                ).then(response => response.json())
             }
             fetchChildren={fetchChildren}
