@@ -10,12 +10,6 @@ import isLeaf from './utils/isLeaf';
 import { above } from './utils/mediaQuery';
 import useAsync from './utils/useAsync';
 
-const Container = styled.div`
-   flex: 1 1 auto;
-   overflow-y: auto;
-   -webkit-overflow-scrolling: touch;
-`;
-
 export const Grid = styled.div`
    padding: ${space[5]};
    display: grid;
