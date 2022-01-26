@@ -23,3 +23,8 @@ yarn-error.log*
 
 .env
 src/algoliaConfig.json
+
+# Rush
+**/.rush/temp
+device-picker.build.log
+device-picker.build.error.log
